@@ -1,0 +1,14 @@
+.admin-dashboard {
+    background: linear-gradient(135deg, #6a0dad, #ff99cc);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    margin-top: 20px;
+}
+.admin-dashboard ul {
+    list-style: none;
+    padding-left: 0;
+}
+.admin-dashboard li {
+    padding: 5px 0;
+}

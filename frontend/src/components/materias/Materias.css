@@ -1,0 +1,15 @@
+.materias-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.materia-card {
+    background: linear-gradient(135deg, #6a0dad, #ff99cc);
+    padding: 15px;
+    border-radius: 15px;
+    min-width: 120px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    font-weight: bold;
+}
