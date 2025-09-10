@@ -16,7 +16,7 @@ body {
 }
 
 form {
-    background: linear-gradient(135deg, #6a0dad, #ff99cc);
+    background: linear-gradient(135deg, #6a0dad, #67386d);
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -46,5 +46,5 @@ form button {
 }
 
 form button:hover {
-    background-color: #7a1fa2;
+    background-color: #6a0dad;
 }
