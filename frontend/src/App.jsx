@@ -19,7 +19,7 @@ function App() {
     <div className="app-container">
       <Navbar />
       <div className="dashboard-grid">
-        <Materias />
+        <Subjects />
         <FormUser setUsers={setUsers} />
         <FormProfessor setProfessors={setProfessors} />
       </div>

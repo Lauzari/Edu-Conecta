@@ -20,7 +20,7 @@ export default function FormUser({ setUsers }) {
 
             const updated = await fetch("http://localhost:5000/api/Usuarios");
             const usersData = await updated.json();
-            setUsuarios(usuariosData);
+            setUsuarios(usersData);
 
             setName(""); setEmail(""); setPassword("");
         } catch (err) {
@@ -33,7 +33,7 @@ export default function FormUser({ setUsers }) {
         <>
             <form onSubmit={handleSubmit}>
                 <h3>Registro de Usuario</h3>
-                <input type="text" placeholder="Nombre" value={nombre} onChange={e => setName(e.target.value)} required />
+                <input type="text" placeholder="Nombre" value={name} onChange={e => setName(e.target.value)} required />
                 <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
                 <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
                 <button type="submit">Registrar</button>
