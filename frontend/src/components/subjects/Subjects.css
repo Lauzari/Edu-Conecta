@@ -1,10 +1,10 @@
-.materias-container {
+.subjects-container {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
 }
 
-.materia-card {
+.subject-card {
     background: linear-gradient(135deg, #6a0dad, #ff99cc);
     padding: 15px;
     border-radius: 15px;
