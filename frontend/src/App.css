@@ -1,14 +1,18 @@
 body {
     margin: 0;
+     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #1e1e2f;
+    background-color: #222241;
     color: white;
+    height: 100%;
 }
+
 
 .app-container {
-    padding: 20px;
+  margin: 0;
+  padding: 0; /* importante quitar padding */
+  width: 100%;
 }
-
 .dashboard-grid {
     display: flex;
     gap: 20px;
@@ -16,7 +20,7 @@ body {
 }
 
 form {
-    background: linear-gradient(135deg, #6a0dad, #67386d);
+    background: linear-gradient(135deg, #032156, #004823);
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
@@ -26,25 +30,33 @@ form {
 form h3 {
     margin-top: 0;
 }
-
 form input, form select, form button {
     display: block;
     width: 100%;
     margin: 10px 0;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 10px;
     border: none;
     outline: none;
+    box-sizing: border-box; /* para que el padding no rompa el ancho */
 }
 
 form button {
-    background-color: #4b0082;
-    color: white;
+    background-color: #032156;
+    color: white; 
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
 }
 
 form button:hover {
-    background-color: #6a0dad;
+    background-color: #015c2d;
+}
+
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 10px;  
+    gap: 10px;       
+  }
 }

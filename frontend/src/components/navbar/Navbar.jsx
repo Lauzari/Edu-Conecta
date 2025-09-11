@@ -1,7 +1,7 @@
 export default function Navbar() {
     return (
         <nav className="navbar">
-            <h2>EduConecta</h2>
+            <h1>Edu-Conecta</h1>
         </nav>
     );
 }
