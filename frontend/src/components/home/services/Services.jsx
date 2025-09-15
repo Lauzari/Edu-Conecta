@@ -12,13 +12,13 @@ function Services() {
     slidesToScroll: 1,
     responsive: [
       {
-        breakpoint: 992, // tablets
+        breakpoint: 1080, // tablets
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 768, // móviles
+        breakpoint: 840, // móviles
         settings: {
           slidesToShow: 1,
         },
@@ -29,29 +29,25 @@ function Services() {
   const items = [
     {
       icon: "/images/service-icon-01.png",
-      title: "Best Education",
-      desc: "Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.",
+      title: "Excelente nivel educativo",
+      desc: "Nuestro programa combina teoría y práctica para que aprendas de verdad. Queremos que cada clase te acerque un paso más a tus metas académicas..",
     },
     {
       icon: "/images/service-icon-02.png",
-      title: "Best Teachers",
-      desc: "Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.",
+      title: "Nuestro cuerpo docente",
+      desc: "Contamos con docentes certificados y apasionados por enseñar. Ellos entienden el plan de la UTN y saben cómo ayudarte a superar cada desafío.",
     },
     {
       icon: "/images/service-icon-03.png",
-      title: "Best Students",
-      desc: "Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.",
+      title: "Buenos estudiantes",
+      desc: "Formamos una comunidad de alumnos comprometidos y solidarios. Podés compartir dudas, experiencias y crecer junto a tus compañeros.",
     },
     {
       icon: "/images/service-icon-02.png",
-      title: "Online Meeting",
-      desc: "Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.",
+      title: "Clases virtuales",
+      desc: "Aprendé desde donde estés con clases online dinámicas y accesibles. Ganás flexibilidad sin perder la calidad y el acompañamiento de siempre.",
     },
-    {
-      icon: "/images/service-icon-03.png",
-      title: "Best Networking",
-      desc: "Suspendisse tempor mauris a sem elementum bibendum. Praesent facilisis massa non vestibulum.",
-    },
+
   ];
 
   return (
