@@ -1,5 +1,7 @@
 import React from 'react'
 
+// Hace falta hacer consulta a la BBDD o dejamos datos ficticios?
+
 function OurFacts() {
   return (
     <section className="our-facts">
@@ -8,20 +10,20 @@ function OurFacts() {
         <div className="col-lg-6">
           <div className="row">
             <div className="col-lg-12">
-              <h2>A Few Facts About Our University</h2>
+              <h2>Algunos datos de nuestra institución</h2>
             </div>
             <div className="col-lg-6">
               <div className="row">
                 <div className="col-12">
                   <div className="count-area-content percentage">
                     <div className="count-digit">94</div>
-                    <div className="count-title">Succesed Students</div>
+                    <div className="count-title">estudiantes exitosos</div>
                   </div>
                 </div>
                 <div className="col-12">
                   <div className="count-area-content">
-                    <div className="count-digit">126</div>
-                    <div className="count-title">Current Teachers</div>
+                    <div className="count-digit">26</div>
+                    <div className="count-title">profesores verificados</div>
                   </div>
                 </div>
               </div>
@@ -30,14 +32,14 @@ function OurFacts() {
               <div className="row">
                 <div className="col-12">
                   <div className="count-area-content new-students">
-                    <div className="count-digit">2345</div>
-                    <div className="count-title">New Students</div>
+                    <div className="count-digit">345</div>
+                    <div className="count-title">estudiantes nuevos</div>
                   </div>
                 </div> 
                 <div className="col-12">
                   <div className="count-area-content">
                     <div className="count-digit">32</div>
-                    <div className="count-title">Awards</div>
+                    <div className="count-title">clases disponibles</div>
                   </div>
                 </div>
               </div>

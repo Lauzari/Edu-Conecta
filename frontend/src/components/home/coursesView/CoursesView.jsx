@@ -91,7 +91,7 @@ function CoursesView() {
           {/* Categorías */}
           <div className="col-lg-4">
             <div className="categories">
-              <h4>¿En qué etapa de la carrera estás?</h4>
+              <h4>¿En qué año de la carrera estás?</h4>
               <ul>
                 <li>
                   <button
