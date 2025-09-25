@@ -1,63 +1,68 @@
 import React from "react";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function ApplyNow() {
   const [activeIndex, setActiveIndex] = useState(0);
-  
-
+  const navigate = useNavigate();
   const toggleAccordion = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
+      const navigate = useNavigate(); 
   };
 
   const items = [
     {
-      title: "About Edu Meeting HTML Template",
+      title: "¿Qué es EduConecta?",
       content: (
         <p>
-          If you want to get the latest collection of HTML CSS templates for
-          your websites, you may visit{" "}
-          <a rel="nofollow" href="https://www.toocss.com/" target="_blank">
-            Too CSS website
-          </a>
-          . If you need a working contact form script, please visit{" "}
-          <a href="https://templatemo.com/contact" target="_parent">
-            our contact page
-          </a>{" "}
-          for more info.
+          <strong>EduConecta</strong> es una plataforma creada especialmente
+          para acompañar a los estudiantes de la{" "}
+          <b>Tecnicatura Universitaria en Programación de la UTN</b>. Nuestro
+          objetivo es ofrecer un espacio de apoyo académico donde podés reforzar
+          tus conocimientos, resolver dudas y compartir experiencias con otros
+          compañeros.
         </p>
       ),
     },
     {
-      title: "HTML CSS Bootstrap Layout",
+      title: "¿Es necesario pagar para acceder a las clases?",
       content: (
         <p>
-          Etiam posuere metus orci, vel consectetur elit imperdiet eu. Cras
-          ipsum magna, maximus at semper sit amet, eleifend eget neque. Nunc
-          facilisis quam purus, sed vulputate augue interdum vitae. Aliquam a
-          elit massa.
+          ¡Para nada! El acceso a las clases de <strong>EduConecta</strong> es
+          totalmente gratuito. Creemos que la educación debe ser inclusiva y
+          accesible para todos. De todas formas, si querés apoyar este proyecto
+          y ayudar a que siga creciendo, podés invitarnos un <Link to={"https://cafecito.app/"}>cafecito</Link>.
+          Ese pequeño gesto nos permite seguir ofreciendo más contenidos y
+          mantener la plataforma en marcha.
         </p>
       ),
     },
     {
-      title: "Please tell your friends",
+      title: "¿Cuántos estudiantes se permiten por clase?",
       content: (
         <p>
-          Ut vehicula mauris est, sed sodales justo rhoncus eu. Morbi porttitor
-          quam velit, at ullamcorper justo suscipit sit amet. Quisque at
-          suscipit mi, non efficitur velit.
+          Cada clase está diseñada para un máximo de{" "}
+          <strong>15 estudiantes</strong>. De esta manera nos aseguramos de que
+          todos tengan la posibilidad de participar, hacer preguntas y recibir
+          la atención necesaria. La idea es mantener un ambiente cercano y
+          personalizado, donde cada voz pueda ser escuchada.
         </p>
       ),
     },
     {
-      title: "Share this to your colleagues",
+      title: "¿Cómo puedo ver las clases?",
       content: (
         <p>
-          Maecenas suscipit enim libero, vel lobortis justo condimentum id.
-          Interdum et malesuada fames ac ante ipsum primis in faucibus.
+          Una vez que te inscribas, recibirás en tu correo electrónico un
+          <strong> enlace de Zoom</strong> exclusivo para cada clase. Solo tenés
+          que hacer clic en el link el día y horario programados, y listo. ¡Es
+          muy simple y podés conectarte desde tu computadora, tablet o incluso
+          tu celular!
         </p>
       ),
     },
   ];
+
   return (
     <section className="apply-now" id="apply">
       <div className="container">
@@ -66,30 +71,36 @@ function ApplyNow() {
             <div className="row">
               <div className="col-lg-12">
                 <div className="item">
-                  <h3>APPLY FOR BACHELOR DEGREE</h3>
+                  <h3>REGISTRATE COMO ESTUDIANTE</h3>
                   <p>
-                    You are allowed to use this edu meeting CSS template for
-                    your school or university or business. You can feel free to
-                    modify or edit this layout.
+                    Si quieres disfrutar de forma gratuita de todas nuestras
+                    clases, ¡no pierdas más tiempo! Únete a esta hermosa
+                    comunidad que le ofrece a sus alumnos clases de apoyo de la
+                    mejor calidad para mejorar sus experiencia académica.
                   </p>
                   <div className="main-button-red">
                     <div className="scroll-to-section">
-                      <a href="#contact">Join Us Now!</a>
+                      <button onClick={() => navigate("/")}>
+                        Regístrate ahora
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="col-lg-12">
                 <div className="item">
-                  <h3>APPLY FOR BACHELOR DEGREE</h3>
+                  <h3>REGISTRATE COMO DOCENTE</h3>
                   <p>
-                    You are not allowed to redistribute the template ZIP file on
-                    any other template website. Please contact us for more
-                    information.
+                    Para poder formar parte de nuestro cuerpo docente, primero
+                    debes crear una cuenta como estudiante y luego rellenar el{" "}
+                    <Link to="/otra-pagina">siguiente formulario</Link> para que
+                    nuestro comité verifique tu perfil.
                   </p>
                   <div className="main-button-yellow">
                     <div className="scroll-to-section">
-                      <a href="#contact">Join Us Now!</a>
+                      <button onClick={() => navigate("/")}>
+                        Regístrate ahora
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -136,4 +147,4 @@ function ApplyNow() {
   );
 }
 
-export default ApplyNow;
+export default ApplyNow;

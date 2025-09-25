@@ -14,16 +14,16 @@ Table of contents
 11. search
 
 --------------------------------------------- */
-/* 
+/*
 ---------------------------------------------
 font & reset css
---------------------------------------------- 
+---------------------------------------------
 */
 @import url("https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900");
-/* 
+/*
 ---------------------------------------------
 reset
---------------------------------------------- 
+---------------------------------------------
 */
 html,
 body,
@@ -180,10 +180,10 @@ img {
   overflow: hidden;
 }
 
-/* 
+/*
 ---------------------------------------------
 global styles
---------------------------------------------- 
+---------------------------------------------
 */
 html,
 body {
@@ -219,7 +219,7 @@ body {
 }
 
 .main-button-red button {
-  font-size: 16px;
+  font-size: 15px;
   color: #fff;
   background-color: #310c88;
   padding: 12px 30px;
@@ -234,8 +234,8 @@ body {
   opacity: 0.9;
 }
 
-.main-button-yellow a {
-  font-size: 13px;
+.main-button-yellow button {
+  font-size: 15px;
   color: #fff;
   background-color: #f5a425;
   padding: 12px 30px;
@@ -262,10 +262,10 @@ body {
   color: #fff;
 }
 
-/* 
+/*
 ---------------------------------------------
 header
---------------------------------------------- 
+---------------------------------------------
 */
 
 .background-header {
@@ -514,7 +514,7 @@ header
 }
 
 @media (min-width: 1000px) {
-  
+
 .header-area.header-sticky .nav li button {
   color: #333;
 }
@@ -618,10 +618,10 @@ header
   }
 }
 
-/* 
+/*
 ---------------------------------------------
 banner
---------------------------------------------- 
+---------------------------------------------
 */
 
 .main-banner {
@@ -774,7 +774,7 @@ section.upcoming-meetings {
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
-  padding-top: 230px;
+  padding-top: 280px;
   padding-bottom: 110px;
 }
 
@@ -790,7 +790,7 @@ section.upcoming-meetings .categories {
 }
 
 section.upcoming-meetings .categories h4 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: #1f272b;
   margin-bottom: 30px;
@@ -801,13 +801,15 @@ section.upcoming-meetings .categories h4 {
 section.upcoming-meetings .categories ul li {
   display: inline-block;
   margin-bottom: 15px;
+
 }
 
 section.upcoming-meetings .categories ul li button {
-  font-size: 15px;
+  font-size: 16px;
   color: #1f272b;
   font-weight: 500;
   transition: all 0.3s;
+  background-color: #fff;
 }
 
 section.upcoming-meetings .categories ul li button:hover {
@@ -836,7 +838,7 @@ section.upcoming-meetings .categories .main-button-red button {
 .meeting-item .thumb img {
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
-  width: 100%;   
+  width: 100%;
 }
 
 .meeting-item .thumb button {
@@ -989,10 +991,10 @@ section.apply-now .item p {
   }
 }
 
-/* 
+/*
 ---------------------------------------------
 courses
---------------------------------------------- 
+---------------------------------------------
 */
 
 section.our-courses {
@@ -1011,40 +1013,17 @@ section.our-courses {
 .our-courses .item .down-content {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Título arriba, info abajo */
+  align-items: center;
+  justify-content: center;
   background-color: #fff;
-  height: 200px;
+  min-height: 90px;
 }
 
 .our-courses .item .down-content h4 {
-  padding: 25px;
+  padding: 15px 10px;
   font-size: 18px;
   color: #1f272b;
   text-align: center;
-  border-bottom: 1px solid #eee;
-}
-
-.our-courses .item .down-content .info {
-  padding: 25px;
-}
-
-.our-courses .item .down-content .info ul li {
-  display: inline-block;
-  margin-right: 1px;
-}
-
-.our-courses .item .down-content .info ul li i {
-  color: #f5a425;
-  font-size: 14px;
-}
-
-.our-courses .item .down-content .info span {
-  color: #a12c2f;
-  font-size: 15px;
-  font-weight: 600;
-  text-align: right;
-  display: inline-block;
-  width: 100%;
 }
 
 .our-courses .slick-slide {
@@ -1108,7 +1087,7 @@ section.our-facts h2 {
 section.our-facts .video {
   text-align: center;
   margin-left: 70px;
-  background-image: url(../images/video-item-bg.jpg);
+  background-image: url(../images/online-class.jpg);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -1120,10 +1099,10 @@ section.our-facts .video img {
   max-width: 56px;
 }
 
-/* 
+/*
 ---------------------------------------------
 contact us
---------------------------------------------- 
+---------------------------------------------
 */
 
 section.contact-us {
@@ -1163,7 +1142,7 @@ section.contact-us #contact input {
   font-weight: 500;
   color: #7a7a7a;
   padding: 0px 15px;
-  margin-bottom: 30px;
+  margin-bottom: 3px;
 }
 
 section.contact-us #contact textarea {
@@ -1201,9 +1180,12 @@ section.contact-us #contact button:hover {
 }
 
 section.contact-us .right-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #a12c2f;
   border-radius: 20px;
-  padding: 40px;
+  padding: 40px 60px;
   margin-bottom: 2rem;
 }
 
@@ -1232,6 +1214,19 @@ section.contact-us .right-info ul li span {
   font-size: 18px;
   color: #fff;
   font-weight: 700;
+}
+
+section.contact-us small {
+  display: block;
+  color: #e63946;
+  font-size: 11px; 
+  margin-top: 4px;
+  padding-left: 12px;
+}
+
+section.contact-us fieldset {
+  margin-bottom: 18px;
+  position: relative; 
 }
 
 /*
@@ -1513,10 +1508,10 @@ section.meetings-page .pagination ul li a:hover {
   }
 }
 
-/* 
+/*
 ---------------------------------------------
 responsive
---------------------------------------------- 
+---------------------------------------------
 */
 
 @media (max-width: 992px) {

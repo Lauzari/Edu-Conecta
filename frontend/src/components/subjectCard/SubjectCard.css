@@ -1,0 +1,51 @@
+.subject-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.subject-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.subject-card .thumb {
+  position: relative;
+}
+
+.subject-card .date {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: #f33f3f;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.subject-card .date span {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.subject-card .down-content {
+  padding: 15px;
+  text-align: center;
+}
+
+.subject-card .down-content h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.subject-card .down-content p {
+  font-size: 14px;
+  color: #777;
+}
