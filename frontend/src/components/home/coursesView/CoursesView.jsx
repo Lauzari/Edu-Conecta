@@ -14,7 +14,7 @@ function CoursesView() {
       : courses.filter((c) => c.year === filter);
 
   return (
-    <section className="upcoming-meetings" id="meetings">
+    <section className="courses-view">
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
@@ -23,7 +23,6 @@ function CoursesView() {
             </div>
           </div>
 
-          {/* Categorías */}
           <div className="col-lg-4">
             <div className="categories">
               <h4>¿En qué año de la carrera estás?</h4>
@@ -48,12 +47,12 @@ function CoursesView() {
               </ul>
 
               <div className="main-button-blue">
+
                 <button onClick={() => setFilter("all")}>Todos los cursos</button>
               </div>
             </div>
           </div>
 
-          {/* Cursos */}
           <div className="col-lg-8">
             <div className="row">
               {filteredCourses.map((course) => (

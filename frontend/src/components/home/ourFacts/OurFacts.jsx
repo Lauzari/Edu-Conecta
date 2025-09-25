@@ -1,4 +1,5 @@
 import React from 'react'
+import "./OurFacts.css";
 
 // Hace falta hacer consulta a la BBDD o dejamos datos ficticios?
 

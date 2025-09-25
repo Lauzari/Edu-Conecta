@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import "./ApplyNow.css";
 import { Link, useNavigate } from "react-router-dom";
 
 function ApplyNow() {
@@ -78,7 +79,7 @@ function ApplyNow() {
                     comunidad que le ofrece a sus alumnos clases de apoyo de la
                     mejor calidad para mejorar sus experiencia académica.
                   </p>
-                  <div className="main-button-red">
+                  <div className="main-button-blue">
                     <div className="scroll-to-section">
                       <button onClick={() => navigate("/")}>
                         Regístrate ahora
@@ -96,7 +97,7 @@ function ApplyNow() {
                     <Link to="/otra-pagina">siguiente formulario</Link> para que
                     nuestro comité verifique tu perfil.
                   </p>
-                  <div className="main-button-yellow">
+                  <div className="main-button-green">
                     <div className="scroll-to-section">
                       <button onClick={() => navigate("/")}>
                         Regístrate ahora

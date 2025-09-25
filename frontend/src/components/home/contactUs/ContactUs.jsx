@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { validateForm } from "./formValidations";
+import { toast } from "react-toastify";
+import "./ContactUs.css";
 
 function ContactUs() {
   const [formData, setFormData] = useState({
@@ -26,21 +28,20 @@ function ContactUs() {
       setErrors(newErrors);
       return;
     }
-    //LOGICA PARA UNIR CON BACK:
-    // try {
-    //   const response = await fetch("http://localhost:4000/contact", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(formData),
-    //   });
 
-    //   if (!response.ok) throw new Error("Error al enviar el formulario");
-
-    //   MOSTRAR MODAL DE ÉXITO
-    //   setFormData({ name: "", email: "", subject: "", message: "" });
-    // } catch (err) {
-    //   MOSTRAR MODAL DE FALLO
-    // }
+    try {
+      //LOGICA PARA UNIR CON BACK:
+      //   const response = await fetch("http://localhost:4000/contact", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify(formData),
+      //   });
+      //   if (!response.ok) throw new Error("Error al enviar el formulario");
+      toast.success("✅ ¡Formulario enviado con éxito!");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (err) {
+      toast.error("❌ Hubo un error al enviar el formulario");
+    }
   };
 
   return (
@@ -54,7 +55,6 @@ function ContactUs() {
                   <div className="row">
                     <div className="col-lg-12">
                       <h2>Contáctate con nosotros</h2>
-                      {success && <p>{success}</p>}
                     </div>
                     <div className="col-lg-4">
                       <fieldset>
@@ -75,8 +75,7 @@ function ContactUs() {
                           name="email"
                           type="text"
                           id="email"
-                          pattern="[^ @]*@[^ @]*"
-                          placeholder="Tu correo..."
+                          placeholder="Tu correo...*"
                           value={formData.email}
                           onChange={handleChange}
                         />
@@ -107,8 +106,8 @@ function ContactUs() {
                           value={formData.message}
                           onChange={handleChange}
                         >
-                          {errors.message && <small>{errors.message}</small>}
                         </textarea>
+                        {errors.message && <small>{errors.message}</small>}
                       </fieldset>
                     </div>
                     <div className="col-lg-12">

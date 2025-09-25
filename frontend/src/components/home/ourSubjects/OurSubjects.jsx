@@ -8,6 +8,7 @@ import "./OurSubjects.css";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "./OurSubjects.css";
 
 function OurSubjects() {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ function OurSubjects() {
   ];*/
 
   return (
-    <section className="our-courses" id="courses">
+    <section className="our-subjects" id="courses">
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
