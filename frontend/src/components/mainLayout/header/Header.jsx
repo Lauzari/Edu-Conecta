@@ -82,6 +82,17 @@ function Header() {
                     Docentes
                   </button>
                 </li>
+
+                <li className="has-sub">
+                  <button
+                    className="nav-link"
+                    onClick={() => {
+                      navigate("/applyNow");
+                      setMenuOpen(false);
+                    }}
+                  >
+                    Preguntas Frecuentes
+                  </button>
                   {/* <ul className="sub-menu">
                     <li>
                       <button

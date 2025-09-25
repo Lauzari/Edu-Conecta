@@ -1,0 +1,83 @@
+.Professor{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #3b3fbd, #242582);
+  padding: 20px;
+  gap: 20px;
+}
+
+
+
+.Professor-form{
+    width: 593px;
+    min-height: 629px;
+    background-color: #FFFFFF;
+    border-radius: 40px;
+    margin-left: 50px;
+}
+
+.Professor-form h1{
+    font-size: 40px;
+    text-align: center;
+}
+
+.Professor-form-content{
+    margin-top: 60px;
+}
+
+.Professor-form-content form{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.Professor-form-content form input{
+    width: 400px;
+    height: 50px;
+    border-radius: 40px;
+    border: 1px solid #989898;
+    font-size: 13px;
+    color: #777777;
+}
+
+.form-group-text{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 12px;     
+}
+
+.form-group-text textarea{
+    width: 400px;
+    height: 130px;
+    border: 1px solid #989898;
+    font-size: 13px;
+    color: #777777;
+}
+
+.form-group{
+    display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 12px; 
+}
+.submit-register-professor{
+    width: 323px;
+    height: 70px;
+    border-radius: 40px;
+    background-color: #3B3FBD;
+    color: #FFFFFF;
+    font-size: 20px;
+}
+
+
+.professor-img img{
+    height: 900px;
+    border-radius: 400px 0px 0px 400px;
+}

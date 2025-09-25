@@ -1,3 +1,4 @@
+
 section.our-subjects {
   background-image: url(../images/meetings-bg.jpg);
   background-position: center center;
@@ -36,3 +37,10 @@ section.our-subjects {
 .our-subjects .slick-slide {
   padding: 0 2.1rem;
 }
+
+.our-courses .section-heading h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #333;
+}
+

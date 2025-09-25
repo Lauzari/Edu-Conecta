@@ -1,3 +1,4 @@
+
 section.courses-view .categories ul li button.active {
   color: #039a51;
   font-weight: 700;
@@ -21,9 +22,12 @@ section.courses-view .section-heading {
 
 section.courses-view .categories {
   background-color: #fff;
-  border-radius: 20px;
-  padding: 40px;
   margin-right: 45px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
 }
 
 section.courses-view .categories h4 {
@@ -154,5 +158,198 @@ section.courses-view .categories .main-button-blue button {
 
   .meeting-item {
     max-width: 80%;
+
+.categories h4 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.categories ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.categories ul li {
+  margin-bottom: 12px;
+}
+
+.categories button {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  background: #f9f9f9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+  text-align: left;
+}
+
+.categories button:hover {
+  background: #f1f1f1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.categories button.active {
+  background: #eee; /* sutil gris */
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Botón "Todos los cursos" azul y centrado */
+.main-button-blue button {
+  background: #007bff;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.main-button-blue button:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* --- Modal Overlay --- */
+.ourcourses-modal-overlay {
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.6);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* --- Modal Content --- */
+.ourcourses-modal-content {
+  position: relative;
+  background:#fff;
+  padding:30px;
+  border-radius:12px;
+  max-width:500px;
+  width:100%;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  animation: scaleUp 0.3s ease;
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* --- Close Button --- */
+.ourcourses-modal-content .close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #f33f3f;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 32px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.ourcourses-modal-content .close-btn:hover {
+  background: #d12d2d;
+  transform: rotate(90deg);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.course-title-link {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #333;
+  font-weight: 600;
+}
+
+.course-title-link:hover {
+  color: #f33f3f;
+  transform: translateY(-2px);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.meeting-item .thumb {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.meeting-item .thumb img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+}
+
+.meeting-item .thumb:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+/* Overlay "Ver más..." */
+.meeting-item .thumb::after {
+  content: "Ver más...";
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(243, 63, 63, 0.9);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.meeting-item .thumb:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Animación de fade-up para cursos --- */
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUpAnim 0.5s forwards;
+  animation-delay: 0.1s;
+}
+
+@keyframes fadeUpAnim {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
