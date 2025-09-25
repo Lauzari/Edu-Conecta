@@ -10,6 +10,7 @@ function ContactUs() {
   });
 
   const [errors, setErrors] = useState({});
+   const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
