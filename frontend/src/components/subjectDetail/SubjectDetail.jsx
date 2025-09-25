@@ -7,7 +7,7 @@ function SubjectDetail() {
   const navigate = useNavigate();
 
   const subject = subjects.find((s) => s.id === parseInt(id));
-  
+
      useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -39,7 +39,7 @@ function SubjectDetail() {
                 <div className="main-button-red" style={{ marginTop: "20px" }}>
                   <div className="scroll-to-section">
                     <button onClick={() => navigate(`/inscripcion/${subject.id}`)}>
-                      Inscribirme
+                      Inscripcion
                     </button>
                   </div>
                 </div>
