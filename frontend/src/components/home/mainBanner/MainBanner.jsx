@@ -1,8 +1,9 @@
-import React, { use } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import LoginModal from "../../loginModal/LoginModal";
+import "./MainBanner.css";
 
 function MainBanner() {
-  const navigate = useNavigate();
+  const [showLogin, setShowLogin] = useState(false);
 
   return (
     <section className="section main-banner" id="top" data-section="section1">
@@ -19,23 +20,26 @@ function MainBanner() {
                 <h2>Bienvenidos a EduConecta</h2>
                 <p>
                   Esta es una plataforma pensada con cariño para los estudiantes
-                  de la Tecnicatura Universitaria en Programación de la UTN. Aquí podés encontrar clases de
-                  apoyo en distintas materias, acompañadas por docentes
-                  certificados que conocen a fondo el programa. Nuestro objetivo
-                  es que el estudio sea más sencillo, con un enfoque cercano y
-                  amigable que te ayude a sentirte acompañado y seguro mientras
-                  avanzás en tu carrera.
+                  de la Tecnicatura Universitaria en Programación de la UTN.
+                  Aquí podés encontrar clases de apoyo en distintas materias,
+                  acompañadas por docentes certificados que conocen a fondo el
+                  programa. Nuestro objetivo es que el estudio sea más sencillo,
+                  con un enfoque cercano y amigable que te ayude a sentirte
+                  acompañado y seguro mientras avanzás en tu carrera.
                 </p>
-                <div className="main-button-red">
-                  <div className="scroll-to-section">
-                   <button onClick={() => navigate("/register")}>¡Registrate!</button>
-                  </div>
+                <div className="main-button-blue">
+                    <button
+                      onClick={() => setShowLogin(true)}
+                    >
+                      Iniciá sesión
+                    </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <LoginModal show={showLogin} handleClose={() => setShowLogin(false)} />
     </section>
   );
 }

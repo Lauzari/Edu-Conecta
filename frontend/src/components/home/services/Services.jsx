@@ -2,23 +2,24 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "./Services.css";
 
 function Services() {
   const settings = {
-    dots: true,          // puntos de navegación
-    infinite: true,      // loop infinito
+    dots: true,
+    infinite: true,
     speed: 500,
-    slidesToShow: 3,     // cuántos ítems se ven a la vez
+    slidesToShow: 3,
     slidesToScroll: 1,
     responsive: [
       {
-        breakpoint: 1080, // tablets
+        breakpoint: 1080,
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 840, // móviles
+        breakpoint: 840,
         settings: {
           slidesToShow: 1,
         },
@@ -28,17 +29,17 @@ function Services() {
 
   const items = [
     {
-      icon: "/images/service-icon-01.png",
+      icon: "/images/school.png",
       title: "Excelente nivel educativo",
       desc: "Nuestro programa combina teoría y práctica para que aprendas de verdad. Queremos que cada clase te acerque un paso más a tus metas académicas..",
     },
     {
-      icon: "/images/service-icon-02.png",
+      icon: "/images/teachings.png",
       title: "Nuestro cuerpo docente",
       desc: "Contamos con docentes certificados y apasionados por enseñar. Ellos entienden el plan de la UTN y saben cómo ayudarte a superar cada desafío.",
     },
     {
-      icon: "/images/service-icon-03.png",
+      icon: "/images/student.png",
       title: "Buenos estudiantes",
       desc: "Formamos una comunidad de alumnos comprometidos y solidarios. Podés compartir dudas, experiencias y crecer junto a tus compañeros.",
     },
@@ -47,7 +48,6 @@ function Services() {
       title: "Clases virtuales",
       desc: "Aprendé desde donde estés con clases online dinámicas y accesibles. Ganás flexibilidad sin perder la calidad y el acompañamiento de siempre.",
     },
-
   ];
 
   return (

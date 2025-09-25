@@ -1,0 +1,69 @@
+section.our-facts {
+  background-image: url(../images/facts-bg.jpg);
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 140px 0px 125px 0px;
+}
+
+section.our-facts h2 {
+  font-size: 38px;
+  color: #fff;
+  line-height: 50px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 50px;
+}
+
+.count-area-content {
+  text-align: center;
+  background-color: rgba(250, 250, 250, 0.15);
+  border-radius: 20px;
+  padding: 25px 30px 35px 30px;
+  margin: 15px 0px;
+}
+
+.percentage .count-digit:after {
+  content: "%";
+  margin-left: 3px;
+}
+
+.count-digit {
+  margin: 5px 0px;
+  color: #039a51;
+  font-weight: 700;
+  font-size: 36px;
+}
+.count-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.new-students {
+  margin-top: 45px;
+}
+
+section.our-facts .video {
+  text-align: center;
+  margin-left: 70px;
+  background-image: url(../images/online-class.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  border-radius: 20px;
+}
+
+section.our-facts .video img {
+  padding: 170px 0px;
+  max-width: 56px;
+}
+
+@media (max-width: 992px) {
+  section.our-facts .video {
+    margin-left: 0px;
+    margin-top: 15px;
+  }
+}

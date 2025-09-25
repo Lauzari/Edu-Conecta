@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./CoursesView.css";
 
 function CoursesView() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function CoursesView() {
     {
       id: 3,
       year: "segundo",
-      title: "Metodología de Sistemas I",
+      title: "Metod. de Sistemas I",
       date: "Nov 26",
       img: "/images/meeting-03.jpg",
       professor:"Poli, Jorgelina",
@@ -57,7 +58,7 @@ function CoursesView() {
     {
       id: 7,
       year: "primer",
-      title: "Organización Empresarial",
+      title: "Org. Empresarial",
       date: "Nov 10",
       img: "/images/meeting-03.jpg",
       professor:"Muñoz, Paulina",
@@ -65,21 +66,20 @@ function CoursesView() {
     {
       id: 8,
       year: "primer",
-      title: "Estadística y Probabilidad",
+      title: "Estadística y Prob.",
       date: "Nov 10",
       img: "/images/meeting-04.jpg",
       professor:"Lindt, Ignacio",
     },
   ];
 
-  // Filtrado
   const filteredCourses =
   filter === "all"
     ? courses.slice(0, 4)
     : courses.filter((c) => c.year === filter);
 
   return (
-    <section className="upcoming-meetings" id="meetings">
+    <section className="courses-view">
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
@@ -88,7 +88,6 @@ function CoursesView() {
             </div>
           </div>
 
-          {/* Categorías */}
           <div className="col-lg-4">
             <div className="categories">
               <h4>¿En qué año de la carrera estás?</h4>
@@ -118,13 +117,12 @@ function CoursesView() {
                 </li>
               </ul>
 
-              <div className="main-button-red">
+              <div className="main-button-blue">
                 <button onClick={() => navigate("/courses")}>Todos los cursos</button>
               </div>
             </div>
           </div>
 
-          {/* Cursos */}
           <div className="col-lg-8">
             <div className="row">
               {filteredCourses.map((course) => (

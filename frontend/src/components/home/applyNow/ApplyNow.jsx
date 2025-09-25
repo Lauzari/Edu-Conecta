@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import "./ApplyNow.css";
 
 function ApplyNow() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -77,7 +78,7 @@ function ApplyNow() {
                     comunidad que le ofrece a sus alumnos clases de apoyo de la
                     mejor calidad para mejorar sus experiencia académica.
                   </p>
-                  <div className="main-button-red">
+                  <div className="main-button-blue">
                     <div className="scroll-to-section">
                       <button onClick={() => navigate("/")}>
                         Regístrate ahora
@@ -95,7 +96,7 @@ function ApplyNow() {
                     <Link to="/otra-pagina">siguiente formulario</Link> para que
                     nuestro comité verifique tu perfil.
                   </p>
-                  <div className="main-button-yellow">
+                  <div className="main-button-green">
                     <div className="scroll-to-section">
                       <button onClick={() => navigate("/")}>
                         Regístrate ahora

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Header.css";
 
 
 //FALTA AGREGAR:
-// - Cambio cuando el usuario tenga la sesión iniciada
+// - Cambio cuando el usuario tenga la sesión iniciada (nuevo componente o mismo con condiciones?)
 //      - Avatar de usuario
 //      - Desplegable cuando se apriete (Mi perfil y Cerrar Sesión)
 function Header() {
@@ -18,7 +19,7 @@ function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // si bajamos más de 80px, activamos sticky
+      // if we go over 80px down, we activate the sticky menu
       if (window.scrollY > 80) {
         setIsSticky(true);
       } else {
@@ -28,7 +29,6 @@ function Header() {
 
     window.addEventListener("scroll", handleScroll);
 
-    // cleanup para evitar fugas de memoria
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -42,18 +42,18 @@ function Header() {
               <button
                 className="logo"
                 onClick={() => {
-                  navigate("/home");
+                  navigate("/");
                   setMenuOpen(false);
                 }}
               >
                 EduConecta
               </button>
               <ul className={`nav ${menuOpen ? "active" : ""}`}>
-                <li className="scroll-to-section">
+                <li>
                   <button
                     className="nav-link"
                     onClick={() => {
-                      navigate("/home");
+                      navigate("/");
                       setMenuOpen(false);
                     }}
                   >
@@ -71,7 +71,7 @@ function Header() {
                     Cursos
                   </button>
                 </li>
-                <li className="scroll-to-section">
+                <li>
                   <button
                     className="nav-link"
                     onClick={() => {
@@ -82,16 +82,6 @@ function Header() {
                     Docentes
                   </button>
                 </li>
-                <li className="has-sub">
-                  <button
-                    className="nav-link"
-                    onClick={() => {
-                      navigate("/faq");
-                      setMenuOpen(false);
-                    }}
-                  >
-                    Preguntas Frecuentes
-                  </button>
                   {/* <ul className="sub-menu">
                     <li>
                       <button
@@ -115,19 +105,8 @@ function Header() {
                       </button>
                     </li>
                   </ul> */}
-                </li>
-                {/* <li >
-                  <button
-                    className="nav-link"
-                    onClick={() => {
-                      navigate("/meetings");
-                      setMenuOpen(false);
-                    }}
-                  >
-                    Courses
-                  </button>
-                </li> */}
-                <li className="scroll-to-section">
+                {/* </li> */}
+                <li>
                   <button
                     className="nav-link"
                     onClick={() => {
