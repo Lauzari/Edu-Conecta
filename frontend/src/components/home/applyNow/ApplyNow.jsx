@@ -1,12 +1,13 @@
 import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function ApplyNow() {
   const [activeIndex, setActiveIndex] = useState(0);
-
+  const navigate = useNavigate();
   const toggleAccordion = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
+      const navigate = useNavigate(); 
   };
 
   const items = [
@@ -146,4 +147,4 @@ function ApplyNow() {
   );
 }
 
-export default ApplyNow;
+export default ApplyNow;

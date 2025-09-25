@@ -86,11 +86,11 @@ function Header() {
                   <button
                     className="nav-link"
                     onClick={() => {
-                      navigate("/faq");
+                      navigate("/applyNow");
                       setMenuOpen(false);
                     }}
                   >
-                    Preguntas Frecuentes
+                    Preguntas Frecuentes
                   </button>
                   {/* <ul className="sub-menu">
                     <li>
