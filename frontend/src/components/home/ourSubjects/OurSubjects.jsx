@@ -69,7 +69,6 @@ function OurSubjects() {
                   <SubjectCard
                     img={course.img}
                     title={course.title}
-                    date={course.date}
                     description={course.description}
                     onClick={() => navigate(`/subjects/${course.id}`)}
                   />

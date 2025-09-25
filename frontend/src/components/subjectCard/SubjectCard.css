@@ -16,23 +16,6 @@
   position: relative;
 }
 
-.subject-card .date {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: #f33f3f;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.subject-card .date span {
-  display: block;
-  font-size: 20px;
-  font-weight: 700;
-}
 
 .subject-card .down-content {
   padding: 15px;

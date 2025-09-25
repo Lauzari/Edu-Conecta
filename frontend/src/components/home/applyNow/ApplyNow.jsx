@@ -81,7 +81,7 @@ function ApplyNow() {
                   </p>
                   <div className="main-button-blue">
                     <div className="scroll-to-section">
-                      <button onClick={() => navigate("/")}>
+                      <button onClick={() => navigate("/register")}>
                         Regístrate ahora
                       </button>
                     </div>
@@ -99,7 +99,7 @@ function ApplyNow() {
                   </p>
                   <div className="main-button-green">
                     <div className="scroll-to-section">
-                      <button onClick={() => navigate("/")}>
+                      <button onClick={() => navigate("/register")}>
                         Regístrate ahora
                       </button>
                     </div>

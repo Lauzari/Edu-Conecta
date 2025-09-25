@@ -1,8 +1,7 @@
 import React from "react";
 import "./SubjectCard.css";
 
-function SubjectCard({ img, title, date, description, onClick }) {
-  const [month, day] = date ? date.split(" ") : ["", ""];
+function SubjectCard({ img, title, description, onClick }) {
 
   return (
     <div className="subject-card meeting-item" onClick={onClick}>
@@ -16,11 +15,6 @@ function SubjectCard({ img, title, date, description, onClick }) {
           position: "relative",
         }}
       >
-        <div className="date">
-          <h6>
-            {month} <span>{day}</span>
-          </h6>
-        </div>
       </div>
       <div className="down-content">
         <h4>{title}</h4>

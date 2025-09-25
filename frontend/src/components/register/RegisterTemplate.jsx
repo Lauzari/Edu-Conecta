@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import './register.css';
 import validateRegister from './loginhelper';
+import LoginModal from '../loginModal/LoginModal';
 
 const Register = () => {
+  const [showLogin, setShowLogin] = useState(false);
+
   const [errors, setErrors] = useState({});
   const [values, setValues] = useState({
     nombre: "",
@@ -36,8 +39,8 @@ const Register = () => {
     <div className="register">
       <div className='register-form'>
         <div className='register-form-content'>
-          <h1>Bienvenido a Edu-Conecta</h1>
-          <p>Porfavor completa los campos del registro</p>
+          <h1>Bienvenido a EduConecta</h1>
+          <p>Por favor completa los campos del registro</p>
           <form onSubmit={handleSubmit}>
             <div className='form-group'>
               <input type="text"
@@ -92,13 +95,14 @@ const Register = () => {
 
             <button className='submit-register' type="submit">Registrar</button>
           </form>
-          <p>Ya tienes una cuenta? <a href="/login">Iniciar sesión</a></p>
+          <p>Ya tienes una cuenta? <button onClick={() => setShowLogin(true)}>Iniciar sesión</button></p>
         </div>
       </div>
 
       <div className='register-img'>
         <img src="/images/Img-register.jpg" alt="Registro" />
       </div>
+      <LoginModal show={showLogin} handleClose={() => setShowLogin(false)} />
     </div>
   );
 };
