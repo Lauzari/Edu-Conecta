@@ -1,14 +1,18 @@
 .custom-modal {
   padding-right: 0px!important;
 }
+
+body.modal-open {
+  padding-right: 0 !important;
+}
 .custom-modal .modal-content {
   background: url("/images/service-item-bg.png") no-repeat center center;
   background-size: cover; 
   color: white;
   padding: 20px;
-  box-sizing: border-box!important;
 }
 .login-link {
+  background-color: transparent;
   color: #fff;
   text-decoration: none;
   font-weight: 500;
@@ -17,6 +21,19 @@
 
 .login-link:hover {
   color: #039a51!important;
+}
+.password-toggle {
+  position: absolute;
+  top: 38px;
+  right: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+}
+
+.showPassword {
+  background-color: #039a51!important;
+  box-shadow: none;
 }
 
 @media (max-width: 576px) {
