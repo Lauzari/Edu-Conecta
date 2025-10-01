@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Header.css";
+import "../header/Header.css";
+import "./LoggedHeader.css";
 
-function Header() {
+function LoggedHeader() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  //This would come from the context
+  const user = { name: "Justina Rey" };
+  const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : "?";
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -74,7 +79,7 @@ function Header() {
                       setMenuOpen(false);
                     }}
                   >
-                    Registro
+                    Mis cursos
                   </button>
                 </li>
 
@@ -86,45 +91,26 @@ function Header() {
                       setMenuOpen(false);
                     }}
                   >
-                    Preguntas Frecuentes
-                  </button>
-                  </li>
-                  {/* <ul className="sub-menu">
-                    <li>
-                      <button
-                        onClick={() => {
-                          navigate("/meetings");
-                          setMenuOpen(false);
-                        }}
-                      >
-                        Upcoming Meetings
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="nav-link"
-                        onClick={() => {
-                          navigate("/meetings");
-                          setMenuOpen(false);
-                        }}
-                      >
-                        Meeting Details
-                      </button>
-                    </li>
-                  </ul> */}
-                {/* </li> */}
-                <li>
-                  <button
-                    className="nav-link"
-                    onClick={() => {
-                      navigate("/contact");
-                      setMenuOpen(false);
-                    }}
-                  >
-                    Contacto
+                    Cerrar sesión
                   </button>
                 </li>
+                {menuOpen ? (
+                  <li className="has-sub">
+                    <button
+                      className="nav-link"
+                      onClick={() => {
+                        navigate("/myProfile");
+                        setMenuOpen(false);
+                      }}
+                    >
+                      Mi perfil
+                    </button>
+                  </li>
+                ) : (
+                  <li className="user-avatar">{userInitial}</li>
+                )}
               </ul>
+
               <button
                 className={`menu-trigger ${menuOpen ? "active" : ""}`}
                 onClick={toggleMenu}
@@ -139,4 +125,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default LoggedHeader;
