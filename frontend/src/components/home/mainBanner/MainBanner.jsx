@@ -27,7 +27,7 @@ function MainBanner() {
                   con un enfoque cercano y amigable que te ayude a sentirte
                   acompañado y seguro mientras avanzás en tu carrera.
                 </p>
-                <div className="main-button-blue">
+                <div className="main-button-green">
                     <button
                       onClick={() => setShowLogin(true)}
                     >

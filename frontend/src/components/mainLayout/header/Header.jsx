@@ -2,11 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
 
-
-//FALTA AGREGAR:
-// - Cambio cuando el usuario tenga la sesión iniciada (nuevo componente o mismo con condiciones?)
-//      - Avatar de usuario
-//      - Desplegable cuando se apriete (Mi perfil y Cerrar Sesión)
 function Header() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -37,107 +32,76 @@ function Header() {
     <header className={`header-area ${isSticky ? "header-sticky" : ""}`}>
       <div className="container">
         <div className="row">
-          <div className="col-12">
-            <nav className="main-nav">
-              <button
-                className="logo"
-                onClick={() => {
-                  navigate("/");
-                  setMenuOpen(false);
-                }}
-              >
-                EduConecta
-              </button>
-              <ul className={`nav ${menuOpen ? "active" : ""}`}>
-                <li>
-                  <button
-                    className="nav-link"
-                    onClick={() => {
-                      navigate("/");
-                      setMenuOpen(false);
-                    }}
-                  >
-                    Inicio
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="nav-link"
-                    onClick={() => {
-                      navigate("/courses");
-                      setMenuOpen(false);
-                    }}
-                  >
-                    Cursos
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="nav-link"
-                    onClick={() => {
-                      navigate("/register");
-                      setMenuOpen(false);
-                    }}
-                  >
-                    Registro
-                  </button>
-                </li>
+          <nav className="main-nav">
+            <button
+              className="logo"
+              onClick={() => {
+                navigate("/");
+                setMenuOpen(false);
+              }}
+            >
+              EduConecta
+            </button>
+            <ul className={`nav ${menuOpen ? "active" : ""}`}>
+              <li>
+                <button
+                  onClick={() => {
+                    navigate("/");
+                    setMenuOpen(false);
+                  }}
+                >
+                  Inicio
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    navigate("/courses");
+                    setMenuOpen(false);
+                  }}
+                >
+                  Cursos
+                </button>
+              </li>
 
-                <li className="has-sub">
-                  <button
-                    className="nav-link"
-                    onClick={() => {
-                      navigate("/applyNow");
-                      setMenuOpen(false);
-                    }}
-                  >
-                    Preguntas Frecuentes
-                  </button>
-                  </li>
-                  {/* <ul className="sub-menu">
-                    <li>
-                      <button
-                        onClick={() => {
-                          navigate("/meetings");
-                          setMenuOpen(false);
-                        }}
-                      >
-                        Upcoming Meetings
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="nav-link"
-                        onClick={() => {
-                          navigate("/meetings");
-                          setMenuOpen(false);
-                        }}
-                      >
-                        Meeting Details
-                      </button>
-                    </li>
-                  </ul> */}
-                {/* </li> */}
-                <li>
-                  <button
-                    className="nav-link"
-                    onClick={() => {
-                      navigate("/contact");
-                      setMenuOpen(false);
-                    }}
-                  >
-                    Contacto
-                  </button>
-                </li>
-              </ul>
-              <button
-                className={`menu-trigger ${menuOpen ? "active" : ""}`}
-                onClick={toggleMenu}
-              >
-                <span></span>
-              </button>
-            </nav>
-          </div>
+              <li>
+                <button
+                  onClick={() => {
+                    navigate("/applyNow");
+                    setMenuOpen(false);
+                  }}
+                >
+                  Preguntas Frecuentes
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    navigate("/contact");
+                    setMenuOpen(false);
+                  }}
+                >
+                  Contacto
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    navigate("/register");
+                    setMenuOpen(false);
+                  }}
+                >
+                  Registro
+                </button>
+              </li>
+            </ul>
+            <button
+              className={`menu-trigger ${menuOpen ? "active" : ""}`}
+              onClick={toggleMenu}
+            >
+              <span></span>
+            </button>
+          </nav>
         </div>
       </div>
     </header>
