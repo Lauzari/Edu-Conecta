@@ -10,6 +10,7 @@ function MainLayout() {
 
   return (
     <div className="app-container d-flex flex-column min-vh-100">
+      {/* It changes the header based on if the user is logged or not */}
       {isLogged ? <LoggedHeader /> : <Header />}
       <Outlet />
       <Footer />

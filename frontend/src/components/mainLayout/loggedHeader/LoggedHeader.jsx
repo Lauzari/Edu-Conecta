@@ -8,7 +8,7 @@ function LoggedHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   //This would come from the context
-  const user = { name: "Justina Rey" };
+  const user = { name: "Pedro Pérez", role: "Admin" };
   const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : "?";
 
   const toggleMenu = () => {
@@ -37,7 +37,6 @@ function LoggedHeader() {
     <header className={`header-area ${isSticky ? "header-sticky" : ""}`}>
       <div className="container">
         <div className="row">
-          <div className="col-12">
             <nav className="main-nav">
               <button
                 className="logo"
@@ -71,19 +70,41 @@ function LoggedHeader() {
                     Cursos
                   </button>
                 </li>
-                <li>
+                {user.role == "Admin" ? <li>
                   <button
                     className="nav-link"
                     onClick={() => {
-                      navigate("/register");
+                      navigate("/dashboard");
+                      setMenuOpen(false);
+                    }}
+                  >
+                    Dashboard
+                  </button>
+                </li> : <li>
+                  <button
+                    className="nav-link"
+                    onClick={() => {
+                      navigate("/myCourses");
                       setMenuOpen(false);
                     }}
                   >
                     Mis cursos
                   </button>
-                </li>
+                </li>}
 
-                <li className="has-sub">
+                {user.role == "Student" ? <li>
+                  <button
+                    className="nav-link"
+                    onClick={() => {
+                      navigate("/professors");
+                      setMenuOpen(false);
+                    }}
+                  >
+                    Profesores
+                  </button>
+                </li> : ""}
+
+                <li>
                   <button
                     className="nav-link"
                     onClick={() => {
@@ -95,7 +116,7 @@ function LoggedHeader() {
                   </button>
                 </li>
                 {menuOpen ? (
-                  <li className="has-sub">
+                  <li>
                     <button
                       className="nav-link"
                       onClick={() => {
@@ -120,7 +141,6 @@ function LoggedHeader() {
             </nav>
           </div>
         </div>
-      </div>
     </header>
   );
 }

@@ -10,6 +10,6 @@
   font-weight: bold;
   font-size: 18px;
   cursor: pointer;
-  margin-left: 15px;
-  margin-top: 5px;
+  margin-left: 10px;
+  padding-left: 0!important;
 }
