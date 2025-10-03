@@ -1,0 +1,53 @@
+
+.dashboard-header {
+    background: url("/images/heading-bg.jpg") no-repeat center center;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-container {
+  background: url("/images/meetings-bg.jpg") no-repeat center center;
+  width: 100%;
+}
+
+.main-container {
+    display: flex;
+  min-height: 100vh;
+}
+
+.dashboard-sidebar {
+  width: 220px;
+  background: #003366;
+  color: white;
+  padding: 20px;
+}
+
+.dashboard-sidebar h2 {
+  margin-bottom: 1rem;
+}
+
+.dashboard-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.dashboard-sidebar li {
+  margin: 10px 0;
+}
+
+.dashboard-sidebar a {
+  color: white;
+  text-decoration: none;
+}
+
+.dashboard-sidebar a:hover {
+  text-decoration: underline;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 20px;
+}
