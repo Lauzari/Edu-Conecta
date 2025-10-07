@@ -10,7 +10,7 @@
 }
 
 .dashboard-header {
-  background: url("/images/dashboard2.jpg") no-repeat center center;
+  background: url("/images/dashboard.jpg") no-repeat center center;
   background-size: cover;
   min-height: 320px;
   display: flex;
