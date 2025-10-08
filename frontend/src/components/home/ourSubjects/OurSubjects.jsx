@@ -25,33 +25,6 @@ function OurSubjects() {
     ],
   };
 
-  // Materias (simulación antes de la BBDD)
-/*  const courses = [
-    {
-      img: "/images/course-01.jpg",
-      title: "Programación II",
-      date: "Nov 30",
-      description: "Curso avanzado de programación estructurada y orientada a objetos.",
-    },
-    {
-      img: "/images/course-02.jpg",
-      title: "Organización Empresarial",
-      date: "Dic 05",
-      description: "Principios de administración y estructuras organizacionales.",
-    },
-    {
-      img: "/images/course-03.jpg",
-      title: "Arquitectura y Sistemas Operativos",
-      date: "Dic 12",
-      description: "Estudio de arquitecturas de hardware y fundamentos de sistemas operativos.",
-    },
-    {
-      img: "/images/course-04.jpg",
-      title: "Inglés II",
-      date: "Dic 20",
-      description: "Curso intermedio de inglés técnico y académico.",
-    },
-  ];*/
 
   return (
     <section className="our-subjects" id="courses">

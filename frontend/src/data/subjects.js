@@ -18,3 +18,4 @@ const subjects = [
 ];
 
 export default subjects;
+// quitar fecha agrgar año y duracion 
