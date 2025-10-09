@@ -1,0 +1,27 @@
+.pagination .page-item .page-link {
+  color: #039a51;
+  border-color: #039a51;
+}
+.pagination .page-item.active .page-link {
+  background-color: #039a51;
+  border-color: #039a51;
+  color: white;
+}
+.pagination .page-item .page-link:hover {
+  background-color: #039a51;
+  border-color: #039a51;
+  color: white;
+}
+
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+  color: #039a51;
+  border-color: #039a51;
+}
+
+.pagination .page-item:first-child .page-link:hover,
+.pagination .page-item:last-child .page-link:hover {
+  background-color: #039a51;
+  color: white;
+  border-color: #039a51;
+}

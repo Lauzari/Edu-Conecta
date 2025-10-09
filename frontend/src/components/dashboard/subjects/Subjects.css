@@ -1,0 +1,17 @@
+.create-subject-btn {
+  font-size: 14px;
+  background-color: #039a51!important;
+}
+
+@media (max-width: 576px) {
+  .create-subject-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 18px;
+  }
+  .create-subject-btn::after {
+    content: "+";
+  }
+  .create-subject-btn span {
+    display: none;
+  }
+}
