@@ -1,0 +1,220 @@
+.profile-card {
+  width: 1092px;
+  background-color: #f8fbff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin: 20px auto;
+  position: relative;
+  font-family: "Arial", sans-serif;
+  margin-top: 200px;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  width: 350px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 10;
+  padding: 15px;
+
+}
+
+.notification-dropdown h5{
+  text-align: center;
+  font-size: 17px;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item.visto {
+  background-color: #f0f0f0;
+}
+
+.notification-item.no-visto {
+  background-color: #ffffff;
+  font-weight: 500;
+}
+
+.estado {
+  color: #777;
+  font-size: 0.9em;
+  margin-left: 100px;
+}
+
+.notification-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #1a3c8b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.notification-btn .bell-icon {
+  font-size: 1rem;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+.profile-avatar {
+  position: relative;
+}
+
+.avatar-icon {
+  font-size: 120px;
+  color: #2b4a8a;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+}
+
+.edit-avatar {
+  position: absolute;
+  bottom: 0;
+  right: -10px;
+  background: white;
+  color: #2b4a8a;
+  /* border-radius: 50%; */
+  border: 1px solid #ccc;
+  padding: 3px;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.profile-avatar:hover .edit-avatar {
+  opacity: 1;
+}
+
+.profile-details {
+  flex-grow: 1;
+}
+
+.label {
+  color: gray;
+  font-size: 0.85rem;
+  margin-bottom: 2px;
+}
+
+.name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.edit-icon {
+  color: #1a3c8b;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* ✅ aparece solo cuando pasás el mouse por el nombre */
+.name:hover .edit-icon {
+  opacity: 1;
+}
+
+.email {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.edit-password {
+  display: inline-block;
+  margin-top: 10px;
+  color: #365dd1;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.edit-password:hover {
+  text-decoration: underline;
+}
+
+.course-card{
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    margin: 20px auto;
+    position: relative;
+    font-family: "Arial", sans-serif;
+    margin-top: 30px;
+    width: 1092px;
+    height: 400px;
+}
+.course-card h3{
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold
+}
+
+
+.course-card-content{
+    display: flex;
+    height: 182px;
+    width: 1030px;
+    gap: 20px;
+}
+
+
+.course-card-item{
+    border: 1px solid #ccc;
+    height: 300px;
+}
+
+.course-card-content p{
+    font-size: 16px;
+    color: gray;
+    text-align: center;
+} 
+
+
+.delete-btn {
+  position: absolute;
+  /* top: 8px;
+  right: 8px; */
+  background: #FFFFFF;
+  color: #c92a36;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #c92a36;
+}
