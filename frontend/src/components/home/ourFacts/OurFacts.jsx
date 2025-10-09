@@ -17,8 +17,8 @@ function OurFacts() {
               <div className="row">
                 <div className="col-12">
                   <div className="count-area-content percentage">
-                    <div className="count-digit">94</div>
-                    <div className="count-title">estudiantes exitosos</div>
+                    <div className="count-digit">100</div>
+                    <div className="count-title">clases virtuales</div>
                   </div>
                 </div>
                 <div className="col-12">
