@@ -17,7 +17,7 @@ function PasswordModal({ show, handleClose }) {
             setErrors(validationErrors);
             return;
         }
-
+        
         console.log("Guardando nueva contraseña...");
         handleClose();
     };

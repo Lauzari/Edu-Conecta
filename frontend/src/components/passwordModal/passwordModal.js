@@ -13,3 +13,4 @@ export function validatePasswordFields(current, next) {
 
   return errors;
 }
+
