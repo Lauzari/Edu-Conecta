@@ -94,7 +94,7 @@ function ApplyNow() {
                   <p>
                     Para poder formar parte de nuestro cuerpo docente, primero
                     debes crear una cuenta como estudiante y luego rellenar el{" "}
-                    <Link to="/otra-pagina">siguiente formulario</Link> para que
+                    <Link to="/form-professor">siguiente formulario</Link> para que
                     nuestro comité verifique tu perfil.
                   </p>
                   <div className="main-button-green">

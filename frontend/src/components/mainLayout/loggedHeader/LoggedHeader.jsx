@@ -96,7 +96,7 @@ function LoggedHeader() {
                   <button
                     className="nav-link"
                     onClick={() => {
-                      navigate("/professors");
+                      navigate("/form-professor");
                       setMenuOpen(false);
                     }}
                   >
@@ -120,7 +120,7 @@ function LoggedHeader() {
                     <button
                       className="nav-link"
                       onClick={() => {
-                        navigate("/myProfile");
+                        navigate("/user-profile");
                         setMenuOpen(false);
                       }}
                     >
@@ -128,7 +128,10 @@ function LoggedHeader() {
                     </button>
                   </li>
                 ) : (
-                  <li className="user-avatar">{userInitial}</li>
+                  <button onClick={() => {
+                        navigate("/user-profile");
+                        setMenuOpen(false);
+                      }} className="user-avatar">{userInitial}</button>
                 )}
               </ul>
 
