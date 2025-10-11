@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import subjects from "../../data/subjects.js";
-
+import "./SubjectDetail.css";
 function SubjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ function SubjectDetail() {
               <div className="caption">
                 <h2>{subject.title}</h2>
 
-                <h6 style={{ marginTop: "10px" }}>📅 Fecha de inicio: {subject.date}</h6>
+                
 
                 <p>{subject.description}</p>
 
@@ -39,7 +39,7 @@ function SubjectDetail() {
                 <div className="main-button-red" style={{ marginTop: "20px" }}>
                   <div className="scroll-to-section">
                     <button onClick={() => navigate(`/inscripcion/${subject.id}`)}>
-                      Inscripcion
+                      Cursos disponibles para esta materia
                     </button>
                   </div>
                 </div>

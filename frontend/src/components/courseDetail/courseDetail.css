@@ -1,0 +1,150 @@
+/* ----- Heading Page ----- */
+.heading-page {
+  padding: 60px 0 20px 0;
+  background: #f2f2f2;
+  text-align: center;
+}
+
+.heading-page h6 {
+  font-size: 16px;
+  color: #888;
+  margin-bottom: 5px; 
+  text-transform: uppercase;
+}
+
+.heading-page h2 {
+  font-size: 36px;
+  color: #333;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+/* ----- Card Container ----- */
+.meeting-single-item {
+  background: #fff;
+  border-radius: 8px;
+  margin: 10px auto 20px auto; 
+  max-width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.meeting-single-item .thumb {
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+}
+
+.meeting-single-item .thumb img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+  transition: none; 
+}
+
+/* ----- Card Content ----- */
+.down-content {
+  padding: 25px;
+}
+
+.down-content h4 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.down-content p {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.down-content .description {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.down-content .course-info p {
+  margin-bottom: 5px;
+}
+
+.down-content .course-info strong {
+  font-weight: 600;
+}
+
+/* ----- Buttons ----- */
+.course-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.course-buttons .main-button-red {
+  background-color: #004494 !important;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  min-width: 150px;
+}
+
+.course-buttons .main-button-red:hover {
+  background-color: #003377 !important;
+  text-decoration: none;
+  color: #fff;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 992px) {
+  .heading-page h2 {
+    font-size: 28px;
+  }
+
+  .down-content h4 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heading-page {
+    padding: 50px 0 15px 0; 
+  }
+
+  .down-content h4 {
+    font-size: 20px;
+  }
+
+  .down-content p {
+    font-size: 13px;
+  }
+
+  .meeting-single-item {
+    max-width: 95%;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .down-content {
+    padding: 15px;
+  }
+
+  .down-content h4 {
+    font-size: 18px;
+  }
+
+  .course-buttons .main-button-red {
+    width: 100%;
+    padding: 12px 0;
+  }
+}

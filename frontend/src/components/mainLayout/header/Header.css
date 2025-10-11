@@ -80,6 +80,7 @@
   height: 40px;
   border: transparent;
   letter-spacing: 1px;
+  background-color: transparent;
 }
 
 .header-area .main-nav .nav li:hover button,
