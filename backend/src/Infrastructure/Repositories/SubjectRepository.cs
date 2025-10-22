@@ -7,9 +7,9 @@ namespace Infrastructure.Repositories
 {
     public class SubjectRepository : ISubjectRepository
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public SubjectRepository(AppDbContext context)
+        public SubjectRepository(ApplicationDbContext context)
         {
             _context = context;
         }

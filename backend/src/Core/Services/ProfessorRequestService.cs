@@ -1,20 +1,19 @@
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces;
-using Core.Dtos;
-using Infrastructure.Data;
+
+
 
 namespace Core.Services
 {
     public class ProfessorRequestService : IProfessorRequestService
     {
         private readonly IProfessorRequestRepository _repository;
-        private readonly AppDbContext _context;
-
-        public ProfessorRequestService(IProfessorRequestRepository repository, AppDbContext context)
+       
+        public ProfessorRequestService(IProfessorRequestRepository repository)
         {
             _repository = repository;
-            _context = context;
+            
         }
 
         public async Task<IEnumerable<ProfessorRequest>> GetPendingRequestsAsync()
@@ -22,19 +21,19 @@ namespace Core.Services
             return await _repository.GetPendingAsync();
         }
 
-        public async Task SubmitRequestAsync(string userId, ProfessorRequestCreateDto requestDto)
+        public async Task SubmitRequestAsync(string userId, Subject subject, string description)
         {
             var newRequest = new ProfessorRequest
             {
                 UserId = userId,
-                Subject = requestDto.Subject,
-                Description = requestDto.Description,
+                Subject = subject,
+                Description = description,
                 Status = RequestStatus.Pending,
-                CreatedAt = DateTime.UtcNow
+            
             };
 
             await _repository.AddAsync(newRequest);
-            await _context.SaveChangesAsync();
+          
         }
 
         public async Task UpdateRequestStatusAsync(int id, RequestStatus status)
@@ -44,10 +43,10 @@ namespace Core.Services
                 throw new KeyNotFoundException($"No se encontró la solicitud con ID {id}");
 
             request.Status = status;
-            request.UpdatedAt = DateTime.UtcNow;
+          
 
             await _repository.UpdateAsync(request);
-            await _context.SaveChangesAsync();
+           
         }
     }
 }

@@ -1,7 +1,9 @@
 using Core.Services;
-using Core.Dtos;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Core.Entities;
+using Web.Models.Requests;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -24,21 +26,15 @@ public class ProfessorRequestController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Submit([FromBody] ProfessorRequestCreateDto dto)
+    public async Task<IActionResult> Submit(ProfessorRequestDto dto)    
     {
         var userId = User.FindFirst("sub")?.Value;
         if (userId == null)
             return Unauthorized();
 
-        await _service.SubmitRequestAsync(userId, dto);
+        await _service.SubmitRequestAsync(dto.UserId, dto.Subject, dto.Description);
         return CreatedAtAction(nameof(Submit), null);
     }
 
-    [HttpPut("{id}/status")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateStatus(int id, [FromBody] ProfessorRequestStatusUpdateDto statusDto)
-    {
-        await _service.UpdateRequestStatusAsync(id, statusDto.Status);
-        return NoContent();
-    }
+  
 }

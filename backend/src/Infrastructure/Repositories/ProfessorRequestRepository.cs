@@ -8,9 +8,9 @@ namespace Infrastructure.Repositories
 {
     public class ProfessorRequestRepository : IProfessorRequestRepository
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public ProfessorRequestRepository(AppDbContext context)
+        public ProfessorRequestRepository(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -18,7 +18,7 @@ namespace Infrastructure.Repositories
         public async Task AddAsync(ProfessorRequest request)
         {
             await _context.ProfessorRequests.AddAsync(request);
-            // ❌ No SaveChangesAsync
+           
         }
 
         public async Task DeleteAsync(int id)
@@ -26,7 +26,7 @@ namespace Infrastructure.Repositories
             var existing = await _context.ProfessorRequests.FindAsync(id);
             if (existing != null)
                 _context.ProfessorRequests.Remove(existing);
-            // ❌ No SaveChangesAsync
+            
         }
 
         public async Task<IEnumerable<ProfessorRequest>> GetAllAsync()
@@ -50,7 +50,7 @@ namespace Infrastructure.Repositories
         public async Task UpdateAsync(ProfessorRequest request)
         {
             _context.ProfessorRequests.Update(request);
-            // ❌ No SaveChangesAsync
+            
         }
     }
 }

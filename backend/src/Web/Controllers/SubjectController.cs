@@ -1,7 +1,10 @@
 using Core.Services;
-using Core.Dtos;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Models.Requests;
+
+
 
 [ApiController]
 [Route("api/[controller]")]
@@ -31,17 +34,17 @@ public class SubjectController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Create([FromBody] SubjectCreateDto dto)
+    public async Task<IActionResult> Create([FromBody] SubjectRequestDto dto)
     {
-        var created = await _subjectService.CreateAsync(dto);
+        var created = await _subjectService.CreateAsync(dto.Name, dto.Year, dto.Description, dto.Duration);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Update(int id, [FromBody] SubjectUpdateDto dto)
+    public async Task<IActionResult> Update(int id, [FromBody] SubjectRequestDto dto)
     {
-        var success = await _subjectService.UpdateAsync(id, dto);
+        var success = await _subjectService.UpdateAsync(id,dto.Name, dto.Year, dto.Description, dto.Duration);
         if (!success) return NotFound();
         return NoContent();
     }
