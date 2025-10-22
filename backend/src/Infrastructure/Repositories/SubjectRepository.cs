@@ -7,48 +7,46 @@ namespace Infrastructure.Repositories
 {
     public class SubjectRepository : ISubjectRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public SubjectRepository(ApplicationDbContext context)
+        public SubjectRepository(AppDbContext context)
         {
             _context = context;
         }
 
+        public async Task AddAsync(Subject subject)
+        {
+            await _context.Subjects.AddAsync(subject);
+            
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var existing = await _context.Subjects.FindAsync(id);
+            if (existing != null)
+                _context.Subjects.Remove(existing);
+           
+        }
+
         public async Task<IEnumerable<Subject>> GetAllAsync()
         {
-            return await _context.Subjects.ToListAsync();
+            return await _context.Subjects.AsNoTracking().ToListAsync();
         }
 
         public async Task<Subject?> GetByIdAsync(int id)
         {
-            return await _context.Subjects.FindAsync(id);
-        }
-
-        public async Task AddAsync(Subject subject)
-        {
-            _context.Subjects.Add(subject);
-            await _context.SaveChangesAsync();
+            return await _context.Subjects.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task UpdateAsync(Subject subject)
         {
             _context.Subjects.Update(subject);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var subject = await _context.Subjects.FindAsync(id);
-            if (subject != null)
-            {
-                _context.Subjects.Remove(subject);
-                await _context.SaveChangesAsync();
-            }
+           
         }
 
         public async Task<bool> ExistsAsync(int id)
         {
-            return await _context.Subjects.AnyAsync(s => s.SubjectId == id);
+            return await _context.Subjects.AnyAsync(s => s.Id == id);
         }
     }
 }
