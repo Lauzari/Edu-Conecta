@@ -4,7 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Core.Enums;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Data
 {
     public class ProfessorRequestRepository : IProfessorRequestRepository
     {

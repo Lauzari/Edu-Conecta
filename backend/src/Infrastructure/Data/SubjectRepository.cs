@@ -3,7 +3,7 @@ using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Data
 {
     public class SubjectRepository : ISubjectRepository
     {

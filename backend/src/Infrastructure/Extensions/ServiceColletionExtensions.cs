@@ -1,6 +1,6 @@
 using Core.Interfaces;
 using Core.Services;
-using Infrastructure.Repositories;
+using Infrastructure.Data;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Extensions
@@ -12,10 +12,16 @@ namespace Infrastructure.Extensions
             // Repositorios
             services.AddScoped<IProfessorRequestRepository, ProfessorRequestRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IClassRepository, ClassRepository>();
+
 
             // Servicios
             services.AddScoped<IProfessorRequestService, ProfessorRequestService>();
             services.AddScoped<ISubjectService, SubjectService>();
+            services.AddScoped<IUserService, UserService>();
+
+
 
             return services;
         }

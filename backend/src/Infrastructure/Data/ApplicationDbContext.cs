@@ -15,6 +15,8 @@ namespace Infrastructure.Data
         // Tablas de la base de datos
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<ProfessorRequest> ProfessorRequests { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Class> Classes { get; set; }
 
         // Configuración adicional (relaciones, restricciones, etc.)
         protected override void OnModelCreating(ModelBuilder modelBuilder)

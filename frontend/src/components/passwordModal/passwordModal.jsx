@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { validatePasswordFields } from './password.js';
+import { validatePasswordFields } from './passwordModal';
 
 function PasswordModal({ show, handleClose }) {
 
