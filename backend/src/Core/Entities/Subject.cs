@@ -9,6 +9,6 @@ namespace Core.Entities
         public int Duration { get; set; }
 
         // Relationships
-       // public ICollection<Course>? Courses { get; set; }
+       public ICollection<Class>? Classes { get; set; }
     }
 }

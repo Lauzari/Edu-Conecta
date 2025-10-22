@@ -6,11 +6,10 @@ namespace Core.Entities;
 
 public class User
 {
-    // UNIÓN CON PROFESSOR REQUEST (FALTA AGREGAR)
-    // public virtual ICollection<ProfessorRequest> Requests { get; set; } = new List<ProfessorRequest>();
 
-    // UNIÓN CON COURSE (FALTA AGREGAR)
-    // public ICollection<Course> Courses { get; set; } = new List<Course>();
+    public virtual ICollection<ProfessorRequest> Requests { get; set; } = new List<ProfessorRequest>();
+
+    public ICollection<Class> Classes { get; set; } = new List<Class>();
     // RECORDATORIO: cuando un usuario cambie de student a professor, hay que borrar
     // la lista de cursos y cuando un user se quiera inscribir, hay que verificar que
     // sea de tipo Student
