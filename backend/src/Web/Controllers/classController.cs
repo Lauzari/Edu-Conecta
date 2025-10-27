@@ -1,6 +1,9 @@
 using Core.Entities;
 using Core.Interfaces;
+using Core.Services;
+using Web.Models;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace Web.Controllers
 {
@@ -8,42 +11,47 @@ namespace Web.Controllers
     [Route("[controller]")]
     public class ClassController : ControllerBase
     {
-        private readonly IClassRepository _classRepository;
+        private readonly ClassService _classService;
 
-        public ClassController(IClassRepository classRepository)
+        public ClassController(ClassService classService)
         {
-            _classRepository = classRepository;
+            _classService = classService;
         }
 
         [HttpGet("AllClasses")]
         public ActionResult<IEnumerable<Class>> GetAll()
         {
-            return Ok(_classRepository.GetAll());
+            return Ok(_classService.GetAll());
         }
 
         [HttpGet("GetClass")]
         public ActionResult<Class> GetById([FromQuery] int id)
         {
-            var classItem = _classRepository.GetById(id);
-            if (classItem == null)
-                return NotFound($"No se encontró la clase con ID {id}.");
-
-            return Ok(classItem);
+            return Ok(_classService.GetById(id));
         }
 
         [HttpPost("CreateClass")]
-        public ActionResult<Class> Create([FromBody] Class newClass)
+        public ActionResult<ClassDto> Create([FromBody] ClassDto newClassDto)
         {
-            var created = _classRepository.Create(newClass);
-            return CreatedAtAction(nameof(GetById), new { id = created.classId }, created);
+            var newClass = new Class
+            {
+                subjectId = newClassDto.subjectId,
+                classDescription = newClassDto.classDescription,
+                teacherId = newClassDto.teacherId,
+                zoomLink = newClassDto.zoomLink,
+                classShift = newClassDto.classShift,
+                startDate = newClassDto.startDate,
+                endDate = newClassDto.endDate
+            };
+
+            var created = _classService.Create(newClass);
+            return CreatedAtAction(nameof(GetById), new { id = created.classId }, ClassDto.Create(created));
         }
 
         [HttpPut("UpdateClass")]
         public ActionResult<Class> Update([FromBody] Class updatedClass)
         {
-            var result = _classRepository.Update(updatedClass);
-            if (result == null)
-                return NotFound($"No se encontró la clase con ID {updatedClass.classId}.");
+            var result = _classService.Update(updatedClass);
 
             return Ok(result);
         }
@@ -51,7 +59,7 @@ namespace Web.Controllers
         [HttpDelete("Delete")]
         public IActionResult Delete([FromQuery] int id)
         {
-            _classRepository.Delete(id);
+            _classService.Delete(id);
             return NoContent();
         }
     }
