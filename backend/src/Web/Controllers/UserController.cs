@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Core.Services;
 using Microsoft.AspNetCore.Authorization;
-using Core.Models;
-using Core.Models.Requests;
+using Web.Models;
+using Models.Requests;
 
 namespace Web.Controllers;
 
@@ -12,9 +12,9 @@ namespace Web.Controllers;
 public class UserController : ControllerBase
 {
 
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
 
-    public UserController(UserService userService)
+    public UserController(IUserService userService)
     {
         _userService = userService;
 

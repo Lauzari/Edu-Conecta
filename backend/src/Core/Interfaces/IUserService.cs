@@ -13,6 +13,10 @@ public interface IUserService
 
     public List<User> GetAllUsersInfo();
 
+    public User? UpdateUser(int id, string email, string name, DateOnly birthDate, UserType userType);
+
     public void DeleteUser(int id);
+
+    public User PromoteToProfessor(int id);
 
 }

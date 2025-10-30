@@ -15,42 +15,40 @@ namespace Infrastructure.Data
             _context = context;
         }
 
-        public async Task AddAsync(ProfessorRequest request)
+        public async Task<ProfessorRequest> AddAsync(ProfessorRequest request)
         {
             await _context.ProfessorRequests.AddAsync(request);
-           
+            _context.SaveChanges();
+            return request;
+        }
+        public async Task<IEnumerable<ProfessorRequest>> GetAllAsync()
+        {
+            return await _context.ProfessorRequests.AsNoTracking().ToListAsync();
+        }
+        public async Task<ProfessorRequest?> GetByIdAsync(int id)
+        {
+            return await _context.ProfessorRequests.FirstOrDefaultAsync(r => r.Id == id);
+        }
+        public async Task<ProfessorRequest?> GetByApplicantIdAndStatusAsync(int applicantId, RequestStatus status)
+        {
+            return await _context.ProfessorRequests
+                .AsNoTracking() //data only for reading
+                .FirstOrDefaultAsync(r => r.ApplicantId == applicantId && r.Status == status);
         }
 
+        public async Task<ProfessorRequest> UpdateAsync(ProfessorRequest request)
+        {
+            _context.ProfessorRequests.Update(request);
+            _context.SaveChanges();
+            return request;
+        }
         public async Task DeleteAsync(int id)
         {
             var existing = await _context.ProfessorRequests.FindAsync(id);
             if (existing != null)
                 _context.ProfessorRequests.Remove(existing);
-            
+
         }
 
-        public async Task<IEnumerable<ProfessorRequest>> GetAllAsync()
-        {
-            return await _context.ProfessorRequests.AsNoTracking().ToListAsync();
-        }
-
-        public async Task<ProfessorRequest?> GetByIdAsync(int id)
-        {
-            return await _context.ProfessorRequests.FirstOrDefaultAsync(r => r.Id == id);
-        }
-
-        public async Task<IEnumerable<ProfessorRequest>> GetPendingAsync()
-        {
-            return await _context.ProfessorRequests
-                .AsNoTracking()
-                .Where(r => r.Status == RequestStatus.Pending)
-                .ToListAsync();
-        }
-
-        public async Task UpdateAsync(ProfessorRequest request)
-        {
-            _context.ProfessorRequests.Update(request);
-            
-        }
     }
 }

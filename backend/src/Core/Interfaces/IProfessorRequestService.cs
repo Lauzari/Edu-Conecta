@@ -1,13 +1,17 @@
 
 using Core.Entities;
+using Core.Enums;
 
 
 namespace Core.Interfaces
 {
     public interface IProfessorRequestService
     {
-        Task<IEnumerable<ProfessorRequest>> GetPendingRequestsAsync();
-        Task SubmitRequestAsync(string userId, Subject subject, string description);
-       // Task UpdateRequestStatusAsync(int id, RequestStatus status);
+        Task<IEnumerable<ProfessorRequest>> GetRequestsAsync();
+        Task<ProfessorRequest> AddRequestAsync(int id, string description, int applicantId);
+        Task<ProfessorRequest> GetRequestById(int id);
+        Task<ProfessorRequest> AcceptRequestStatusAsync(int requestId, int applicantId);
+        Task<ProfessorRequest> DeclineRequestStatusAsync(int requestId, int applicantId);
+        
     }
 }

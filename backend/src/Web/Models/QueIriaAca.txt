@@ -1,1 +1,0 @@
-Acá van los DTO de salida como BankAccountDto

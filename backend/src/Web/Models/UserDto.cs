@@ -1,6 +1,6 @@
 using Core.Entities;
 
-namespace Core.Models;
+namespace Web.Models;
 
 public record UserDto(
     int Id,

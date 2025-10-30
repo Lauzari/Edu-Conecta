@@ -9,9 +9,9 @@ public class User
 
     public virtual ICollection<ProfessorRequest> Requests { get; set; } = new List<ProfessorRequest>();
 
-    public ICollection<Class> Classes { get; set; } = new List<Class>();
+    // public ICollection<Class> Classes { get; set; } = new List<Class>();
     // RECORDATORIO: cuando un usuario cambie de student a professor, hay que borrar
-    // la lista de cursos y cuando un user se quiera inscribir, hay que verificar que
+    // la lista de cursos y cuando un user se quiera inscribir a una clase, hay que verificar que
     // sea de tipo Student
 
 
@@ -77,10 +77,9 @@ public class User
 
     public void ChangeRole(UserType newRole)
     {
-        if (UserType == UserType.Student && newRole != UserType.Student)
+        // if (UserType == UserType.Student && newRole != UserType.Student)
             // Courses.Clear();
             // elimina cursos que el usuario estaba tomando
-
-            UserType = newRole;
+        UserType = newRole;
     }
 }

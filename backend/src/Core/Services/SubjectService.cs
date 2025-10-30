@@ -9,24 +9,23 @@ namespace Core.Services
     {
         private readonly ISubjectRepository _repository;
      
-
         public SubjectService(ISubjectRepository repository)
         {
             _repository = repository;
            
         }
-
         public async Task<IEnumerable<Subject>> GetAllAsync()
         {
             return await _repository.GetAllAsync();
         }
 
-        public async Task<Subject?> GetByIdAsync(int id)
+        public async Task<Subject> GetByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            var subject = await _repository.GetByIdAsync(id) ?? throw new Exception("Materia no encontrada.");
+            return subject;
         }
 
-        public async Task<Subject> CreateAsync( string Name,int Year, string Description , int Duration)
+        public async Task<Subject> CreateAsync(string Name, int Year, string Description , int Duration)
         
         {
             var newSubject = new Subject
@@ -42,29 +41,28 @@ namespace Core.Services
             return newSubject;
         }
 
-        public async Task<bool> UpdateAsync(int id,string Name,int Year, string Description , int Duration) 
+        public async Task<Subject> UpdateAsync(int id, int subjectId, string Name,int Year, string Description , int Duration)
         {
-            var existing = await _repository.GetByIdAsync(id);
-            if (existing == null) return false;
+            if (id != subjectId)
+            {
+                throw new ArgumentException("El ID de la ruta no coincide con el del cuerpo.");
+            }
+            var subject = await _repository.GetByIdAsync(subjectId) ?? throw new Exception("Materia no encontrada.");
+            
+            subject.Name = Name;
+            subject.Description = Description;
+            subject.Year = Year;
+            subject.Duration = Duration;
 
-            existing.Name = Name;
-            existing.Description = Description;
-            existing.Year = Year;
-            existing.Duration = Duration;
-
-            await _repository.UpdateAsync(existing);
+            await _repository.UpdateAsync(subject);
           
-            return true;
+            return subject;
         }
 
-        public async Task<bool> DeleteAsync(int id )
+        public async Task DeleteAsync(int id)
         {
-            var exists = await _repository.ExistsAsync(id);
-            if (!exists) return false;
-
-            await _repository.DeleteAsync(id);
-         
-            return true;
+            var subject = await _repository.GetByIdAsync(id) ?? throw new Exception("No se encontró ninguna materia con ese ID.");
+            await _repository.DeleteAsync(subject);
         }
     }
 }

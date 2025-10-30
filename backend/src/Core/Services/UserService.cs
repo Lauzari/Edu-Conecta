@@ -57,12 +57,26 @@ public class UserService : IUserService
     {
         var user = _userRepository.GetById(id);
         if (user == null) throw new Exception("Usuario no encontrado.");
-        
+
         user.UpdateFields(email, name, birthDate, userType);
         _userRepository.Update(user);
 
         return user;
     }
 
+    public User PromoteToProfessor(int id)
+    {
+        var user = _userRepository.GetById(id);
+        if (user == null)
+            throw new Exception("Usuario no encontrado.");
 
+        if (user.UserType != UserType.Student)
+            throw new InvalidOperationException("Solo los usuarios con rol 'Student' pueden convertirse en 'Professor'.");
+
+        user.ChangeRole(UserType.Professor);
+
+        _userRepository.Update(user);
+
+        return user;
+    }
 }
