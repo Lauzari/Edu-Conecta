@@ -18,7 +18,7 @@ namespace Infrastructure.Data
         public async Task<ProfessorRequest> AddAsync(ProfessorRequest request)
         {
             await _context.ProfessorRequests.AddAsync(request);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return request;
         }
         public async Task<IEnumerable<ProfessorRequest>> GetAllAsync()
@@ -39,16 +39,8 @@ namespace Infrastructure.Data
         public async Task<ProfessorRequest> UpdateAsync(ProfessorRequest request)
         {
             _context.ProfessorRequests.Update(request);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return request;
         }
-        public async Task DeleteAsync(int id)
-        {
-            var existing = await _context.ProfessorRequests.FindAsync(id);
-            if (existing != null)
-                _context.ProfessorRequests.Remove(existing);
-
-        }
-
     }
 }

@@ -14,8 +14,5 @@ public record CreateUserRequest(
     string Name,
 
     [Required]
-    DateOnly BirthDate,
-
-    [Required]
-    UserType UserType
+    DateOnly BirthDate
 );

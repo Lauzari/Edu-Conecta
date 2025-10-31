@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Core.Entities;
 using Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
@@ -12,57 +13,48 @@ public class UserRepository : IUserRepository
         _applicationDbContext = applicationDbContext;
     }
 
-    public User Add(User entity)
+    public async Task<User> AddAsync(User entity)
     {
-        _applicationDbContext.Users.Add(entity);
-        _applicationDbContext.SaveChanges();
+        await _applicationDbContext.Users.AddAsync(entity);
+        await _applicationDbContext.SaveChangesAsync();
         return entity;
     }
 
-    public void Delete(User entity)
+    public async Task DeleteAsync(User entity)
     {
         _applicationDbContext.Users.Remove(entity);
-        _applicationDbContext.SaveChanges();
+        await _applicationDbContext.SaveChangesAsync();
     }
 
-    public User? GetByEmail(string email)
+    public async Task<User?> GetByEmailAsync(string email)
     {
-        return _applicationDbContext
-        .Users
-        .FirstOrDefault(a => a.Email == email);
+        return await _applicationDbContext.Users.FirstOrDefaultAsync(a => a.Email == email);
     }
 
-    public User? GetById(int id)
+    public async Task<User?> GetByIdAsync(int id)
     {
-        return _applicationDbContext.Users
-        .FirstOrDefault(a => a.Id == id);
+        return await _applicationDbContext.Users.FirstOrDefaultAsync(a => a.Id == id);
     }
 
-    public User? GetByIdWithJoins(int id)
+    public async Task<User?> GetByIdWithJoinsAsync(int id)
     {
-        return _applicationDbContext.Users
-        // AGREGAR CUANDO TENGAMOS LAS DEMÁS ENTIDADES
-        // .Include(x => x.Requests)
-        // .Include(x => x.Courses)
-        .FirstOrDefault(a => a.Id == id);
+        return await _applicationDbContext.Users
+        .Include(x => x.Requests)
+        // AGREGAR CUANDO TENGAMOS COMPLETA LA ENTIDAD CLASS
+        // .Include(x => x.Classes)
+        .FirstOrDefaultAsync(a => a.Id == id);
     }
 
 
-    public List<User> List()
+    public async Task<IEnumerable<User>> ListAsync()
     {
-        return _applicationDbContext.Users
-        .ToList();
+        return await _applicationDbContext.Users.ToListAsync();
     }
 
-    public User Update(User entity)
+    public async Task<User> UpdateAsync(User entity)
     {
         _applicationDbContext.Users.Update(entity);
-        _applicationDbContext.SaveChanges();
+        await _applicationDbContext.SaveChangesAsync();
         return entity;
-    }
-
-    public List<User> GetByExpression(Expression<Func<User, bool>> expression)
-    {
-        return _applicationDbContext.Users.Where(expression).ToList();
     }
 }

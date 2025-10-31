@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Core.Entities;
 using Core.Enums;
 using Core.Interfaces;
@@ -12,61 +13,61 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
-    public User CreateUser(string Email, string Password, string Name, DateOnly BirthDate, UserType UserType)
+    public async Task<User> CreateUserAsync(string Email, string Password, string Name, DateOnly BirthDate)
 
     {
-        User newUser = new(Email, Password, Name, BirthDate, UserType);
+       var newUser = new User(Email, Password, Name, BirthDate, UserType.Student);
 
-        _userRepository.Add(newUser);
+        await _userRepository.AddAsync(newUser);
 
         return newUser;
     }
 
-    public User GetUserInfo(int id)
+    public async Task<User> GetUserInfoAsync(int id)
     {
-        var user = _userRepository.GetById(id)
+        var user = await _userRepository.GetByIdAsync(id)
         //CAMBIAR POR RESPUESTA MAS DE UNA API
                 ?? throw new Exception("Usuario no encontrado.");
         return user;
     }
 
-    public User GetUserInfoWithJoins(int id)
+    public async Task<User> GetUserInfoWithJoinsAsync(int id)
     {
-        var user = _userRepository.GetByIdWithJoins(id)
+        var user = await _userRepository.GetByIdWithJoinsAsync(id)
         //CAMBIAR POR RESPUESTA MAS DE UNA API
                 ?? throw new Exception("Usuario no encontrado.");
         return user;
     }
 
-    public List<User> GetAllUsersInfo()
+    public async Task<IEnumerable<User>> GetAllUsersInfoAsync()
     {
-        return _userRepository.List();
+        return await _userRepository.ListAsync();
     }
 
-    public void DeleteUser(int id)
+    public async Task DeleteUserAsync(int id)
     {
-        var user = _userRepository.GetById(id);
+        var user = await _userRepository.GetByIdAsync(id);
 
         if (user == null)
             throw new Exception("Usuario no encontrado.");
 
-        _userRepository.Delete(user);
+        await _userRepository.DeleteAsync(user);
     }
 
-    public User? UpdateUser(int id, string email, string name, DateOnly birthDate, UserType userType)
+    public async Task<User> UpdateUserAsync(int id, string email, string name, DateOnly birthDate, UserType userType)
     {
-        var user = _userRepository.GetById(id);
+        var user = await _userRepository.GetByIdAsync(id);
         if (user == null) throw new Exception("Usuario no encontrado.");
 
         user.UpdateFields(email, name, birthDate, userType);
-        _userRepository.Update(user);
+        await _userRepository.UpdateAsync(user);
 
         return user;
     }
 
-    public User PromoteToProfessor(int id)
+    public async Task<User> PromoteToProfessor(int id)
     {
-        var user = _userRepository.GetById(id);
+        var user = await _userRepository.GetByIdAsync(id);
         if (user == null)
             throw new Exception("Usuario no encontrado.");
 
@@ -75,7 +76,7 @@ public class UserService : IUserService
 
         user.ChangeRole(UserType.Professor);
 
-        _userRepository.Update(user);
+        await _userRepository.UpdateAsync(user);
 
         return user;
     }

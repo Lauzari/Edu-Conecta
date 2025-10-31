@@ -29,7 +29,7 @@ namespace Core.Services
             {
                 throw new ArgumentException("El ID de la ruta no coincide con el del cuerpo.");
             }
-            var user = _userRepository.GetById(applicantId);
+            var user = await _userRepository.GetByIdAsync(applicantId);
 
             if (user == null)
                 throw new Exception("El usuario no existe.");
@@ -46,6 +46,7 @@ namespace Core.Services
             var newRequest = new ProfessorRequest
             {
                 Description = description,
+                Applicant = user,
                 ApplicantId = applicantId,
                 Status = RequestStatus.Pending,
             };
@@ -69,7 +70,7 @@ namespace Core.Services
 
             request.Status = RequestStatus.Approved;
 
-            _userService.PromoteToProfessor(applicantId);
+            await _userService.PromoteToProfessor(applicantId);
 
             await _professorRequestRepository.UpdateAsync(request);
 

@@ -10,6 +10,5 @@ namespace Core.Interfaces
         Task<ProfessorRequest?> GetByIdAsync(int id);
         Task<ProfessorRequest?> GetByApplicantIdAndStatusAsync(int applicantId, RequestStatus status);
         Task<ProfessorRequest> UpdateAsync(ProfessorRequest request);
-        Task DeleteAsync(int id);
     }
 }

@@ -17,13 +17,13 @@ namespace Infrastructure.Data
         public async Task AddAsync(Subject subject)
         {
             await _context.Subjects.AddAsync(subject);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Subject subject)
         {
             _context.Subjects.Remove(subject);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Subject>> GetAllAsync()
@@ -39,7 +39,7 @@ namespace Infrastructure.Data
         public async Task UpdateAsync(Subject subject)
         {
             _context.Subjects.Update(subject);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
