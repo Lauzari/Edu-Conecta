@@ -1,17 +1,19 @@
-<<<<<<< Updated upstream
-=======
 
 using System.Text;
 using Infrastructure.Data;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
+
 using Core.Interfaces;
 using Core.Services;
 
->>>>>>> Stashed changes
+
 var builder = WebApplication.CreateBuilder(args);
 
+// Controllers
 builder.Services.AddControllers();
+
+// Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -44,6 +46,9 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+
+// Configure the HTTP request pipeline
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -51,6 +56,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors("AllowAll");
+
 app.MapControllers();
+
 app.Run();
