@@ -3,6 +3,11 @@ using System.Text;
 using Infrastructure.Data;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
+
+using Core.Interfaces;
+using Core.Services;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Controllers
@@ -18,6 +23,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Repositorios y servicios
 builder.Services.AddApplicationServices(); // Extensión para registrar repos y services
+builder.Services.AddScoped<IClassRepository, ClassRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+builder.Services.AddScoped<ClassService>();
 
 // CORS
 builder.Services.AddCors(options =>
