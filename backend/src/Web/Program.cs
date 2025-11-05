@@ -8,6 +8,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Core.Interfaces;
+using Core.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +78,13 @@ builder.Services.AddApplicationServices();
 
 // Middlewares
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+
+// Repositorios y servicios
+builder.Services.AddApplicationServices(); // Extensión para registrar repos y services
+builder.Services.AddScoped<IClassRepository, ClassRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+builder.Services.AddScoped<ClassService>();
 
 // CORS
 builder.Services.AddCors(options =>
