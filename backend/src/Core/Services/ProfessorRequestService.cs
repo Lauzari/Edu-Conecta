@@ -1,5 +1,6 @@
 using Core.Entities;
 using Core.Enums;
+using Core.Exceptions;
 using Core.Interfaces;
 
 namespace Core.Services
@@ -27,20 +28,21 @@ namespace Core.Services
 
             if (id != applicantId)
             {
-                throw new ArgumentException("El ID de la ruta no coincide con el del cuerpo.");
+                throw new AppValidationException("Route ID does not match body ID.");
             }
-            var user = await _userRepository.GetByIdAsync(applicantId);
 
-            if (user == null)
-                throw new Exception("El usuario no existe.");
+            var user = await _userRepository.GetByIdAsync(applicantId) ?? throw new NotFoundException("User Not Found.");
 
             if (user.UserType != UserType.Student)
-                throw new Exception("Solo los usuarios de tipo estudiante pueden solicitar ser docentes.");
+                //Agregamos un nuevo tipo de error como "BussinessRuleException"???
+                throw new InvalidOperationException("Solo los usuarios con rol 'Student' pueden convertirse en 'Professor'.");
+
             //Checks if there is already a request pending for this user
             var existingPending = await _professorRequestRepository.GetByApplicantIdAndStatusAsync(applicantId, RequestStatus.Pending);
 
             if (existingPending != null)
             {
+                //Agregamos un nuevo tipo de error como "BussinessRuleException"???
                 throw new InvalidOperationException("Ya existe una solicitud pendiente para este usuario.");
             }
             var newRequest = new ProfessorRequest
@@ -56,16 +58,17 @@ namespace Core.Services
 
         public async Task<ProfessorRequest> GetRequestById(int id)
         {
-            var request = await _professorRequestRepository.GetByIdAsync(id) ?? throw new Exception("Request not found");
+            var request = await _professorRequestRepository.GetByIdAsync(id) ?? throw new NotFoundException("Professor Request not found");
             return request;
         }
 
         public async Task<ProfessorRequest> AcceptRequestStatusAsync(int requestId, int applicantId)
         {
             var request = await _professorRequestRepository.GetByIdAsync(requestId)
-                ?? throw new KeyNotFoundException("No se encontró la solicitud.");
+                ?? throw new NotFoundException("Professor Request Not Found.");
 
             if (request.Status != RequestStatus.Pending)
+                //Agregamos un nuevo tipo de error como "BussinessRuleException"???
                 throw new InvalidOperationException("Solo se pueden aceptar solicitudes en estado 'Pending'.");
 
             request.Status = RequestStatus.Approved;
@@ -80,9 +83,10 @@ namespace Core.Services
         public async Task<ProfessorRequest> DeclineRequestStatusAsync(int requestId, int applicantId)
         {
             var request = await _professorRequestRepository.GetByIdAsync(requestId)
-                ?? throw new KeyNotFoundException("No se encontró la solicitud.");
+                ?? throw new NotFoundException("Professor Request Not Found.");
 
             if (request.Status != RequestStatus.Pending)
+            //Agregamos un nuevo tipo de error como "BussinessRuleException"???
                 throw new InvalidOperationException("Solo se pueden rechazar solicitudes en estado 'Pending'.");
 
             request.Status = RequestStatus.Rejected;

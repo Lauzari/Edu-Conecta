@@ -1,5 +1,6 @@
 using Core.Enums;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Requests;
 using Web.Models;
@@ -18,7 +19,7 @@ public class ProfessorRequestController : ControllerBase
     }
 
     [HttpGet]
-    // [Authorize(UserType = "Admin")]
+    [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<ActionResult<IEnumerable<ProfessorRequestDto>>> GetRequests()
     {
         var requests = await _service.GetRequestsAsync();
@@ -27,7 +28,7 @@ public class ProfessorRequestController : ControllerBase
 
     // It recieves the User ID in the route and all the Request info in the body
     [HttpPost("{id}")]
-    // [Authorize]
+    [Authorize]
     public async Task<ActionResult<ProfessorRequestDto>> CreateProfessorRequest([FromRoute] int id, [FromBody] CreateProfessorRequestDto request)
     {
         var newRequest = await _service.AddRequestAsync(id, request.Description, request.ApplicantId);
@@ -36,7 +37,7 @@ public class ProfessorRequestController : ControllerBase
 
     //CAPAZ ESTE NO HACE FALTA
     [HttpGet("{id}")]
-    // [Authorize]
+    [Authorize]
     public async Task<ActionResult<ProfessorRequestDto>> GetRequestById([FromRoute] int id)
     {
         var request = await _service.GetRequestById(id);
@@ -44,17 +45,19 @@ public class ProfessorRequestController : ControllerBase
     }
 
     [HttpPut("acceptRequest")]
-    // [Authorize]
+    [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<ActionResult<ProfessorRequestDto>> AcceptRequestStatus([FromBody] UpdateProfessorRequestDto request)
     {
+        // FALTA AGREGAR ID DE LA ROUTE
         var req = await _service.AcceptRequestStatusAsync(request.Id, request.ApplicantId);
         return ProfessorRequestDto.Create(req);
     }
 
     [HttpPut("declineRequest")]
-    // [Authorize]
+    [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<ActionResult<ProfessorRequestDto>> DeclineRequestStatus([FromRoute] int id, [FromBody] UpdateProfessorRequestDto request)
     {
+        // FALTA AGREGAR ID DE LA ROUTE
         var req = await _service.DeclineRequestStatusAsync(request.Id, request.ApplicantId);
         return ProfessorRequestDto.Create(req);
     }

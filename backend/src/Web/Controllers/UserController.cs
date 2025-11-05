@@ -4,6 +4,7 @@ using Web.Models;
 using Models.Requests;
 using System.Threading.Tasks;
 using Core.Interfaces;
+using Core.Enums;
 
 namespace Web.Controllers;
 
@@ -35,6 +36,7 @@ public class UserController : ControllerBase
 
 
     [HttpGet("userInfo")]
+    [Authorize]
     public async Task<ActionResult<UserDto>> GetUserInfo([FromQuery] int id)
     {
         var user = await _userService.GetUserInfoAsync(id);
@@ -43,6 +45,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("completeUserInfo")]
+    [Authorize]
     public async Task<ActionResult<UserWithRelationsDto>> GetCompleteUserInfo([FromQuery] int id)
     {
         var user = await _userService.GetUserInfoWithJoinsAsync(id);
@@ -51,6 +54,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("allUsersInfo")]
+    [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsersInfo()
     {
         var list = await _userService.GetAllUsersInfoAsync();
@@ -58,6 +62,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("update")]
+    [Authorize]
     public async Task<ActionResult<UserDto>> UpdateUser([FromBody] UpdateUserRequest request)
     {
         var updatedUser = await _userService.UpdateUserAsync(
@@ -75,6 +80,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("delete")]
+    [Authorize]
     public async Task<IActionResult> DeleteUser([FromQuery] int id)
     {
         await _userService.DeleteUserAsync(id);

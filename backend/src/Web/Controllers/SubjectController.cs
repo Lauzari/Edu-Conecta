@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Models.Requests;
 using Web.Models;
 using Models.Requests;
+using Microsoft.AspNetCore.Authorization;
+using Core.Enums;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -30,7 +32,7 @@ public class SubjectController : ControllerBase
     }
 
     [HttpPost]
-    // [Authorize(UserType = "Admin")]
+    [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<ActionResult<SubjectDto>> Create([FromBody] CreateSubjectRequest request)
     {
         var newSubject = await _subjectService.CreateAsync(request.Name, request.Year, request.Description, request.Duration);
@@ -38,7 +40,7 @@ public class SubjectController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    // [Authorize(UserType = "Admin")]
+    [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<ActionResult<SubjectDto>> Update(int id, [FromBody] UpdateSubjectRequest request)
     {
         var subject = await _subjectService.UpdateAsync(id, request.Id, request.Name, request.Year, request.Description, request.Duration);
@@ -46,7 +48,7 @@ public class SubjectController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    // [Authorize(UserType = "Admin")]
+     [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<IActionResult> Delete(int id)
     {
         await _subjectService.DeleteAsync(id);

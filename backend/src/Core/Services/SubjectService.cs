@@ -1,5 +1,6 @@
 
 using Core.Entities;
+using Core.Exceptions;
 using Core.Interfaces;
 
 
@@ -21,7 +22,7 @@ namespace Core.Services
 
         public async Task<Subject> GetByIdAsync(int id)
         {
-            var subject = await _repository.GetByIdAsync(id) ?? throw new Exception("Materia no encontrada.");
+            var subject = await _repository.GetByIdAsync(id) ?? throw new NotFoundException("Subject Not Found.");
             return subject;
         }
 
@@ -45,9 +46,9 @@ namespace Core.Services
         {
             if (id != subjectId)
             {
-                throw new ArgumentException("El ID de la ruta no coincide con el del cuerpo.");
+                throw new AppValidationException("Route ID does not match body ID.");
             }
-            var subject = await _repository.GetByIdAsync(subjectId) ?? throw new Exception("Materia no encontrada.");
+            var subject = await _repository.GetByIdAsync(subjectId) ?? throw new NotFoundException("Subject Not Found.");
             
             subject.Name = Name;
             subject.Description = Description;
@@ -61,7 +62,7 @@ namespace Core.Services
 
         public async Task DeleteAsync(int id)
         {
-            var subject = await _repository.GetByIdAsync(id) ?? throw new Exception("No se encontró ninguna materia con ese ID.");
+            var subject = await _repository.GetByIdAsync(id) ?? throw new NotFoundException("Subject Not Found.");
             await _repository.DeleteAsync(subject);
         }
     }
