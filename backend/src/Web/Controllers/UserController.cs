@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Core.Services;
 using Microsoft.AspNetCore.Authorization;
-using Core.Models;
-using Core.Models.Requests;
+using Web.Models;
+using Models.Requests;
+using System.Threading.Tasks;
+using Core.Interfaces;
+using Core.Enums;
 
 namespace Web.Controllers;
 
@@ -12,9 +14,9 @@ namespace Web.Controllers;
 public class UserController : ControllerBase
 {
 
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
 
-    public UserController(UserService userService)
+    public UserController(IUserService userService)
     {
         _userService = userService;
 
@@ -22,45 +24,48 @@ public class UserController : ControllerBase
 
 
     [HttpPost("create")]
-    public ActionResult<UserDto> CreateUser([FromBody] CreateUserRequest request)
+    public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserRequest request)
     {
-        var newUser = _userService.CreateUser(request.Email
+        var newUser = await _userService.CreateUserAsync(request.Email
          , request.Password
          , request.Name
-         , request.BirthDate
-         , request.UserType);
+         , request.BirthDate);
 
         return CreatedAtAction(nameof(GetUserInfo), new { Id = newUser.Id }, UserDto.Create(newUser));
     }
 
 
     [HttpGet("userInfo")]
-    public ActionResult<UserDto> GetUserInfo([FromQuery] int id)
+    [Authorize]
+    public async Task<ActionResult<UserDto>> GetUserInfo([FromQuery] int id)
     {
-        var user = _userService.GetUserInfo(id);
+        var user = await _userService.GetUserInfoAsync(id);
 
         return UserDto.Create(user);
     }
 
     [HttpGet("completeUserInfo")]
-    public ActionResult<UserDto> GetCompleteUserInfo([FromQuery] int id)
+    [Authorize]
+    public async Task<ActionResult<UserWithRelationsDto>> GetCompleteUserInfo([FromQuery] int id)
     {
-        var user = _userService.GetUserInfoWithJoins(id);
+        var user = await _userService.GetUserInfoWithJoinsAsync(id);
 
-        return UserDto.Create(user);
+        return UserWithRelationsDto.Create(user);
     }
 
     [HttpGet("allUsersInfo")]
-    public ActionResult<List<UserDto>> GetAllUsersInfo()
+    [Authorize(Roles = nameof(UserType.Admin))]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsersInfo()
     {
-        var list = _userService.GetAllUsersInfo();
+        var list = await _userService.GetAllUsersInfoAsync();
         return UserDto.Create(list);
     }
 
     [HttpPut("update")]
-    public ActionResult<UserDto> UpdateUser([FromBody] UpdateUserRequest request)
+    [Authorize]
+    public async Task<ActionResult<UserDto>> UpdateUser([FromBody] UpdateUserRequest request)
     {
-        var updatedUser = _userService.UpdateUser(
+        var updatedUser = await _userService.UpdateUserAsync(
         request.Id,
         request.Email,
         request.Name,
@@ -75,9 +80,10 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("delete")]
-    public IActionResult DeleteUser([FromQuery] int id)
+    [Authorize]
+    public async Task<IActionResult> DeleteUser([FromQuery] int id)
     {
-        _userService.DeleteUser(id);
+        await _userService.DeleteUserAsync(id);
         return NoContent();
     }
 }

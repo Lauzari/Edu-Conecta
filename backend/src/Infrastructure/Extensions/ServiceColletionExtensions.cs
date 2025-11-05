@@ -1,6 +1,7 @@
 using Core.Interfaces;
 using Core.Services;
 using Infrastructure.Data;
+using Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Extensions
@@ -9,19 +10,17 @@ namespace Infrastructure.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            // Repositorios
+            // Repositories
             services.AddScoped<IProfessorRequestRepository, ProfessorRequestRepository>();
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IClassRepository, ClassRepository>();
 
-
-            // Servicios
+            // Services
             services.AddScoped<IProfessorRequestService, ProfessorRequestService>();
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<IUserService, UserService>();
-
-
+            services.AddScoped<ICustomAuthenticationService, AuthenticationService>();
 
             return services;
         }

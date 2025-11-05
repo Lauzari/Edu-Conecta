@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029224055_ModifyProfessorRequest")]
+    partial class ModifyProfessorRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,13 +130,17 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(1);
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(4);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -149,11 +156,11 @@ namespace Infrastructure.Data.Migrations
 
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(6);
 
                     b.Property<int>("UserType")
                         .HasColumnType("int")
-                        .HasColumnOrder(6);
+                        .HasColumnOrder(7);
 
                     b.Property<int?>("classId")
                         .HasColumnType("int");

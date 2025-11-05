@@ -1,18 +1,21 @@
 using Core.Entities;
 using Core.Enums;
-using Core.Interfaces;
-namespace Core.Services;
+namespace Core.Interfaces;
 
 public interface IUserService
 {
-    public User CreateUser(string Email, string Password, string Name, DateOnly BirthDate, UserType UserType);
+    Task<User> CreateUserAsync(string Email, string Password, string Name, DateOnly BirthDate);
 
-    public User GetUserInfo(int id);
+    Task<User> GetUserInfoAsync(int id);
 
-    public User GetUserInfoWithJoins(int id);
+    Task<User> GetUserInfoWithJoinsAsync(int id);
 
-    public List<User> GetAllUsersInfo();
+    Task<IEnumerable<User>> GetAllUsersInfoAsync();
 
-    public void DeleteUser(int id);
+    Task<User> UpdateUserAsync(int id, string email, string name, DateOnly birthDate, UserType userType);
+
+    Task DeleteUserAsync(int id);
+
+    Task<User> PromoteToProfessor(int id);
 
 }

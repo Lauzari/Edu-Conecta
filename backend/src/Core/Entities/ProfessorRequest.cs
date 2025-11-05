@@ -1,17 +1,23 @@
+using System.ComponentModel.DataAnnotations;
 using Core.Enums;
 
 namespace Core.Entities
 {
     public class ProfessorRequest
     {
+        [Required]
         public int Id { get; set; }
-         public string Description { get; set; }
-        public string UserId { get; set; }
-        public RequestStatus Status { get; set; }
-        public bool IsApproved { get; set; }
-        public Subject Subject { get; set; }
 
-        // Relationship whith User
-       // public User? User { get; set; }
+        [Required]
+        public string Description { get; set; }
+
+        [Required]
+        public User Applicant { get; set; }
+
+        [Required]
+        public int ApplicantId { get; set; }
+
+        [Required]
+        public RequestStatus Status { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using Core.Entities;
+using Core.Services;
 
 namespace Core.Interfaces
 {
@@ -8,7 +9,6 @@ namespace Core.Interfaces
         Task<Subject?> GetByIdAsync(int id);
         Task AddAsync(Subject subject);
         Task UpdateAsync(Subject subject);
-        Task DeleteAsync(int id);
-        Task<bool> ExistsAsync(int id);
+        Task DeleteAsync(Subject subject);
     }
 }

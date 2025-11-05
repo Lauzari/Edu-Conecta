@@ -6,21 +6,19 @@ namespace Core.Interfaces;
 public interface IUserRepository
 {
     //It returns only the user info
-    User? GetById(int id);
+    Task<User?> GetByIdAsync(int id);
 
     //It returns the User info with joins (Professor Requests & Classses)
-    User? GetByIdWithJoins(int id);
+    Task<User?> GetByIdWithJoinsAsync(int id);
 
-    User? GetByEmail(string email);
+    Task<User?> GetByEmailAsync(string email);
 
-    List<User> List();
+    Task<IEnumerable<User>> ListAsync();
 
-    User Add(User entity);
+    Task<User> AddAsync(User entity);
 
-    User Update(User entity);
+    Task<User> UpdateAsync(User entity);
 
-    void Delete(User entity);
-
-    List<User> GetByExpression(Expression<Func<User, bool>> expression);
+    Task DeleteAsync(User entity);
 
 }

@@ -3,21 +3,20 @@ using Core.Enums;
 
 namespace Models.Requests;
 
-public record UpdateUserRequest(
+public record UpdateSubjectRequest(
     [Required]
     int Id,
 
-    [MaxLength(100)]
     [Required]
-    string Email,
+    int Year,
 
     [MaxLength(100)]
     [Required]
     string Name,
 
-    [Required]
-    DateOnly BirthDate,
+    [MaxLength(200)]
+    string Description,
 
     [Required]
-    UserType UserType
+    int Duration
 );

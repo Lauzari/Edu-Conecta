@@ -1,9 +1,11 @@
-using Core.Services;
+using Core.Enums;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Core.Entities;
-using Web.Models.Requests;
+using Models.Requests;
+using Web.Models;
+
+namespace Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -16,25 +18,47 @@ public class ProfessorRequestController : ControllerBase
         _service = service;
     }
 
-    [HttpGet("pending")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetPending()
+    [HttpGet]
+    [Authorize(Roles = nameof(UserType.Admin))]
+    public async Task<ActionResult<IEnumerable<ProfessorRequestDto>>> GetRequests()
     {
-        var requests = await _service.GetPendingRequestsAsync();
-        return Ok(requests);
+        var requests = await _service.GetRequestsAsync();
+        return ProfessorRequestDto.Create(requests);
     }
 
-    [HttpPost]
+    // It recieves the User ID in the route and all the Request info in the body
+    [HttpPost("{id}")]
     [Authorize]
-    public async Task<IActionResult> Submit(ProfessorRequestDto dto)    
+    public async Task<ActionResult<ProfessorRequestDto>> CreateProfessorRequest([FromRoute] int id, [FromBody] CreateProfessorRequestDto request)
     {
-        var userId = User.FindFirst("sub")?.Value;
-        if (userId == null)
-            return Unauthorized();
-
-        await _service.SubmitRequestAsync(dto.UserId, dto.Subject, dto.Description);
-        return CreatedAtAction(nameof(Submit), null);
+        var newRequest = await _service.AddRequestAsync(id, request.Description, request.ApplicantId);
+        return CreatedAtAction(nameof(GetRequestById), new { id = newRequest.Id }, ProfessorRequestDto.Create(newRequest));
     }
 
-  
+    //CAPAZ ESTE NO HACE FALTA
+    [HttpGet("{id}")]
+    [Authorize]
+    public async Task<ActionResult<ProfessorRequestDto>> GetRequestById([FromRoute] int id)
+    {
+        var request = await _service.GetRequestById(id);
+        return ProfessorRequestDto.Create(request);
+    }
+
+    [HttpPut("acceptRequest")]
+    [Authorize(Roles = nameof(UserType.Admin))]
+    public async Task<ActionResult<ProfessorRequestDto>> AcceptRequestStatus([FromBody] UpdateProfessorRequestDto request)
+    {
+        // FALTA AGREGAR ID DE LA ROUTE
+        var req = await _service.AcceptRequestStatusAsync(request.Id, request.ApplicantId);
+        return ProfessorRequestDto.Create(req);
+    }
+
+    [HttpPut("declineRequest")]
+    [Authorize(Roles = nameof(UserType.Admin))]
+    public async Task<ActionResult<ProfessorRequestDto>> DeclineRequestStatus([FromRoute] int id, [FromBody] UpdateProfessorRequestDto request)
+    {
+        // FALTA AGREGAR ID DE LA ROUTE
+        var req = await _service.DeclineRequestStatusAsync(request.Id, request.ApplicantId);
+        return ProfessorRequestDto.Create(req);
+    }
 }

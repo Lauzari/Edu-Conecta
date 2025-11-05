@@ -1,10 +1,10 @@
-using Core.Services;
 using Core.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models.Requests;
-
-
+using Web.Models;
+using Models.Requests;
+using Microsoft.AspNetCore.Authorization;
+using Core.Enums;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -18,43 +18,40 @@ public class SubjectController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<IEnumerable<SubjectDto>>> GetAll()
     {
         var subjects = await _subjectService.GetAllAsync();
-        return Ok(subjects);
+        return SubjectDto.Create(subjects);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<ActionResult<SubjectDto>> GetById(int id)
     {
         var subject = await _subjectService.GetByIdAsync(id);
-        if (subject == null) return NotFound();
-        return Ok(subject);
+        return SubjectDto.Create(subject);
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Create([FromBody] SubjectRequestDto dto)
+    [Authorize(Roles = nameof(UserType.Admin))]
+    public async Task<ActionResult<SubjectDto>> Create([FromBody] CreateSubjectRequest request)
     {
-        var created = await _subjectService.CreateAsync(dto.Name, dto.Year, dto.Description, dto.Duration);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        var newSubject = await _subjectService.CreateAsync(request.Name, request.Year, request.Description, request.Duration);
+        return CreatedAtAction(nameof(GetById), new { id = newSubject.Id }, SubjectDto.Create(newSubject));
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Update(int id, [FromBody] SubjectRequestDto dto)
+    [Authorize(Roles = nameof(UserType.Admin))]
+    public async Task<ActionResult<SubjectDto>> Update(int id, [FromBody] UpdateSubjectRequest request)
     {
-        var success = await _subjectService.UpdateAsync(id,dto.Name, dto.Year, dto.Description, dto.Duration);
-        if (!success) return NotFound();
-        return NoContent();
+        var subject = await _subjectService.UpdateAsync(id, request.Id, request.Name, request.Year, request.Description, request.Duration);
+        return SubjectDto.Create(subject);
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+     [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<IActionResult> Delete(int id)
     {
-        var success = await _subjectService.DeleteAsync(id);
-        if (!success) return NotFound();
+        await _subjectService.DeleteAsync(id);
         return NoContent();
     }
 }

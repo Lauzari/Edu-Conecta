@@ -6,14 +6,12 @@ namespace Core.Entities;
 
 public class User
 {
-
     public virtual ICollection<ProfessorRequest> Requests { get; set; } = new List<ProfessorRequest>();
 
-    public ICollection<Class> Classes { get; set; } = new List<Class>();
+    // public ICollection<Class> Classes { get; set; } = new List<Class>();
     // RECORDATORIO: cuando un usuario cambie de student a professor, hay que borrar
-    // la lista de cursos y cuando un user se quiera inscribir, hay que verificar que
+    // la lista de cursos y cuando un user se quiera inscribir a una clase, hay que verificar que
     // sea de tipo Student
-
 
     [Column(Order = 0)]
     [Key]
@@ -34,24 +32,21 @@ public class User
     [MaxLength(100)]
     public string Name { get; set; }
 
-    [Column(Order = 4)]
-    [Required]
-    public bool IsActive { get; set; }
 
-    [Column(Order = 5)]
+    [Column(Order = 4)]
     [Required]
     public DateOnly BirthDate { get; set; }
 
-    [Column(Order = 6)]
+    [Column(Order = 5)]
     [Required]
     public DateTime RegisterDate { get; set; }
 
-    [Column(Order = 7)]
+    [Column(Order = 6)]
     [Required]
     public UserType UserType { get; set; }
 
     // Added for the ORM mapping
-    public User()
+    private User()
     {
 
     }
@@ -63,7 +58,6 @@ public class User
         this.Name = Name;
         this.BirthDate = BirthDate;
         this.UserType = UserType;
-        this.IsActive = true;
         this.RegisterDate = DateTime.Now;
     }
 
@@ -77,10 +71,9 @@ public class User
 
     public void ChangeRole(UserType newRole)
     {
-        if (UserType == UserType.Student && newRole != UserType.Student)
+        // if (UserType == UserType.Student && newRole != UserType.Student)
             // Courses.Clear();
             // elimina cursos que el usuario estaba tomando
-
-            UserType = newRole;
+        UserType = newRole;
     }
 }

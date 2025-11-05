@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Core.Enums;
 
-namespace Core.Models.Requests;
+namespace Models.Requests;
 
 public record CreateUserRequest(
     [Required, MaxLength(100)]
@@ -14,8 +14,5 @@ public record CreateUserRequest(
     string Name,
 
     [Required]
-    DateOnly BirthDate,
-
-    [Required]
-    UserType UserType
+    DateOnly BirthDate
 );

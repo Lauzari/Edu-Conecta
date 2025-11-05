@@ -17,15 +17,13 @@ namespace Infrastructure.Data
         public async Task AddAsync(Subject subject)
         {
             await _context.Subjects.AddAsync(subject);
-            
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Subject subject)
         {
-            var existing = await _context.Subjects.FindAsync(id);
-            if (existing != null)
-                _context.Subjects.Remove(existing);
-           
+            _context.Subjects.Remove(subject);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Subject>> GetAllAsync()
@@ -41,12 +39,7 @@ namespace Infrastructure.Data
         public async Task UpdateAsync(Subject subject)
         {
             _context.Subjects.Update(subject);
-           
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _context.Subjects.AnyAsync(s => s.Id == id);
+            await _context.SaveChangesAsync();
         }
     }
 }
