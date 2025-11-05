@@ -40,8 +40,7 @@ public class UserRepository : IUserRepository
     {
         return await _applicationDbContext.Users
         .Include(x => x.Requests)
-        // AGREGAR CUANDO TENGAMOS COMPLETA LA ENTIDAD CLASS
-        // .Include(x => x.Classes)
+        .Include(x => x.Classes)
         .FirstOrDefaultAsync(a => a.Id == id);
     }
 

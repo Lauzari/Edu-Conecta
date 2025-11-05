@@ -4,9 +4,11 @@ namespace Core.Interfaces;
 
 public interface IClassRepository
 {
-    public List<Class> GetAll();
-    public Class? GetById(int id);
-    public Class Create(Class newClass);
-    public Class Update(Class updatedClass);
-    public void Delete(int id);
+    public Task<IEnumerable<Class>> GetAll();
+    public Task<IEnumerable<Class>> GetAllWithStudents();
+    public Task<Class?> GetById(int id);
+    public Task<Class?> GetByIdWithStudents(int id);
+    public Task<Class> Create(Class newClass);
+    public Task<Class> Update(Class updatedClass);
+    public void Delete(Class classItem);
 }

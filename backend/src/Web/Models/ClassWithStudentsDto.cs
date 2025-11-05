@@ -3,7 +3,7 @@ using Core.Enums;
 
 namespace Web.Models;
 
-public record ClassDto(
+public record ClassWithStudentsDto(
     int classId,
     int subjectId,
     SubjectDto Subject,
@@ -13,12 +13,13 @@ public record ClassDto(
     string zoomLink,
     ClassShift classShift,
     DateTime startDate,
-    DateTime endDate
+    DateTime endDate,
+    List<UserDto> Students
 )
 {
-    public static ClassDto Create(Class entity)
+    public static ClassWithStudentsDto Create(Class entity)
     {
-        var dto = new ClassDto(
+        var dto = new ClassWithStudentsDto(
             entity.Id,
             entity.SubjectId,
             entity.Subject != null ? SubjectDto.Create(entity.Subject) : null,
@@ -28,20 +29,15 @@ public record ClassDto(
             entity.ZoomLink,
             entity.ClassShift,
             entity.StartDate,
-            entity.EndDate
+            entity.EndDate,
+            entity.Students != null ? UserDto.Create(entity.Students) : new List<UserDto>()
         );
 
         return dto;
     }
 
-    public static List<ClassDto> Create(IEnumerable<Class> entities)
+    public static List<ClassWithStudentsDto> Create(IEnumerable<Class> entities)
     {
-        var listDto = new List<ClassDto>();
-        foreach (var entity in entities)
-        {
-            listDto.Add(Create(entity));
-        }
-
-        return listDto;
+        return entities.Select(Create).ToList();
     }
 }

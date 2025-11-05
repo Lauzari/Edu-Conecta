@@ -23,11 +23,18 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Ejemplo: configuración opcional
-            // modelBuilder.Entity<ProfessorRequest>()
-            //     .HasOne(p => p.Subject)
-            //     .WithMany(s => s.ProfessorRequests)
-            //     .HasForeignKey(p => p.SubjectId);
+            // --- Relation Many to One: Professor -> Class ---
+            modelBuilder.Entity<Class>()
+                .HasOne(c => c.Teacher)
+                .WithMany()
+                .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // --- Relation Many to Many: Students -> Classes ---
+            modelBuilder.Entity<Class>()
+                .HasMany(c => c.Students)
+                .WithMany(u => u.Classes)
+                .UsingEntity(j => j.ToTable("ClassStudents")); // Intermediate Table
         }
     }
 }

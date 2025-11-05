@@ -81,10 +81,6 @@ builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 // Repositorios y servicios
 builder.Services.AddApplicationServices(); // Extensión para registrar repos y services
-builder.Services.AddScoped<IClassRepository, ClassRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
-builder.Services.AddScoped<ClassService>();
 
 // CORS
 builder.Services.AddCors(options =>
@@ -117,6 +113,14 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var configuration = services.GetRequiredService<IConfiguration>();
+
+    await Infrastructure.Data.Seeding.AdminSeeder.SeedAdminAsync(services, configuration);
+}
 
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 

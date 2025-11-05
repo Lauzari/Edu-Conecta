@@ -1,51 +1,67 @@
 using Core.Entities;
 using Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
 {
     public class ClassRepository : IClassRepository
     {
-        private static List<Class> classes = new List<Class>();
-        private static int nextId = 1;
-
-        public List<Class> GetAll()
+        private readonly ApplicationDbContext _applicationDbContext;
+        public ClassRepository(ApplicationDbContext applicationDbContext)
         {
-            return classes;
+            _applicationDbContext = applicationDbContext;
         }
 
-        public Class? GetById(int id)
+        public async Task<IEnumerable<Class>> GetAll()
         {
-            return classes.FirstOrDefault(c => c.classId == id);
+            return await _applicationDbContext.Classes
+            .Include(x => x.Subject)
+            .Include(x => x.Teacher).ToListAsync();
         }
 
-        public Class Create(Class newClass)
+        public async Task<IEnumerable<Class>> GetAllWithStudents()
         {
-            newClass.classId = nextId++;
-            classes.Add(newClass);
+            return await _applicationDbContext.Classes
+            .Include(x => x.Subject)
+            .Include(x => x.Students)
+            .Include(x => x.Teacher).ToListAsync();
+        }
+
+        public async Task<Class?> GetById(int id)
+        {
+           return await _applicationDbContext.Classes
+            .Include(x => x.Subject)
+            .Include(x => x.Teacher)
+            .FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<Class?> GetByIdWithStudents(int id)
+        {
+            return await _applicationDbContext.Classes
+            .Include(x => x.Subject)
+            .Include(x => x.Teacher)
+            .Include(x => x.Students)
+            .FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<Class> Create(Class newClass)
+        {
+            await _applicationDbContext.Classes.AddAsync(newClass);
+            await _applicationDbContext.SaveChangesAsync();
             return newClass;
         }
 
-        public Class? Update(Class updatedClass)
+        public async Task<Class> Update(Class updatedClass)
         {
-            var existing = classes.FirstOrDefault(c => c.classId == updatedClass.classId);
-            if (existing == null) 
-                return null;
-
-            existing.classDescription = updatedClass.classDescription;
-            existing.zoomLink = updatedClass.zoomLink;
-            existing.techRequirements = updatedClass.techRequirements;
-            existing.classShift = updatedClass.classShift;
-            existing.startDate = updatedClass.startDate;
-            existing.endDate = updatedClass.endDate;
-
-            return existing;
+            _applicationDbContext.Classes.Update(updatedClass);
+            await _applicationDbContext.SaveChangesAsync();
+            return updatedClass;
         }
 
-        public void Delete(int id)
+        public async void Delete(Class classItem)
         {
-            var classItem = classes.FirstOrDefault(c => c.classId == id);
-            if (classItem != null)
-                classes.Remove(classItem);
+            _applicationDbContext.Classes.Remove(classItem);
+            await _applicationDbContext.SaveChangesAsync();
         }
     }
 }

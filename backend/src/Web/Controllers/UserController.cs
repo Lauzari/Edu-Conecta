@@ -72,13 +72,10 @@ public class UserController : ControllerBase
         request.BirthDate,
         request.UserType
         );
-
-        if (updatedUser == null)
-            return NotFound($"User with ID {request.Id} not found.");
-
         return Ok(UserDto.Create(updatedUser));
     }
 
+    //AGREGAR MÁS SEGURIDAD (VERIFICACIÓN DE ID)
     [HttpDelete("delete")]
     [Authorize]
     public async Task<IActionResult> DeleteUser([FromQuery] int id)
