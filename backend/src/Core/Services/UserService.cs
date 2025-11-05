@@ -17,7 +17,19 @@ public class UserService : IUserService
     public async Task<User> CreateUserAsync(string Email, string Password, string Name, DateOnly BirthDate)
 
     {
-        var newUser = new User(Email, Password, Name, BirthDate, UserType.Student);
+        string passwordHash = BCrypt.Net.BCrypt.HashPassword(Password);
+        var newUser = new User(Email, passwordHash, Name, BirthDate, UserType.Student);
+
+        await _userRepository.AddAsync(newUser);
+
+        return newUser;
+    }
+
+    public async Task<User> CreateAdminAsync(string Email, string Password, string Name, DateOnly BirthDate)
+
+    {
+        string passwordHash = BCrypt.Net.BCrypt.HashPassword(Password);
+        var newUser = new User(Email, passwordHash, Name, BirthDate, UserType.Admin);
 
         await _userRepository.AddAsync(newUser);
 
@@ -65,13 +77,19 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(id) ?? throw new NotFoundException("User Not Found.");
 
         if (user.UserType != UserType.Student)
-        //Agregamos un nuevo tipo de error como "BussinessRuleException"???
+            //Agregamos un nuevo tipo de error como "BussinessRuleException"???
             throw new InvalidOperationException("Solo los usuarios con rol 'Student' pueden convertirse en 'Professor'.");
 
         user.ChangeRole(UserType.Professor);
 
         await _userRepository.UpdateAsync(user);
 
+        return user;
+    }
+    
+    public async Task<User> GetByEmailAsync(string email)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
         return user;
     }
 }

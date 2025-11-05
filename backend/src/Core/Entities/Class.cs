@@ -1,33 +1,48 @@
+using Core.Enums;
+
 namespace Core.Entities
 
 {
-    public enum ClassShift
-    {
-        Morning,
-        Afternoon,
-        Evening
-    }
     public class Class
     {
-        public int classId { get; set; }
-        public int subjectId { get; set; }
-        public int teacherId { get; set; }
-        public string classDescription { get; set; } = string.Empty;
+        public int Id { get; set; }
+        public int SubjectId { get; set; }
+        public Subject Subject { get; set; }
+        public int TeacherId { get; set; }
+        public User Teacher { get; set; }
+        public string ClassDescription { get; set; } = string.Empty;
 
-        public string zoomLink { get; set; } = string.Empty;
+        public string ZoomLink { get; set; } = string.Empty;
 
-        public string techRequirements { get; set; } = string.Empty;
+        public ClassShift ClassShift { get; set; }
 
-        public ClassShift classShift { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
 
-        public DateTime startDate { get; set; }
-        public DateTime endDate { get; set; }
+        public virtual ICollection<User> Students { get; set; } = new List<User>();
 
-        public ICollection<User> Students { get; set; } = new List<User>();
-
-        public Class()
+        private Class()
         {
+        }
 
+        public Class(int subjectId, int teacherId, string classDescription, string zoomLink, ClassShift classShift, DateTime startDate, int subjectDurationInMonths)
+        {
+            SubjectId = subjectId;
+            TeacherId = teacherId;
+            ClassDescription = classDescription;
+            ZoomLink = zoomLink;
+            ClassShift = classShift;
+            StartDate = startDate;
+
+            EndDate = StartDate.AddMonths(subjectDurationInMonths);
+        }
+
+        public void RecalculateEndDate()
+        {
+            if (Subject == null)
+                throw new InvalidOperationException("Subject must be assigned to calculate EndDate.");
+
+            EndDate = StartDate.AddMonths(Subject.Duration);
         }
 
     }

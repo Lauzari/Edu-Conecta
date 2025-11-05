@@ -15,12 +15,13 @@ namespace Infrastructure.Extensions
             services.AddScoped<ISubjectRepository, SubjectRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IClassRepository, ClassRepository>();
-
+            
             // Services
             services.AddScoped<IProfessorRequestService, ProfessorRequestService>();
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICustomAuthenticationService, AuthenticationService>();
+            services.AddScoped<IClassService, ClassService>();
 
             return services;
         }

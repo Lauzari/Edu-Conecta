@@ -1,8 +1,10 @@
 using Core.Entities;
 using Core.Interfaces;
-using Core.Services;
 using Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Models.Requests;
+using Microsoft.AspNetCore.Authorization;
+using Core.Enums;
 
 
 namespace Web.Controllers
@@ -11,55 +13,84 @@ namespace Web.Controllers
     [Route("[controller]")]
     public class ClassController : ControllerBase
     {
-        private readonly ClassService _classService;
+        private readonly IClassService _classService;
 
-        public ClassController(ClassService classService)
+        public ClassController(IClassService classService)
         {
             _classService = classService;
         }
 
-        [HttpGet("AllClasses")]
-        public ActionResult<IEnumerable<Class>> GetAll()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ClassDto>>> GetAll()
         {
-            return Ok(_classService.GetAll());
+            var classes = await _classService.GetAll();
+            return ClassDto.Create(classes);
+        }
+
+        [HttpGet("GetClassesWithStudents")]
+         [Authorize(Roles = nameof(UserType.Admin))]
+        public async Task<ActionResult<IEnumerable<ClassWithStudentsDto>>> GetAllWithStudents()
+        {
+            var classes = await _classService.GetAllWithStudents();
+            return ClassWithStudentsDto.Create(classes);
         }
 
         [HttpGet("GetClass")]
-        public ActionResult<Class> GetById([FromQuery] int id)
+        public async Task<ActionResult<ClassDto>> GetById([FromQuery] int id)
         {
-            return Ok(_classService.GetById(id));
+            var classItem = await _classService.GetById(id);
+            return ClassDto.Create(classItem);
         }
 
-        [HttpPost("CreateClass")]
-        public ActionResult<ClassDto> Create([FromBody] ClassDto newClassDto)
+        [HttpGet("GetClassWithStudents")]
+        [Authorize(Roles = nameof(UserType.Professor))]
+        public async Task<ActionResult<ClassWithStudentsDto>> GetClassWithStudents([FromQuery] int id)
         {
-            var newClass = new Class
-            {
-                subjectId = newClassDto.subjectId,
-                classDescription = newClassDto.classDescription,
-                teacherId = newClassDto.teacherId,
-                zoomLink = newClassDto.zoomLink,
-                classShift = newClassDto.classShift,
-                startDate = newClassDto.startDate,
-                endDate = newClassDto.endDate
-            };
-
-            var created = _classService.Create(newClass);
-            return CreatedAtAction(nameof(GetById), new { id = created.classId }, ClassDto.Create(created));
+            var classItem = await _classService.GetByIdWithStudents(id);
+            return ClassWithStudentsDto.Create(classItem);
         }
 
-        [HttpPut("UpdateClass")]
-        public ActionResult<Class> Update([FromBody] Class updatedClass)
+        [HttpPost]
+        [Authorize(Roles = nameof(UserType.Professor))]
+        public async Task<ActionResult<ClassDto>> Create([FromBody] CreateClassRequest request)
         {
-            var result = _classService.Update(updatedClass);
+            var newClass = await _classService.Create(request.SubjectId, request.ClassDescription, request.TeacherId, request.ZoomLink, request.ClassShift, request.StartDate);
 
-            return Ok(result);
+            return CreatedAtAction(nameof(GetById), new { id = newClass.Id }, ClassDto.Create(newClass));
+        }
+
+        [HttpPut]
+        [Authorize(Roles = nameof(UserType.Professor))]
+        public async Task<ActionResult<ClassDto>> Update([FromBody] UpdateClassRequest request)
+        {
+            var updatedClass = await _classService.Update(request.Id, request.SubjectId, request.ClassDescription, request.TeacherId, request.ZoomLink, request.ClassShift, request.StartDate);
+
+            return ClassDto.Create(updatedClass);
         }
 
         [HttpDelete("Delete")]
-        public IActionResult Delete([FromQuery] int id)
+        [Authorize(Roles = $"{nameof(UserType.Admin)},{nameof(UserType.Professor)}")]
+        public async Task<IActionResult> Delete([FromQuery] int id)
         {
-            _classService.Delete(id);
+            await _classService.Delete(id);
+            return NoContent();
+        }
+
+        [HttpPost("{classId}/enrollStudent")]
+        [Authorize]
+        public async Task<ActionResult> EnrollStudent(int classId, [FromBody] int studentId)
+        {
+            await _classService.AddStudent(classId, studentId);
+
+            return NoContent();
+        }
+
+        [HttpPost("{classId}/deleteStudent")]
+        [Authorize(Roles = nameof(UserType.Professor))]
+        public async Task<ActionResult> DeleteStudent(int classId, [FromBody] int studentId)
+        {
+            await _classService.DeleteStudent(classId, studentId);
+
             return NoContent();
         }
     }

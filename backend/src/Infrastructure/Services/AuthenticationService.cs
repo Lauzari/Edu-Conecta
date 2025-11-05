@@ -38,11 +38,12 @@ namespace Infrastructure.Services
             if (user.UserType != verifiedUserType)
                 throw new AppValidationException("User type mismatch.");
 
-            if (user.Password != password)
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
                 throw new AppValidationException("Invalid password.");
 
             return user;
         }
+
 
 
         public async Task<string> Autenticar(string email, string password, string userType)

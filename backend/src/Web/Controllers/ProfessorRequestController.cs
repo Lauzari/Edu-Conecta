@@ -35,7 +35,6 @@ public class ProfessorRequestController : ControllerBase
         return CreatedAtAction(nameof(GetRequestById), new { id = newRequest.Id }, ProfessorRequestDto.Create(newRequest));
     }
 
-    //CAPAZ ESTE NO HACE FALTA
     [HttpGet("{id}")]
     [Authorize]
     public async Task<ActionResult<ProfessorRequestDto>> GetRequestById([FromRoute] int id)
