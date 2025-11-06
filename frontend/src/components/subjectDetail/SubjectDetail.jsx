@@ -1,12 +1,46 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import subjects from "../../data/subjects.js";
+import { useState } from "react";
 import "./SubjectDetail.css";
+
+
 function SubjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+const [subject, setSubject] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+ 
+  useEffect(() => {
+   
+    const fetchSubject = async () => {
+      try {
+        
+        const response = await fetch(`http://localhost:7018/api/subjects/${id}`);
 
-  const subject = subjects.find((s) => s.id === parseInt(id));
+        if (!response.ok) {
+          throw new Error("Error al obtener la materia");
+        }
+
+        const data = await response.json();
+
+       
+        setSubject(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+        window.scrollTo(0, 0); 
+      }
+    };
+
+    fetchSubject();
+  }, [id]); 
+
+
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>{error}</p>;
+  if (!subject) return <p>Materia no encontrada</p>;
 
      useEffect(() => {
     window.scrollTo(0, 0);
@@ -18,12 +52,12 @@ function SubjectDetail() {
 
   return (
     <section className="section main-banner" id="subject-detail" data-section="section-detail">
-      {/* Video de fondo igual que el banner */}
+     
       <video autoPlay muted loop id="bg-video">
         <source src="/images/course-video.mp4" type="video/mp4" />
       </video>
 
-      {/* Overlay de la plantilla */}
+      
       <div className="video-overlay header-text">
         <div className="container">
           <div className="row">
@@ -35,7 +69,7 @@ function SubjectDetail() {
 
                 <p>{subject.description}</p>
 
-                {/* Botón de inscripción */}
+               
                 <div className="main-button-red" style={{ marginTop: "20px" }}>
                   <div className="scroll-to-section">
                     <button onClick={() => navigate(`/inscripcion/${subject.id}`)}>
@@ -44,7 +78,7 @@ function SubjectDetail() {
                   </div>
                 </div>
 
-                {/* Botón volver */}
+               
                 <div className="main-button-red" style={{ marginTop: "15px" }}>
                   <div className="scroll-to-section">
                     <button onClick={() => navigate(-1)}>Volver</button>

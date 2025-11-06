@@ -24,7 +24,7 @@ const LoginModal = ({ show, handleClose }) => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
     setError("");
-  }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -43,22 +43,29 @@ const LoginModal = ({ show, handleClose }) => {
       return;
     }
     try {
-      console.log("Se inició sesión con éxito");
+      const response = await fetch("http://localhost:7018/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Email o contraseña incorrectos");
+      }
+
+      const data = await response.json();
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      } else {
+        throw new Error("Ocurrió un error al iniciar sesión");
+      }
+
       handleClose();
-      //   const response = await fetch("http://localhost:5000/api/auth/login", {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({ email, password }),
-      //   });
-      //   if (!response.ok) {
-      //     throw new Error("Credenciales inválidas");
-      // }
-      //   const data = await response.json();
-      //   localStorage.setItem("token", data.token);
-      //   handleClose();
+      navigate("/");
     } catch (err) {
-      console.log("Error al iniciar sesión");
-      //   setError(err.message || "Error al iniciar sesión");
+      console.error("❌ Error al iniciar sesión:", err.message);
+      setError(err.message || "Error al iniciar sesión");
     }
   };
 
@@ -90,8 +97,9 @@ const LoginModal = ({ show, handleClose }) => {
                 onChange={handlePasswordChange}
               />
               <Button
+                type="button"
                 className="showPassword"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={togglePasswordVisibility}
               >
                 <i className={showPassword ? "fa fa-eye-slash" : "fa fa-eye"} />
               </Button>
