@@ -64,7 +64,7 @@ namespace Core.Services
                 string body = $"{newRequest.Applicant.Name} realizó una nueva solicitud.\n" +
                             $"ID: {newRequest.Id}\n" +
                             $"Fecha: {DateTime.Now}\n" +
-                            $"Email: {admin.Email}\n" +
+                            $"Email: {newRequest.Applicant.Email}\n" +
                             $"Descripción: {newRequest.Description}";
 
                 _mailService.Send(subject, body, admin.Email);
