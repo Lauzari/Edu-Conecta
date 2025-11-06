@@ -208,10 +208,10 @@ function EditUserModal({ show, onHide, userId, onSave }) {
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="email"
-                  placeholder="ejemplo@correo.com"
                   name="email"
                   value={userData.email}
                   onChange={handleChange}
+                  readOnly
                 />
                 {errors.email && (
                   <div className="text-danger small mt-1">{errors.email}</div>

@@ -51,7 +51,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(UserType.Professor))]
+        [Authorize(Roles = $"{nameof(UserType.Admin)},{nameof(UserType.Professor)}")]
         public async Task<ActionResult<ClassDto>> Create([FromBody] CreateClassRequest request)
         {
             var newClass = await _classService.Create(request.SubjectId, request.ClassDescription, request.TeacherId, request.ZoomLink, request.ClassShift, request.StartDate);

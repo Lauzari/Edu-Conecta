@@ -5,25 +5,39 @@ import SubjectCard from "../../subjectCard/SubjectCard.jsx";
 import "./OurSubjects.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "./OurSubjects.css";
+import { useAuth } from "../../../hooks/useAuth.js";
 
 function OurSubjects() {
   const navigate = useNavigate();
+  const { token } = useAuth(); // obtenemos el token
+
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:7018/api/courses")
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch("https://localhost:7018/api/Subject", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Error al obtener materias");
+        }
+
+        const data = await response.json();
         setCourses(data);
-        setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error al cargar cursos:", error);
+      } finally {
         setLoading(false);
-      });
-  }, []);
+      }
+    };
+
+    fetchCourses();
+  }, [token]);
 
   const settings = {
     dots: true,
@@ -36,7 +50,9 @@ function OurSubjects() {
       { breakpoint: 768, settings: { slidesToShow: 1 } },
     ],
   };
+
   if (loading) return <p>Cargando materias...</p>;
+
   return (
     <section className="our-subjects" id="courses">
       <div className="container">
@@ -51,9 +67,11 @@ function OurSubjects() {
               {courses.map((course) => (
                 <div className="item" key={course.id}>
                   <SubjectCard
-                    img={course.img}
-                    title={course.title}
+                    // Usamos name en lugar de title
+                    title={course.name}
                     description={course.description}
+                    // img puede ser un placeholder si no existe
+                    img={`/images/subjects/${course.id}.jpg`}
                     onClick={() => navigate(`/subjects/${course.id}`)}
                   />
                 </div>

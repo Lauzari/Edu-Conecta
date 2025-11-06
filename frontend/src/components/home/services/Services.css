@@ -12,7 +12,8 @@
   border-radius: 20px;
   text-align: center;
   color: #fff;
-  padding: 40px;
+  padding: 25px;
+  height: 50vh;
 }
 
 .services .item .icon {
@@ -36,14 +37,3 @@
   padding: 0 1.6rem;
 }
 
-@media (min-width: 840px) and (max-width: 1080px) {
-  .services .item {
-    height: 300px;
-  }
-}
-
-@media (max-width: 992px) {
-  .services {
-    margin-top: 60px;
-  }
-}

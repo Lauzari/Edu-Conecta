@@ -13,7 +13,7 @@ function Services() {
     slidesToScroll: 1,
     responsive: [
       {
-        breakpoint: 1080,
+        breakpoint: 1203,
         settings: {
           slidesToShow: 2,
         },
@@ -44,7 +44,7 @@ function Services() {
       desc: "Formamos una comunidad de alumnos comprometidos y solidarios. Podés compartir dudas, experiencias y crecer junto a tus compañeros.",
     },
     {
-      icon: "/images/service-icon-02.png",
+      icon: "/images/teachings.png",
       title: "Clases virtuales",
       desc: "Aprendé desde donde estés con clases online dinámicas y accesibles. Ganás flexibilidad sin perder la calidad y el acompañamiento de siempre.",
     },

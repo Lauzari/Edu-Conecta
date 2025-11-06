@@ -1,11 +1,12 @@
 import { useEffect , useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./CourseDetail.css";
+import { useAuth } from "../../hooks/useAuth";
 
 function CourseDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const { token } = useAuth(); 
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
@@ -13,7 +14,9 @@ function CourseDetail() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await fetch(`http://localhost:7018/api/courses/${id}`);
+        const response = await fetch(`https://localhost:7018/Class/GetClass?id=${classId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
         if (!response.ok) {
           throw new Error("Error al obtener el curso");

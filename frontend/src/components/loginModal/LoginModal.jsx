@@ -3,17 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { Modal, Form, InputGroup, Button } from "react-bootstrap";
 import "./loginModal.css";
 import { validateLoginForm } from "./loginValidation";
+import { useAuth } from "../../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const LoginModal = ({ show, handleClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
+
+  const { handleLogin } = useAuth();
 
   const handleRegisterNavigate = () => {
     navigate("/register");
-    handleClose();
+    handleModalClose();
   };
 
   const handleEmailChange = (e) => {
@@ -30,53 +36,68 @@ const LoginModal = ({ show, handleClose }) => {
     setShowPassword(!showPassword);
   };
 
-  const handleLogin = async (e) => {
+
+const resetForm = () => {
+  setEmail("");
+  setPassword("");
+  setError("");
+  setShowPassword(false);
+  setLoading(false);
+};
+
+const handleModalClose = () => {
+  resetForm();
+  handleClose();
+};
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    // validations from loginValidations.js
     const errors = validateLoginForm({ email, password });
-
     if (Object.keys(errors).length > 0) {
-      // We show only the first error
       setError(Object.values(errors)[0]);
       return;
     }
+
     try {
-      const response = await fetch("http://localhost:7018/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      setLoading(true);
+
+      const response = await fetch(
+        "https://localhost:7018/api/authentication/authenticate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Email o contraseña incorrectos");
+        const text = await response.text();
+        throw new Error(text || "Credenciales inválidas");
       }
 
-      const data = await response.json();
-
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-      } else {
-        throw new Error("Ocurrió un error al iniciar sesión");
-      }
-
-      handleClose();
-      navigate("/");
+      const token = await response.text();
+      handleLogin(token);
+      toast.success("¡Inicio de sesión exitoso!");
+      handleModalClose();
     } catch (err) {
-      console.error("❌ Error al iniciar sesión:", err.message);
-      setError(err.message || "Error al iniciar sesión");
+      console.error("Error al iniciar sesión:", err);
+      setError("Error al iniciar sesión");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered className="custom-modal">
+    <Modal show={show} onHide={handleModalClose} centered className="custom-modal">
       <Modal.Header closeButton>
         <Modal.Title>INICIAR SESIÓN</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {error && <div className="alert alert-danger">{error}</div>}
-        <Form onSubmit={handleLogin}>
+        <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -97,8 +118,8 @@ const LoginModal = ({ show, handleClose }) => {
                 onChange={handlePasswordChange}
               />
               <Button
-                type="button"
                 className="showPassword"
+                type="button"
                 onClick={togglePasswordVisibility}
               >
                 <i className={showPassword ? "fa fa-eye-slash" : "fa fa-eye"} />
@@ -107,7 +128,9 @@ const LoginModal = ({ show, handleClose }) => {
           </Form.Group>
 
           <div className="main-button-green">
-            <button type="submit">Iniciar sesión</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "Iniciando..." : "Iniciar sesión"}
+            </button>
           </div>
         </Form>
         <button onClick={handleRegisterNavigate} className="login-link">
