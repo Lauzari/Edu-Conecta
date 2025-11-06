@@ -1,16 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import courses from "../../../data/courses.js";
 import "./CoursesView.css";
 
 function CoursesView() {
   const navigate = useNavigate();
-  const [filter, setFilter] = useState("all");
 
+  const [courses, setCourses] = useState([]);
+  const [filter, setFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch("http://localhost:7018/api/courses"); 
+       
+
+        if (!response.ok) {
+          throw new Error("Error al obtener los cursos");
+        }
+
+        const data = await response.json();
+        setCourses(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  
   const filteredCourses =
     filter === "all"
       ? courses
       : courses.filter((c) => c.year === filter);
+
+  
+  if (loading) return <p>Cargando cursos...</p>;
+  if (error) return <p>Error: {error}</p>;courses.filter((c) => c.year === filter);
 
   return (
     <section className="courses-view">
@@ -21,7 +52,7 @@ function CoursesView() {
               <h2>Algunos de nuestros cursos</h2>
             </div>
             </div>
-          {/* Sidebar de filtros */}
+          {/* Sidebar  */}
           <div className="col-lg-4 col-md-12">
             <div className="categories">
               <h4>¿En qué año de la carrera estás?</h4>

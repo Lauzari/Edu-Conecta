@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { FaArrowLeft } from "react-icons/fa";
 import './professorForm.css';
-import { toast, Bounce } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-const ProfessorFrom = () => {
+
+const ProfessorForm = () => {
 
   const [values, setValues] = useState({
-    Name: "",
+    nombre: "",
     lastName: "",
-    description: "",
+    experience: "",
   });
 
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -21,78 +22,66 @@ const ProfessorFrom = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
-    e.preventDefault();
-    console.log("Formulario válido ✅", values);
 
-    //falta agregar el token y el id del usuario
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!values.nombre || !values.lastName || !values.experience) {
+      setMessage("Por favor completá todos los campos.");
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
+
     try {
-      const response = await fetch('http://localhost:5253/api/ProfessorRequest/5', {
+      const response = await fetch("http://localhost:7018/api/professors", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          Description: values.description,
-          ApplicantId: 5,
-        }),
+        body: JSON.stringify(values),
       });
 
       if (response.ok) {
-        toast('✨ Tu solicitud fue enviada con éxito!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-        });
-        setTimeout(() => navigate("/"), 3000);
+        setMessage("✅ Tu postulación fue enviada correctamente.");
+        setValues({ nombre: "", lastName: "", experience: "" });
       } else {
-        const text = await response.text();
-        throw new Error(`Error ${response.status}: ${text}`);
+        const errorData = await response.json();
+        setMessage(`❌ Error: ${errorData.message || "No se pudo enviar la solicitud."}`);
       }
-
     } catch (error) {
-      toast(' Error al enviar la solicitud', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce,
-        });
-      console.error("❌ Error:", error);
+      setMessage("⚠️ Error al conectar con el servidor.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className='Professor'>
       <div className='Professor-form'>
-        <FaArrowLeft style={{ fontSize: '30px', color: 'black', marginTop: '20px', marginLeft: '30px', cursor: 'pointer' }} onClick={() => window.location.href = '/'} />
+        <FaArrowLeft
+          style={{ fontSize: '30px', color: 'black', marginTop: '20px', marginLeft: '30px', cursor: 'pointer' }}
+          onClick={() => window.location.href = '/'}
+        />
+
         <div className='Professor-form-content'>
           <h1>Sumate a nuestro equipo de docentes!</h1>
+
           <form onSubmit={handleSubmit}>
             <div className='form-group'>
-              <input type="text"
-                name="Name"
-                value={values.Name}
+              <input
+                type="text"
+                name="nombre"
+                value={values.nombre}
                 onChange={handleChange}
                 placeholder="Nombre"
               />
             </div>
 
             <div className='form-group'>
-              <input type="text"
+              <input
+                type="text"
                 name="lastName"
                 value={values.lastName}
                 onChange={handleChange}
@@ -101,10 +90,23 @@ const ProfessorFrom = () => {
             </div>
 
             <div className='form-group-text'>
-              <textarea value={values.description} onChange={handleChange} name="description" id="" placeholder='Experiencia..'></textarea>
+              <textarea
+                name="experience"
+                value={values.experience}
+                onChange={handleChange}
+                placeholder="Experiencia..."
+              ></textarea>
             </div>
 
-            <button className='submit-register-professor' type="submit">Aplicar</button>
+            <button
+              className='submit-register-professor'
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Enviando..." : "Aplicar"}
+            </button>
+
+            {message && <p style={{ marginTop: "10px" }}>{message}</p>}
           </form>
         </div>
       </div>
@@ -116,4 +118,4 @@ const ProfessorFrom = () => {
   );
 };
 
-export default ProfessorFrom;
+export default ProfessorForm;
