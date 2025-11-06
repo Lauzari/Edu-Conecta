@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import courses from '../../../data/courses';
+import { useAuth } from "../../../hooks/useAuth";
 import { useParams } from 'react-router-dom';
 
 function EditClassModal({ show, onHide }) {
   const { id } = useParams();
-
-  const course = courses.find((c) => c.id === parseInt(id));
-
+  const { token } = useAuth(); 
   const [formData, setFormData] = useState({
     nameSubjet: "",
     description: "",
@@ -18,30 +16,80 @@ function EditClassModal({ show, onHide }) {
     hours: "",
   });
 
-  
-  useEffect(() => {
-    if (course) {
-      setFormData({
-        nameSubjet: course.title || "",
-        description: course.description || "",
-        startDate: course.startDate || "",
-        endDate: course.endDate || "",
-        hours: course.hours || "",
-      });
-    }
-  }, [course, show]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
+   
+    useEffect(() => {
+    const fetchCourse = async () => {
+      if (!show) return; 
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:7018/api/courses/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        });
+        if (!response.ok) throw new Error("Error al obtener los datos del curso");
+
+        const data = await response.json();
+
+        setFormData({
+          nameSubjet: data.title || "",
+          description: data.description || "",
+          startDate: data.startDate ? data.startDate.split("T")[0] : "",
+          endDate: data.endDate ? data.endDate.split("T")[0] : "",
+          hours: Array.isArray(data.hours) ? data.hours.join(", ") : data.hours || "",
+        });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourse();
+  }, [id, show, token]);
+
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
-  const handleSave = () => {
-    console.log("Datos editados:", formData);
-    onHide(); 
+  
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch(`http://localhost:7018/api/courses/${id}`, {
+        method: "PUT", // or PATCH, 
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, 
+        },
+        body: JSON.stringify({
+          title: formData.nameSubjet,
+          description: formData.description,
+          startDate: formData.startDate,
+          endDate: formData.endDate,
+          hours: formData.hours.split(",").map((h) => h.trim()),
+        }),
+      });
+
+      if (!response.ok) throw new Error("Error al guardar los cambios");
+
+      console.log("✅ Cambios guardados correctamente");
+      onHide(); 
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

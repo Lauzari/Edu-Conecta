@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect , useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./CourseDetail.css";
 
@@ -7,7 +7,7 @@ function CourseDetail() {
   const navigate = useNavigate();
 
   const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
 
   useEffect(() => {

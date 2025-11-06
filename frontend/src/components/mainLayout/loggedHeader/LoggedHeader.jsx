@@ -40,6 +40,7 @@ function LoggedHeader() {
     handleLogout();
     toast.info("Ha cerrado sesión.");
     setMenuOpen(false)
+    navigate("/");
   };
   return (
     <header className={`header-area ${isSticky ? "header-sticky" : ""}`}>
