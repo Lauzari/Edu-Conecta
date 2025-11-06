@@ -29,13 +29,12 @@ function ContactUs() {
     }
 
     try {
-      //LOGICA PARA UNIR CON BACK:
-      //   const response = await fetch("http://localhost:4000/contact", {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify(formData),
-      //   });
-      //   if (!response.ok) throw new Error("Error al enviar el formulario");
+      const response = await fetch("http://localhost:7018/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) throw new Error("Error al enviar el formulario");
       toast.success("✅ ¡Formulario enviado con éxito!");
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
@@ -104,8 +103,7 @@ function ContactUs() {
                           placeholder="Escribe tu consulta..."
                           value={formData.message}
                           onChange={handleChange}
-                        >
-                        </textarea>
+                        ></textarea>
                         {errors.message && <small>{errors.message}</small>}
                       </fieldset>
                     </div>
