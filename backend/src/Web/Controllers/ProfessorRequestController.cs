@@ -43,20 +43,26 @@ public class ProfessorRequestController : ControllerBase
         return ProfessorRequestDto.Create(request);
     }
 
+    [HttpGet("/requestsByUserId/{id}")]
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<ProfessorRequestDto>>> GetRequestsByUserId([FromRoute] int id)
+    {
+        var requests = await _service.GetRequestsByUserId(id);
+        return ProfessorRequestDto.Create(requests);
+    }
+
     [HttpPut("acceptRequest")]
     [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<ActionResult<ProfessorRequestDto>> AcceptRequestStatus([FromBody] UpdateProfessorRequestDto request)
     {
-        // FALTA AGREGAR ID DE LA ROUTE
         var req = await _service.AcceptRequestStatusAsync(request.Id, request.ApplicantId);
         return ProfessorRequestDto.Create(req);
     }
 
     [HttpPut("declineRequest")]
     [Authorize(Roles = nameof(UserType.Admin))]
-    public async Task<ActionResult<ProfessorRequestDto>> DeclineRequestStatus([FromRoute] int id, [FromBody] UpdateProfessorRequestDto request)
+    public async Task<ActionResult<ProfessorRequestDto>> DeclineRequestStatus([FromBody] UpdateProfessorRequestDto request)
     {
-        // FALTA AGREGAR ID DE LA ROUTE
         var req = await _service.DeclineRequestStatusAsync(request.Id, request.ApplicantId);
         return ProfessorRequestDto.Create(req);
     }

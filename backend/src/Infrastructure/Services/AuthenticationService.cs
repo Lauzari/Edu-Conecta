@@ -44,8 +44,6 @@ namespace Infrastructure.Services
             return user;
         }
 
-
-
         public async Task<string> Autenticar(string email, string password, string userType)
         {
             var user = await ValidateUserAsync(email, password, userType) ?? throw new Exception("User authentication failed");
@@ -74,7 +72,6 @@ namespace Infrastructure.Services
 
             return tokenToReturn.ToString();
         }
-
 
         public class AuthenticationServiceOptions
         {

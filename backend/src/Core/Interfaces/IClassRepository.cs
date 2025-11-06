@@ -10,5 +10,5 @@ public interface IClassRepository
     public Task<Class?> GetByIdWithStudents(int id);
     public Task<Class> Create(Class newClass);
     public Task<Class> Update(Class updatedClass);
-    public void Delete(Class classItem);
+    public Task Delete(Class classItem);
 }

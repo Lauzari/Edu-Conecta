@@ -1,71 +1,129 @@
-import React, { useState } from "react";
-import { Table, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Table, Button, Spinner, Alert } from "react-bootstrap";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import Pagination from "../../ui/pagination/Pagination.jsx";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
 import EditUserModal from "./editUserModal/EditUserModal.jsx";
 
-// ARMAR REQUEST DE API
-const dummyUsers = Array.from({ length: 153 }, (_, i) => ({
-  id: i + 1,
-  name: `Usuario ${i + 1}`,
-  email: `user${i + 1}@example.com`,
-  role: ["estudiante", "docente", "admin"][i % 3],
-}));
-
 function Users({ searchTerm }) {
-  const [users, setUsers] = useState(dummyUsers);
+  const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState(null);
 
-  // States to use Modals (edit & delete)
+  // Modal States
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
   const usersPerPage = 10;
 
-  // Filter by search term (from Dashboard.jsx)
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwibmFtZSI6IkFkbWluIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzYyNDMwNjE2LCJleHAiOjE3NjI0MzQyMTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNjkiLCJhdWQiOiJFZHVDb25lY3RhQVBJIn0.kfrtULpt46gZMLWiyiMVDOvV-NP6MhUzk-MY9aQ6wl4";
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(
+          "https://localhost:7018/User/allUsersInfo",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Error al obtener los usuarios");
+        }
+
+        const data = await response.json();
+
+        const formattedData = data.map((u) => ({
+          id: u.id,
+          name: u.name,
+          email: u.email,
+          role: u.userType,
+          birthDate: u.birthDate,
+          registerDate: u.registerDate,
+        }));
+
+        setUsers(formattedData);
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   const filtered = users.filter(
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Pagination (its logic is in UI folder)
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filtered.slice(indexOfFirstUser, indexOfLastUser);
   const totalPages = Math.ceil(filtered.length / usersPerPage);
 
-  // ARMAR REQUEST DE API
-  const handleDelete = () => {
-    if (selectedUserId !== null) {
-      setUsers(users.filter((user) => user.id !== selectedUserId));
+  const handleDelete = async () => {
+    if (selectedUserId === null) return;
+
+    try {
+      setError(null);
+
+      const response = await fetch(
+        `https://localhost:7018/User/delete?id=${selectedUserId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error al eliminar usuario (HTTP ${response.status})`);
+      }
+
+      setUsers((prev) => prev.filter((user) => user.id !== selectedUserId));
       console.log("Usuario eliminado con id:", selectedUserId);
+
       setSelectedUserId(null);
+      setShowDeleteModal(false);
+    } catch (err) {
+      console.error("Error al eliminar usuario:", err);
+      setError("No se pudo eliminar el usuario. Inténtalo de nuevo.");
+      setShowDeleteModal(false);
     }
   };
-  // ARMAR REQUEST DE API
+
+  // 🔹 Editar usuario
   const handleEdit = (id) => {
     setSelectedUserId(id);
     setShowEditModal(true);
   };
 
-  const openDeleteModal = (id) => {
-    setSelectedUserId(id);
-    setShowDeleteModal(true);
-  };
-
-  // ARMAR REQUEST DE API
-  // This comes from the Edit Modal
   const handleSaveUser = (updatedUser) => {
+    const normalizedUser = {
+      ...updatedUser,
+      role: updatedUser.userType, // 👈 importante
+    };
+
     setUsers((prev) =>
       prev.map((user) =>
-        user.id === updatedUser.id ? { ...user, ...updatedUser } : user
+        user.id === normalizedUser.id ? { ...user, ...normalizedUser } : user
       )
     );
-    console.log("Usuario actualizado:", updatedUser);
+
+    console.log("Usuario actualizado:", normalizedUser);
   };
+
+  if (error) return <Alert variant="danger">{error}</Alert>;
 
   return (
     <div
@@ -73,12 +131,14 @@ function Users({ searchTerm }) {
       style={{ overflowX: "auto" }}
     >
       <h4 className="mb-3">Usuarios</h4>
+
       <Table striped bordered hover responsive>
         <thead>
           <tr>
             <th>Nombre</th>
             <th>Mail</th>
             <th>Rol</th>
+            <th>Fecha de registro</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -88,6 +148,7 @@ function Users({ searchTerm }) {
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
+              <td>{new Date(user.registerDate).toLocaleDateString()}</td>
               <td>
                 <Button
                   variant="outline-primary"
@@ -100,7 +161,10 @@ function Users({ searchTerm }) {
                 <Button
                   variant="outline-danger"
                   size="sm"
-                  onClick={() => openDeleteModal(user.id)}
+                  onClick={() => {
+                    setSelectedUserId(user.id);
+                    setShowDeleteModal(true);
+                  }}
                 >
                   <FaTrash />
                 </Button>
@@ -116,6 +180,7 @@ function Users({ searchTerm }) {
         onPageChange={setCurrentPage}
       />
 
+      {/* Modal de confirmación para eliminar */}
       <ConfirmationModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
@@ -126,6 +191,7 @@ function Users({ searchTerm }) {
         onConfirm={handleDelete}
       />
 
+      {/* Modal para editar usuario */}
       <EditUserModal
         show={showEditModal}
         onHide={() => setShowEditModal(false)}

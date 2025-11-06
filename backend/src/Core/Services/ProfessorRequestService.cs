@@ -62,6 +62,14 @@ namespace Core.Services
             return request;
         }
 
+         public async Task<IEnumerable<ProfessorRequest>> GetRequestsByUserId(int id)
+        {
+            var user = _userRepository.GetByIdAsync(id) ?? throw new NotFoundException("User Not Found.");
+            
+            var requests = await _professorRequestRepository.GetRequestsByUserIdAsync(id) ?? throw new NotFoundException("Professor Request not found");
+            return requests;
+        }
+
         public async Task<ProfessorRequest> AcceptRequestStatusAsync(int requestId, int applicantId)
         {
             var request = await _professorRequestRepository.GetByIdAsync(requestId)

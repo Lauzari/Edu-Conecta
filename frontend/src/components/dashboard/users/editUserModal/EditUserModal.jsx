@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Form, Alert } from "react-bootstrap";
+import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { validateUserData } from "./editUserValidations.js";
 
 function EditUserModal({ show, onHide, userId, onSave }) {
   const [errors, setErrors] = useState({});
   const [originalIsAdmin, setOriginalIsAdmin] = useState(false);
   const [showRoleWarning, setShowRoleWarning] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
+  const [saving, setSaving] = useState(false);
+
   const [userData, setUserData] = useState({
     name: "",
     birthDate: "",
@@ -13,19 +17,50 @@ function EditUserModal({ show, onHide, userId, onSave }) {
     role: "",
   });
 
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwibmFtZSI6IkFkbWluIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzYyNDMwNjE2LCJleHAiOjE3NjI0MzQyMTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNjkiLCJhdWQiOiJFZHVDb25lY3RhQVBJIn0.kfrtULpt46gZMLWiyiMVDOvV-NP6MhUzk-MY9aQ6wl4";
+
   useEffect(() => {
-    if (show && userId) {
-      // HACER REQUEST A API
-      const mockUser = {
-        id: userId,
-        name: "Juan Pérez",
-        birthDate: "1990-05-12",
-        email: "juan.perez@example.com",
-        role: "Student",
-      };
-      setUserData(mockUser);
-      setOriginalIsAdmin(mockUser.role === "Admin");
-    }
+    const fetchUserData = async () => {
+      if (show && userId) {
+        setLoading(true);
+        setFetchError(null);
+        try {
+          const response = await fetch(
+            `https://localhost:7018/User/userInfo?id=${userId}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`Error al obtener datos del usuario (HTTP ${response.status})`);
+          }
+
+          const data = await response.json();
+
+          setUserData({
+            name: data.name,
+            birthDate: data.birthDate,
+            email: data.email,
+            role: data.userType,
+          });
+
+          setOriginalIsAdmin(data.userType === "Admin");
+        } catch (err) {
+          console.error("Error al obtener el usuario:", err);
+          setFetchError("No se pudo obtener la información del usuario.");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchUserData();
   }, [show, userId]);
 
   const handleChange = (e) => {
@@ -50,14 +85,48 @@ function EditUserModal({ show, onHide, userId, onSave }) {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const { isValid, errors } = validateUserData(userData);
     if (!isValid) {
       setErrors(errors);
       return;
     }
-    onSave(userData);
-    onHide();
+
+    setSaving(true);
+    setFetchError(null);
+
+    try {
+      const body = {
+        id: userId,
+        email: userData.email,
+        name: userData.name,
+        birthDate: userData.birthDate,
+        userType: userData.role,
+      };
+
+      const response = await fetch("https://localhost:7018/User/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al actualizar el usuario (HTTP ${response.status})`);
+      }
+
+      const updatedUser = await response.json();
+
+      onSave(updatedUser);
+      onHide();
+    } catch (err) {
+      console.error("Error al actualizar el usuario:", err);
+      setFetchError("No se pudo actualizar el usuario. Inténtelo nuevamente.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleCancel = () => {
@@ -79,75 +148,84 @@ function EditUserModal({ show, onHide, userId, onSave }) {
       </Modal.Header>
 
       <Modal.Body>
-        <>
-          <p className="text-muted">
-            Solo el usuario en cuestión puede modificar su contraseña.
-          </p>
+        {loading ? (
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "150px" }}>
+            <Spinner animation="border" variant="primary" />
+          </div>
+        ) : fetchError ? (
+          <Alert variant="danger">{fetchError}</Alert>
+        ) : (
+          <>
+            <p className="text-muted">
+              Solo el usuario en cuestión puede modificar su contraseña.
+            </p>
 
-          {showRoleWarning && (
-            <Alert variant="warning">
-              Usted está modificando el rol del usuario.
-            </Alert>
-          )}
-
-          <Form>
-            <Form.Group className="mb-3" controlId="userName">
-              <Form.Label>Nombre completo</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Ej: Juan Pérez"
-                name="name"
-                value={userData.name}
-                onChange={handleChange}
-              />
-              {errors.name && (
-                <div className="text-danger small mt-1">{errors.name}</div>
-              )}
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="userBirthDate">
-              <Form.Label>Fecha de nacimiento</Form.Label>
-              <Form.Control
-                type="date"
-                name="birthDate"
-                value={userData.birthDate}
-                onChange={handleChange}
-              />
-              {errors.birthDate && (
-                <div className="text-danger small mt-1">{errors.birthDate}</div>
-              )}
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="userEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="ejemplo@correo.com"
-                name="email"
-                value={userData.email}
-                onChange={handleChange}
-              />
-              {errors.email && (
-                <div className="text-danger small mt-1">{errors.email}</div>
-              )}
-            </Form.Group>
-
-            {userData.role === "Professor" ? (
-              ""
-            ) : (
-              <Form.Group controlId="userIsAdmin" className="mt-3">
-                {" "}
-                <Form.Check
-                  type="checkbox"
-                  label="¿Es administrador?"
-                  name="isAdmin"
-                  checked={userData.role === "Admin"}
-                  onChange={handleChange}
-                />{" "}
-              </Form.Group>
+            {showRoleWarning && (
+              <Alert variant="warning">
+                Usted está modificando el rol del usuario.
+              </Alert>
             )}
-          </Form>
-        </>
+
+            <Form>
+              <Form.Group className="mb-3" controlId="userName">
+                <Form.Label>Nombre completo</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Ej: Juan Pérez"
+                  name="name"
+                  value={userData.name}
+                  onChange={handleChange}
+                />
+                {errors.name && (
+                  <div className="text-danger small mt-1">{errors.name}</div>
+                )}
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="userBirthDate">
+                <Form.Label>Fecha de nacimiento</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="birthDate"
+                  value={userData.birthDate}
+                  onChange={handleChange}
+                />
+                {errors.birthDate && (
+                  <div className="text-danger small mt-1">
+                    {errors.birthDate}
+                  </div>
+                )}
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="userEmail">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="ejemplo@correo.com"
+                  name="email"
+                  value={userData.email}
+                  onChange={handleChange}
+                />
+                {errors.email && (
+                  <div className="text-danger small mt-1">{errors.email}</div>
+                )}
+              </Form.Group>
+
+              {userData.role === "Professor" ? (
+                ""
+              ) : (
+                <Form.Group controlId="userIsAdmin" className="mt-3">
+                  <Form.Check
+                    type="checkbox"
+                    label="¿Es administrador?"
+                    name="isAdmin"
+                    checked={userData.role === "Admin"}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              )}
+            </Form>
+          </>
+        )}
       </Modal.Body>
 
       <Modal.Footer>
@@ -157,6 +235,7 @@ function EditUserModal({ show, onHide, userId, onSave }) {
         <Button
           variant="success"
           onClick={handleSave}
+          disabled={loading || fetchError}
           style={{ backgroundColor: "#039a51", borderColor: "#039a51" }}
         >
           Guardar cambios

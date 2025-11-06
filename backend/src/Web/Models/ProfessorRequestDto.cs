@@ -7,6 +7,7 @@ public record ProfessorRequestDto(
     int Id,
     string Description,
     int ApplicantId,
+    string ApplicantName,
     RequestStatus Status
 )
 {
@@ -16,6 +17,7 @@ public record ProfessorRequestDto(
             entity.Id,
             entity.Description,
             entity.ApplicantId,
+            entity.Applicant?.Name ?? string.Empty,
             entity.Status
         );
 
