@@ -22,6 +22,7 @@ namespace Infrastructure.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICustomAuthenticationService, AuthenticationService>();
             services.AddScoped<IClassService, ClassService>();
+            services.AddScoped<IMailService, MailService>();
 
             return services;
         }
