@@ -27,14 +27,14 @@ const Register = () => {
     });
   };
 
-  const handleSubmit  = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateRegister(values);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
       console.log("Formulario válido ✅", values);
-      try{
+      try {
         //puse mi localhost porque no me tomaba el puerto de appsettings.json, hay que modificarlo 
         const response = await fetch("http://localhost:5253/User/create", {
           method: "POST",
@@ -49,17 +49,18 @@ const Register = () => {
           }),
         });
 
+          const data = await response.json();
         if (response.ok) {
-          console.log("Datos enviados correctamente");
-          navigate("/")
-        } else {
-          console.log("Error al enviar los datos");
+          console.log("✅ Registro exitoso");
+          navigate("/");
+        } if (!response.ok) {
+          alert(data.message || "El usuario ya existe ❌");
         }
-
-      }catch(error){
-        console.log(error);
+      } catch (error) {
+        console.error("❌ Error en la conexión:", error);
+        alert("Error al conectar con el servidor");
       }
-      // acá iría tu lógica para enviar los datos (fetch/axios/etc.)
+
     }
   };
 
