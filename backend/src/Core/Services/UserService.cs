@@ -17,6 +17,12 @@ public class UserService : IUserService
     public async Task<User> CreateUserAsync(string Email, string Password, string Name, DateOnly BirthDate)
 
     {
+        var existingUser = await _userRepository.GetByEmailAsync(Email);
+        if (existingUser != null)
+        {
+            throw new AppValidationException("El usuario ya existe");
+        }
+
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(Password);
         var newUser = new User(Email, passwordHash, Name, BirthDate, UserType.Student);
 
@@ -86,7 +92,7 @@ public class UserService : IUserService
 
         return user;
     }
-    
+
     public async Task<User> GetByEmailAsync(string email)
     {
         var user = await _userRepository.GetByEmailAsync(email);

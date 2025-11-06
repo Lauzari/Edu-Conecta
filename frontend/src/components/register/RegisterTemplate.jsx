@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import './register.css';
 import validateRegister from './loginhelper';
 import LoginModal from '../loginModal/LoginModal';
+import { useNavigate } from 'react-router-dom';
+
 
 const Register = () => {
   const [showLogin, setShowLogin] = useState(false);
 
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [values, setValues] = useState({
-    nombre: "",
-    email: "",
-    password: "",
+    Name: "",
+    Email: "",
+    Password: "",
     confirmPassword: "",
     terms: false,
+    birthdate: "",
   });
 
   const handleChange = (e) => {
@@ -23,14 +27,40 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateRegister(values);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
       console.log("Formulario válido ✅", values);
-      // acá iría tu lógica para enviar los datos (fetch/axios/etc.)
+      try {
+        //puse mi localhost porque no me tomaba el puerto de appsettings.json, hay que modificarlo 
+        const response = await fetch("http://localhost:5253/User/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            Email: values.Email,
+            Password: values.Password,
+            Name: values.Name,
+            BirthDate: values.birthdate,
+          }),
+        });
+
+          const data = await response.json();
+        if (response.ok) {
+          console.log("✅ Registro exitoso");
+          navigate("/");
+        } if (!response.ok) {
+          alert(data.message || "El usuario ya existe ❌");
+        }
+      } catch (error) {
+        console.error("❌ Error en la conexión:", error);
+        alert("Error al conectar con el servidor");
+      }
+
     }
   };
 
@@ -44,50 +74,60 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             <div className='form-group'>
               <input type="text"
-                name="nombre"
-                value={values.nombre}
+                name="Name"
+                value={values.Name}
                 onChange={handleChange}
                 placeholder="Nombre"
               />
-              {errors.nombre && <span className="error">{errors.nombre}</span>}
+              {errors.Name && <span className="error">{errors.Name}</span>}
             </div>
 
             <div className='form-group'>
               <input type="text"
-                name="email"
-                value={values.email}
+                name="Email"
+                value={values.Email}
                 onChange={handleChange}
                 placeholder="Email"
               />
-              {errors.email && <span className="error">{errors.email}</span>}
+              {errors.Email && <span className="error">{errors.Email}</span>}
             </div>
 
             <div className='form-group'>
-            <input type="password"
-              placeholder="Contraseña"
-              name='password'
-              value={values.password}
-              onChange={handleChange} 
-            />
-            {errors.password && <span className="error">{errors.password}</span>}
+              <input type="date"
+                name="birthdate"
+                value={values.birthdate}
+                onChange={handleChange}
+                placeholder="Fecha de nacimiento"
+              />
+              {errors.birthdate && <span className="error">{errors.birthdate}</span>}
             </div>
 
             <div className='form-group'>
-            <input type="password"
-              name='confirmPassword'
-              value={values.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirmar contraseña"
-            />
-            {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
+              <input type="password"
+                placeholder="Contraseña"
+                name='Password'
+                value={values.Password}
+                onChange={handleChange}
+              />
+              {errors.Password && <span className="error">{errors.Password}</span>}
+            </div>
+
+            <div className='form-group'>
+              <input type="password"
+                name='confirmPassword'
+                value={values.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirmar contraseña"
+              />
+              {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
             </div>
 
             <div className='form-group'>
               <label htmlFor="" className='check-box'>
                 <input type="checkbox"
-                name='terms'
-                value={values.terms}
-                onChange={handleChange}
+                  name='terms'
+                  value={values.terms}
+                  onChange={handleChange}
                 /><p>Acepto los términos y condiciones</p>
               </label>
               {errors.terms && <span className="error">{errors.terms}</span>}
