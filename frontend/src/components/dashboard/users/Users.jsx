@@ -4,6 +4,7 @@ import { FaTrash, FaEdit } from "react-icons/fa";
 import Pagination from "../../ui/pagination/Pagination.jsx";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
 import EditUserModal from "./editUserModal/EditUserModal.jsx";
+import { useAuth } from "../../../hooks/useAuth.js";
 
 function Users({ searchTerm }) {
   const [users, setUsers] = useState([]);
@@ -17,9 +18,8 @@ function Users({ searchTerm }) {
 
   const usersPerPage = 10;
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwibmFtZSI6IkFkbWluIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzYyNDMwNjE2LCJleHAiOjE3NjI0MzQyMTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNjkiLCJhdWQiOiJFZHVDb25lY3RhQVBJIn0.kfrtULpt46gZMLWiyiMVDOvV-NP6MhUzk-MY9aQ6wl4";
-
+  const { token } = useAuth();
+  
   useEffect(() => {
     const fetchUsers = async () => {
       try {

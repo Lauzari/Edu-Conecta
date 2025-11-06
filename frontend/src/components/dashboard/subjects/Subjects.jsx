@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "./Subjects.css";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
 import AddSubjectModal from "./addSubjectModal/AddSubjectModal.jsx";
+import { useAuth } from "../../../hooks/useAuth.js";
 
 function Subjects({ searchTerm }) {
   const [subjects, setSubjects] = useState([]);
@@ -19,9 +20,8 @@ function Subjects({ searchTerm }) {
   const subjectsPerPage = 10;
   const navigate = useNavigate();
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwibmFtZSI6IkFkbWluIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzYyNDMwNjE2LCJleHAiOjE3NjI0MzQyMTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNjkiLCJhdWQiOiJFZHVDb25lY3RhQVBJIn0.kfrtULpt46gZMLWiyiMVDOvV-NP6MhUzk-MY9aQ6wl4";
-
+  const { token } = useAuth();
+  
   // === FETCH SUBJECTS ===
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -167,7 +167,7 @@ const handleSaveSubject = (savedSubject, subjectId) => {
           {currentSubjects.map((subject) => (
             <tr key={subject.id}>
               <td>{subject.name}</td>
-              <td>{subject.year}</td>
+              <td>Año {subject.year}</td>
               <td>{subject.duration}</td>
               <td>
                 <Button

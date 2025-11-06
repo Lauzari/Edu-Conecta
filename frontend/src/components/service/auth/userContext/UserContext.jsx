@@ -1,48 +1,43 @@
 import { useContext, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-
-// Importa el contexto de autenticación previamente definido
-import { UserContext } from "../auth.context";
-
-// Importamos helper que nos ayuda a validar el token
+import { UserContext } from "../authContext";
 import { isTokenValid } from "./auth.helpers";
 
-// Obtiene el token del localStorage si ya existe y lo valida
-const storedToken = localStorage.getItem("dory-shoes-token");
+const storedToken = localStorage.getItem("educonecta-token");
 const tokenValue = isTokenValid(storedToken) ? storedToken : null;
 
-// Provider: define y exporta el proveedor del contexto del usuario
 export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(tokenValue);
   const decodedToken = token ? jwtDecode(token) : null;
   const [role, setRole] = useState(decodedToken?.role || null);
   const [id, setId] = useState(decodedToken?.id || null);
+  const [name, setName] = useState(decodedToken?.name || null);
 
-  // Guarda el token y actualiza el estado
   const handleLogin = (token) => {
-  localStorage.setItem("dory-shoes-token", token);
+  localStorage.setItem("educonecta-token", token);
   const decodedToken = isTokenValid(token) ? jwtDecode(token) : null;
 
   if (decodedToken) {
     setRole(decodedToken.role);
     setId(decodedToken.id);
     setToken(token);
+    setName(decodedToken.name);
   } else {
-    handleLogout(); // opcional, por si el token es inválido
+    handleLogout();
   }
 };
 
-  // Elimina el token y actualiza el estado
   const handleLogout = () => {
-    localStorage.removeItem("dory-shoes-token");
+    localStorage.removeItem("educonecta-token");
     setToken(null);
     setRole(null);
     setId(null);
+    setName(null);
   };
 
   return (
     <UserContext.Provider
-      value={{ token, role, id, handleLogin, handleLogout }}
+      value={{ token, role, id, name, handleLogin, handleLogout }}
     >
       {children}
     </UserContext.Provider>

@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import MainLayout from "./components/mainLayout/MainLayout";
 import Home from "./components/home/Home.jsx";
 import { ToastContainer } from "react-toastify";
@@ -14,35 +14,34 @@ import Register from "./components/register/RegisterTemplate.jsx";
 import Dashboard from "./components/dashboard/Dashboard.jsx";
 import UserProfile from "./components/user/UserProfile.jsx";
 import Protected from "./components/protected/Protected";
+import PrivateRoute from "./components/privateRoute/PrivateRoute.jsx";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Home />} />
-            <Route path="home" element={<Home />} />
-            <Route path="subjects/:id" element={<SubjectDetail />} />
-            <Route path="/courses/:id" element={<CourseDetail />} />
-            <Route path="/courses" element={<AllCoursesView />} />
-            <Route path="/all-courses" element={<AllCoursesView />} />
-            <Route path="/applyNow" element={<ApplyNow />} />
-            <Route path="/contact" element={<ContactUs />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/form-professor" element={<RegisterProfessor />} />
-            <Route path="/user-profile" element={<UserProfile />} />
-          </Route>
-          <Route path="/register" element={<Register isEdit={false} />} />
-
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="home" element={<Home />} />
+          <Route path="subjects/:id" element={<SubjectDetail />} />
+          <Route path="/courses/:id" element={<CourseDetail />} />
+          <Route path="/courses" element={<AllCoursesView />} />
+          <Route path="/all-courses" element={<AllCoursesView />} />
+          <Route path="/applyNow" element={<ApplyNow />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/form-professor" element={<RegisterProfessor />} />
+          <Route path="/user-profile" element={<UserProfile />} />
           <Route element={<Protected />}>
-            <Route path="/editProfile/:userId" element={<EditProfile />} />
+          {/* <Route path="/editProfile/:userId" element={<EditProfile />} /> */}
+          <Route element={<PrivateRoute allowedRoles={["Admin"]} />}>
+            <Route path="/dashboard" element={<Dashboard />} />
           </Route>
-          <Route element={<PrivateRoute allowedRoles={["Professor", "Admin"]} />}>
-          <Route path="/dashboard/*" element={<Dashboard />} />
         </Route>
-        </Routes>
-      </BrowserRouter>
+        </Route>
+        <Route path="/register" element={<Register isEdit={false} />} />
+
+        
+      </Routes>
       <ToastContainer position="bottom-right" autoClose={3000} />
     </>
   );

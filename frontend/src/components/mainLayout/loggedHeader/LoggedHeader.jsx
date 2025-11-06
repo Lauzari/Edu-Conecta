@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../header/Header.css";
 import "./LoggedHeader.css";
+import { useAuth } from "../../../hooks/useAuth";
+import { toast } from "react-toastify";
 
 function LoggedHeader() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  //This would come from the context
-  const user = { name: "Pedro Pérez", role: "Admin" };
-  const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : "?";
+  const { role, name, handleLogout } = useAuth();
+
+  const userInitial = name ? name.charAt(0).toUpperCase() : "?";
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -33,6 +35,12 @@ function LoggedHeader() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const handleUserLogOut = () => {
+    handleLogout();
+    toast.info("Ha cerrado sesión.");
+    setMenuOpen(false)
+  };
   return (
     <header className={`header-area ${isSticky ? "header-sticky" : ""}`}>
       <div className="container">
@@ -70,7 +78,7 @@ function LoggedHeader() {
                     Cursos
                   </button>
                 </li>
-                {user.role == "Admin" ? <li>
+                {role == "Admin" ? <li>
                   <button
                     className="nav-link"
                     onClick={() => {
@@ -92,7 +100,7 @@ function LoggedHeader() {
                   </button>
                 </li>}
 
-                {user.role == "Student" ? <li>
+                {role == "Student" ? <li>
                   <button
                     className="nav-link"
                     onClick={() => {
@@ -107,10 +115,7 @@ function LoggedHeader() {
                 <li>
                   <button
                     className="nav-link"
-                    onClick={() => {
-                      navigate("/applyNow");
-                      setMenuOpen(false);
-                    }}
+                    onClick={handleUserLogOut}
                   >
                     Cerrar sesión
                   </button>

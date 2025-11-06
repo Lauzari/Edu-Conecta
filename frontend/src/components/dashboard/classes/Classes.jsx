@@ -4,6 +4,7 @@ import { FaTrash, FaEdit } from "react-icons/fa";
 import Pagination from "../../ui/pagination/Pagination.jsx";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
 import EditClassModal from "./editClassModal/EditClassModal.jsx";
+import { useAuth } from "../../../hooks/useAuth.js";
 
 function Classes({ searchTerm }) {
   const [classes, setClasses] = useState([]);
@@ -16,8 +17,13 @@ function Classes({ searchTerm }) {
 
   const classesPerPage = 10;
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwibmFtZSI6IkFkbWluIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzYyNDI2NTg0LCJleHAiOjE3NjI0MzAxODQsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNjkiLCJhdWQiOiJFZHVDb25lY3RhQVBJIn0.WONp04QI_lV0wSqG9X7rM39WetZyiQ4gZ7vjpuHrKik";
+  const { token } = useAuth();
+
+  const shiftMap = {
+    Morning: "Mañana",
+    Afternoon: "Tarde",
+    Evening: "Noche",
+  };
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -38,9 +44,9 @@ function Classes({ searchTerm }) {
           id: cls.classId,
           subjectName: cls.subject?.name || "Sin nombre",
           teacherName: cls.teacher?.name || "Sin profesor",
-          classShift: cls.classShift,
-          startDate: new Date(cls.startDate).toLocaleDateString("es-AR"),
-          endDate: new Date(cls.endDate).toLocaleDateString("es-AR"),
+          classShift: shiftMap[cls.classShift] || cls.classShift,
+          startDate: cls.startDate,
+          endDate: cls.endDate,
         }));
 
         setClasses(formatted);
@@ -106,7 +112,8 @@ function Classes({ searchTerm }) {
           ? {
               ...cls,
               subjectName: updatedClassData.subjectName || cls.subjectName,
-              classShift: updatedClassData.classShift || cls.classShift,
+              classShift:
+                shiftMap[updatedClassData.classShift] || cls.classShift,
               startDate: updatedClassData.startDate || cls.startDate,
               endDate: updatedClassData.endDate || cls.endDate,
               teacherName: cls.teacherName, // we maintain the existing value because it cannot change
@@ -140,8 +147,8 @@ function Classes({ searchTerm }) {
               <td>{cls.subjectName}</td>
               <td>{cls.teacherName}</td>
               <td>{cls.classShift}</td>
-              <td>{cls.startDate}</td>
-              <td>{cls.endDate}</td>
+              <td>{cls.startDate.split("T")[0]}</td>
+              <td>{cls.endDate.split("T")[0]}</td>
               <td>
                 <Button
                   variant="outline-primary"

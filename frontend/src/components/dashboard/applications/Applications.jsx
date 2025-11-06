@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Button, Spinner, Alert } from "react-bootstrap";
 import Pagination from "../../ui/pagination/Pagination.jsx";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
+import { useAuth } from "../../../hooks/useAuth.js";
 
 function Applications({ searchTerm }) {
   const [applications, setApplications] = useState([]);
@@ -12,8 +13,7 @@ function Applications({ searchTerm }) {
   const [error, setError] = useState(null);
   const appsPerPage = 10;
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwibmFtZSI6IkFkbWluIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzYyNDMwNjE2LCJleHAiOjE3NjI0MzQyMTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNjkiLCJhdWQiOiJFZHVDb25lY3RhQVBJIn0.kfrtULpt46gZMLWiyiMVDOvV-NP6MhUzk-MY9aQ6wl4";
+ const { token } = useAuth();
 
   useEffect(() => {
     const fetchApplications = async () => {
