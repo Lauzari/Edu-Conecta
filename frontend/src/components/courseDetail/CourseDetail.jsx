@@ -1,13 +1,20 @@
 import React from "react";
-import  { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import courses from "../../data/courses.js";
+import users from "../../data/user.js";
 import "./CourseDetail.css";
+import StudientModal from "../ui/studientModal/StudientModal.jsx";
+import EditClassModal from "../ui/EditClass/EditClassMOdal.jsx";
+
 
 function CourseDetail() {
+  // tipo de usuario actual, es para testear el modal de edición y de inscriptos
+  const currentUser = { role: "professor" };
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const [show, setShow] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   useEffect(() => {
     window.scrollTo(0, 0); //scroll to top 
   }, []);
@@ -21,8 +28,10 @@ function CourseDetail() {
   const hoursFormatted = Array.isArray(course.hours)
     ? course.hours.join(" / ")
     : typeof course.hours === "string"
-    ? course.hours.split(",").join(" / ")
-    : "Horario no disponible";
+      ? course.hours.split(",").join(" / ")
+      : "Horario no disponible";
+
+
 
   return (
     <div>
@@ -76,15 +85,32 @@ function CourseDetail() {
                     <button className="main-button-red" onClick={() => navigate("/courses")}>
                       Volver a la lista de cursos
                     </button>
+
                     <button className="main-button-red">Crear curso</button>
-                    <button className="main-button-red">Inscripción</button>
+                    {(currentUser.role === "admin" || currentUser.role === "professor") ? (
+                      <button className="main-button-red" onClick={() => setShow(true)}>
+                        Inscriptos en la materia
+                      </button>
+                    ) : (
+                      <button className="main-button-red">Inscribirme</button>
+                    )}
+
+                    {(currentUser.role ==="admin" || currentUser.role === "professor") ? (
+                    <button className="main-button-red" onClick={() => setShowEdit(true)}>Editar curso</button>
+                    ) : ""}
                   </div>
+
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+      <StudientModal show={show} onHide={() => setShow(false)} />
+        <EditClassModal
+        show={showEdit}
+        onHide={() => setShowEdit(false)}
+      />
     </div>
   );
 }
