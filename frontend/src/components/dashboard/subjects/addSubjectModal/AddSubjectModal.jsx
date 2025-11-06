@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { validateSubject } from "./validateSubjectModal.js";
+import { useAuth } from "../../../../hooks/useAuth.js";
 
 function SubjectModal({ show, onHide, onSave, subjectId }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    year: "Año 1",
+    year: "",
     duration: "",
     description: "",
   });
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwibmFtZSI6IkFkbWluIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzYyNDMwNjE2LCJleHAiOjE3NjI0MzQyMTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNjkiLCJhdWQiOiJFZHVDb25lY3RhQVBJIn0.kfrtULpt46gZMLWiyiMVDOvV-NP6MhUzk-MY9aQ6wl4";
-
+  const { token } = useAuth();
+  
   // === FETCH SUBJECT BY ID ===
   useEffect(() => {
     if (show && subjectId) {
@@ -47,7 +47,7 @@ function SubjectModal({ show, onHide, onSave, subjectId }) {
       fetchSubject();
     } else if (show && !subjectId) {
       // Creation mode
-      setFormData({ name: "", year: "Año 1", duration: "", description: "" });
+      setFormData({ name: "", year: "1", duration: "", description: "" });
       setError("");
     }
   }, [subjectId, show, token]);
@@ -116,7 +116,7 @@ function SubjectModal({ show, onHide, onSave, subjectId }) {
       const updatedSubject = {
         id: savedSubject.id ?? savedSubject.Id,
         name: savedSubject.name,
-        year: `Año ${savedSubject.year}`,
+        year: `${savedSubject.year}`,
         duration: savedSubject.duration,
         description: savedSubject.description,
       };
@@ -132,7 +132,7 @@ function SubjectModal({ show, onHide, onSave, subjectId }) {
   };
 
   const handleCancel = () => {
-    setFormData({ name: "", year: "Año 1", duration: "", description: "" });
+    setFormData({ name: "", year: "1", duration: "", description: "" });
     setError("");
     onHide();
   };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Alert, Spinner } from "react-bootstrap";
 import { validateUserData } from "./editUserValidations.js";
+import { useAuth } from "../../../../hooks/useAuth.js";
 
 function EditUserModal({ show, onHide, userId, onSave }) {
   const [errors, setErrors] = useState({});
@@ -17,14 +18,14 @@ function EditUserModal({ show, onHide, userId, onSave }) {
     role: "",
   });
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwibmFtZSI6IkFkbWluIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzYyNDMwNjE2LCJleHAiOjE3NjI0MzQyMTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNjkiLCJhdWQiOiJFZHVDb25lY3RhQVBJIn0.kfrtULpt46gZMLWiyiMVDOvV-NP6MhUzk-MY9aQ6wl4";
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchUserData = async () => {
       if (show && userId) {
         setLoading(true);
         setFetchError(null);
+        setShowRoleWarning(false); // resetea warning
         try {
           const response = await fetch(
             `https://localhost:7018/User/userInfo?id=${userId}`,
@@ -32,13 +33,15 @@ function EditUserModal({ show, onHide, userId, onSave }) {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           );
 
           if (!response.ok) {
-            throw new Error(`Error al obtener datos del usuario (HTTP ${response.status})`);
+            throw new Error(
+              `Error al obtener datos del usuario (HTTP ${response.status})`
+            );
           }
 
           const data = await response.json();
@@ -50,7 +53,7 @@ function EditUserModal({ show, onHide, userId, onSave }) {
             role: data.userType,
           });
 
-          setOriginalIsAdmin(data.userType === "Admin");
+          setOriginalIsAdmin(data.userType === "Admin"); // setea el original desde el backend
         } catch (err) {
           console.error("Error al obtener el usuario:", err);
           setFetchError("No se pudo obtener la información del usuario.");
@@ -108,17 +111,18 @@ function EditUserModal({ show, onHide, userId, onSave }) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(body),
       });
 
       if (!response.ok) {
-        throw new Error(`Error al actualizar el usuario (HTTP ${response.status})`);
+        throw new Error(
+          `Error al actualizar el usuario (HTTP ${response.status})`
+        );
       }
 
       const updatedUser = await response.json();
-
       onSave(updatedUser);
       onHide();
     } catch (err) {
@@ -137,6 +141,7 @@ function EditUserModal({ show, onHide, userId, onSave }) {
       role: "",
     });
     setErrors({});
+    setOriginalIsAdmin(false);
     setShowRoleWarning(false);
     onHide();
   };
@@ -149,7 +154,10 @@ function EditUserModal({ show, onHide, userId, onSave }) {
 
       <Modal.Body>
         {loading ? (
-          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "150px" }}>
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ minHeight: "150px" }}
+          >
             <Spinner animation="border" variant="primary" />
           </div>
         ) : fetchError ? (

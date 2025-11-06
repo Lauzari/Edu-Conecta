@@ -1,15 +1,25 @@
-import React from 'react'
-import { Outlet, Navigate } from 'react-router';
-import { isTokenValid } from '../Service/auth/usercontext/auth.helpers';
+import React, { useState } from 'react';
+import { Outlet } from 'react-router';
+import { isTokenValid } from '../service/auth/userContext/auth.helpers';
 import { useAuth } from '../../hooks/useAuth';
+import LoginModal from '../loginModal/LoginModal';
 
 const Protected = () => {
-    const { token } = useAuth()
-    if (!isTokenValid(token)) {
-        return <Navigate to="/login" replace />;
-    } else {
-        return <Outlet />
-    }
-}
+  const { token } = useAuth();
+  const [showLogin, setShowLogin] = useState(false);
 
-export default Protected
+  if (!isTokenValid(token)) {
+    return (
+      <>
+        <LoginModal show={true} handleClose={() => setShowLogin(false)} />
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          Debes iniciar sesión para continuar.
+        </div>
+      </>
+    );
+  }
+
+  return <Outlet />;
+};
+
+export default Protected;

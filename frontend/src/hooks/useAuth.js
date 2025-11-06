@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UserContext } from "../components/Service/auth/auth.context";
+import { UserContext } from "../components/service/auth/authContext";
 
 // Hook personalizado para acceder fácilmente al contexto
 export const useAuth = () => {

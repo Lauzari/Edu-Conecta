@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
+import { useAuth } from "../../../../hooks/useAuth.js";
 
 function EditClassModal({ show, onHide, classId, onSave }) {
   const [formData, setFormData] = useState({
@@ -15,10 +16,7 @@ function EditClassModal({ show, onHide, classId, onSave }) {
   const [subjects, setSubjects] = useState([]);
   const [error, setError] = useState("");
 
-  const apiUrl = "https://localhost:7018/api/Class";
-
-    const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwibmFtZSI6IkFkbWluIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzYyNDI2NTg0LCJleHAiOjE3NjI0MzAxODQsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNjkiLCJhdWQiOiJFZHVDb25lY3RhQVBJIn0.WONp04QI_lV0wSqG9X7rM39WetZyiQ4gZ7vjpuHrKik";
+  const { token } = useAuth(); 
 
   useEffect(() => {
     if (show) {
