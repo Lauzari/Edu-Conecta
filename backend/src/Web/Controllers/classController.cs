@@ -60,7 +60,7 @@ namespace Web.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = nameof(UserType.Professor))]
+        [Authorize(Roles = $"{nameof(UserType.Admin)},{nameof(UserType.Professor)}")]
         public async Task<ActionResult<ClassDto>> Update([FromBody] UpdateClassRequest request)
         {
             var updatedClass = await _classService.Update(request.Id, request.SubjectId, request.ClassDescription, request.TeacherId, request.ZoomLink, request.ClassShift, request.StartDate);

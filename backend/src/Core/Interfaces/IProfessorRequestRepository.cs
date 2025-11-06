@@ -1,3 +1,4 @@
+using System.Data;
 using Core.Entities;
 using Core.Enums;
 
@@ -10,5 +11,7 @@ namespace Core.Interfaces
         Task<ProfessorRequest?> GetByIdAsync(int id);
         Task<ProfessorRequest?> GetByApplicantIdAndStatusAsync(int applicantId, RequestStatus status);
         Task<ProfessorRequest> UpdateAsync(ProfessorRequest request);
+
+        Task<IEnumerable<ProfessorRequest>> GetRequestsByUserIdAsync(int id);
     }
 }
