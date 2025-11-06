@@ -10,12 +10,14 @@ namespace Core.Services
         private readonly IProfessorRequestRepository _professorRequestRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserService _userService;
+        private readonly IMailService _mailService;
 
-        public ProfessorRequestService(IProfessorRequestRepository repository, IUserService userService, IUserRepository userRepository)
+        public ProfessorRequestService(IProfessorRequestRepository repository, IUserService userService, IUserRepository userRepository, IMailService mailService)
         {
             _professorRequestRepository = repository;
             _userService = userService;
             _userRepository = userRepository;
+            _mailService = mailService;
         }
 
         public async Task<IEnumerable<ProfessorRequest>> GetRequestsAsync()
@@ -53,6 +55,20 @@ namespace Core.Services
                 Status = RequestStatus.Pending,
             };
             await _professorRequestRepository.AddAsync(newRequest);
+
+            var admins = await _userRepository.GetUsersByRoleAsync("Admin");
+
+            foreach (var admin in admins)
+            {
+                string subject = $"Nueva solicitud de profesor Nro. {newRequest.Id}";
+                string body = $"{newRequest.Applicant.Name} realizó una nueva solicitud.\n" +
+                            $"ID: {newRequest.Id}\n" +
+                            $"Fecha: {DateTime.Now}\n" +
+                            $"Email: {admin.Email}\n" +
+                            $"Descripción: {newRequest.Description}";
+
+                _mailService.Send(subject, body, admin.Email);
+            }
             return newRequest;
         }
 
