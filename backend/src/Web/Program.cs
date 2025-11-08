@@ -31,7 +31,7 @@ builder.Services.AddHttpClient<IQuoteService, ZenQuoteService>();
 # region Swagger custom token config
 builder.Services.AddSwaggerGen(setupAction =>
 {
-    setupAction.AddSecurityDefinition("ConsultaAlumnosApiBearerAuth", new OpenApiSecurityScheme() //Esto va a permitir usar swagger con el token.
+    setupAction.AddSecurityDefinition("EduConectaApiBearerAuth", new OpenApiSecurityScheme()
     {
         Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
@@ -90,7 +90,7 @@ builder.Services.AddApplicationServices();
 // Middlewares
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
-// Repositorios y servicios
+// Repositories and services
 builder.Services.AddApplicationServices();
 
 // CORS
