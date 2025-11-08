@@ -28,7 +28,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("GetClassesWithStudents")]
-         [Authorize(Roles = nameof(UserType.Admin))]
         public async Task<ActionResult<IEnumerable<ClassWithStudentsDto>>> GetAllWithStudents()
         {
             var classes = await _classService.GetAllWithStudents();
@@ -43,7 +42,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("GetClassWithStudents")]
-        [Authorize(Roles = nameof(UserType.Professor))]
         public async Task<ActionResult<ClassWithStudentsDto>> GetClassWithStudents([FromQuery] int id)
         {
             var classItem = await _classService.GetByIdWithStudents(id);

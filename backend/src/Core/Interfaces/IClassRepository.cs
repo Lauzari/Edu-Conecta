@@ -4,6 +4,7 @@ namespace Core.Interfaces;
 
 public interface IClassRepository
 {
+    public Task<int> GetStudentCount(int classId);
     public Task<IEnumerable<Class>> GetAll();
     public Task<IEnumerable<Class>> GetAllWithStudents();
     public Task<Class?> GetById(int id);

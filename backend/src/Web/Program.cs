@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Core.Interfaces;
 using Core.Services;
+using Infrastructure.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<Infrastructure.Services.AuthenticationService.AuthenticationServiceOptions>(
     builder.Configuration.GetSection(Infrastructure.Services.AuthenticationService.AuthenticationServiceOptions.AuthenticationService)
 );
+
+// HTTP Client
+builder.Services.AddHttpClient<IQuoteService, ZenQuoteService>();
+
 
 # region Swagger custom token config
 builder.Services.AddSwaggerGen(setupAction =>

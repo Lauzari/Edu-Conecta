@@ -63,5 +63,13 @@ namespace Infrastructure.Data
             _applicationDbContext.Classes.Remove(classItem);
             await _applicationDbContext.SaveChangesAsync();
         }
+
+        public async Task<int> GetStudentCount(int classId)
+        {
+            return await _applicationDbContext.Classes
+                .Where(c => c.Id == classId)
+                .Select(c => c.Students.Count)
+                .FirstOrDefaultAsync();
+        }
     }
 }

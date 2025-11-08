@@ -37,3 +37,16 @@
   padding: 0 1.6rem;
 }
 
+@media (max-width: 992px) {
+  .services .item {
+    height: 30vh;
+  }
+}
+
+@media (max-width: 500px) {
+  .services .item {
+    margin-top: 18vh;
+    height: 55vh;
+  }
+}
+

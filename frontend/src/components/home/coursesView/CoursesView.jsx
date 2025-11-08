@@ -43,7 +43,6 @@ function CoursesView() {
     fetchCourses();
   }, [token]);
 
-  // Filtrado por año (1 = primer año, 2 = segundo año)
   const filteredCourses =
     filter === "all"
       ? courses
@@ -106,7 +105,7 @@ function CoursesView() {
                   >
                     <div className="thumb">
                       <img
-                        src={`/images/subjects/${course.subjectId || "default"}.jpg`}
+                        src={`/images/subjects/${course.subjectId || "/images/subjects/default"}.jpg`}
                         alt={course.subject.name}
                       />
                       <div className="year">

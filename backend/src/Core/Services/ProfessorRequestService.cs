@@ -56,19 +56,14 @@ namespace Core.Services
             };
             await _professorRequestRepository.AddAsync(newRequest);
 
-            var admins = await _userRepository.GetUsersByRoleAsync("Admin");
+            string subject = $"Nueva solicitud de profesor Nro. {newRequest.Id}";
+            string body = $"{newRequest.Applicant.Name} realizó una nueva solicitud.\n" +
+                        $"ID: {newRequest.Id}\n" +
+                        $"Fecha: {DateTime.Now}\n" +
+                        $"Email: {newRequest.Applicant.Email}\n" +
+                        $"Descripción: {newRequest.Description}";
 
-            foreach (var admin in admins)
-            {
-                string subject = $"Nueva solicitud de profesor Nro. {newRequest.Id}";
-                string body = $"{newRequest.Applicant.Name} realizó una nueva solicitud.\n" +
-                            $"ID: {newRequest.Id}\n" +
-                            $"Fecha: {DateTime.Now}\n" +
-                            $"Email: {newRequest.Applicant.Email}\n" +
-                            $"Descripción: {newRequest.Description}";
-
-                _mailService.Send(subject, body, admin.Email);
-            }
+            await _mailService.SendToAdmins(subject, body);
             return newRequest;
         }
 
@@ -78,10 +73,10 @@ namespace Core.Services
             return request;
         }
 
-         public async Task<IEnumerable<ProfessorRequest>> GetRequestsByUserId(int id)
+        public async Task<IEnumerable<ProfessorRequest>> GetRequestsByUserId(int id)
         {
             var user = _userRepository.GetByIdAsync(id) ?? throw new NotFoundException("User Not Found.");
-            
+
             var requests = await _professorRequestRepository.GetRequestsByUserIdAsync(id) ?? throw new NotFoundException("Professor Request not found");
             return requests;
         }
@@ -110,7 +105,7 @@ namespace Core.Services
                 ?? throw new NotFoundException("Professor Request Not Found.");
 
             if (request.Status != RequestStatus.Pending)
-            //Agregamos un nuevo tipo de error como "BussinessRuleException"???
+                //Agregamos un nuevo tipo de error como "BussinessRuleException"???
                 throw new InvalidOperationException("Solo se pueden rechazar solicitudes en estado 'Pending'.");
 
             request.Status = RequestStatus.Rejected;

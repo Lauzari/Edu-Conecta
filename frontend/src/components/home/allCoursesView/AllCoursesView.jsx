@@ -64,7 +64,7 @@ function AllCoursesView() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
+    <div className="courses-bg">
       {/* Heading Page */}
       <section className="heading-page header-text" id="top">
         <div className="container">

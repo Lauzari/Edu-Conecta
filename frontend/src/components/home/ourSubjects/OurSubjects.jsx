@@ -9,7 +9,7 @@ import { useAuth } from "../../../hooks/useAuth.js";
 
 function OurSubjects() {
   const navigate = useNavigate();
-  const { token } = useAuth(); // obtenemos el token
+  const { token } = useAuth();
 
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,11 +67,9 @@ function OurSubjects() {
               {courses.map((course) => (
                 <div className="item" key={course.id}>
                   <SubjectCard
-                    // Usamos name en lugar de title
                     title={course.name}
                     description={course.description}
-                    // img puede ser un placeholder si no existe
-                    img={`/images/subjects/${course.id}.jpg`}
+                    img={course.id ? `/images/subjects/${course.id}.jpg` : "/images/subjects/default.jpg"}
                     onClick={() => navigate(`/subjects/${course.id}`)}
                   />
                 </div>

@@ -14,7 +14,8 @@ public record ClassWithStudentsDto(
     ClassShift classShift,
     DateTime startDate,
     DateTime endDate,
-    List<UserDto> Students
+    List<UserDto> Students,
+    int StudentCount
 )
 {
     public static ClassWithStudentsDto Create(Class entity)
@@ -30,7 +31,8 @@ public record ClassWithStudentsDto(
             entity.ClassShift,
             entity.StartDate,
             entity.EndDate,
-            entity.Students != null ? UserDto.Create(entity.Students) : new List<UserDto>()
+            entity.Students != null ? UserDto.Create(entity.Students) : new List<UserDto>(),
+            entity.Students?.Count ?? 0 
         );
 
         return dto;

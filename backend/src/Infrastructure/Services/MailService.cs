@@ -13,16 +13,19 @@ namespace Infrastructure.Services
         private readonly string _smtpUser;
         private readonly string _smtpPass;
 
-        public MailService(IConfiguration configuration)
+        private readonly IUserRepository _userRepository;
+
+        public MailService(IConfiguration configuration, IUserRepository userRepository)
         {
             _mailFrom = configuration["mailSettings:mailFromAddress"];
             _smtpHost = configuration["mailSettings:host"];
             _smtpPort = int.Parse(configuration["mailSettings:port"] ?? "587");
             _smtpUser = configuration["mailSettings:username"];
             _smtpPass = configuration["mailSettings:password"];
+            _userRepository = userRepository;
         }
 
-        public void Send(string subject, string message, string mailTo)
+        public async Task Send(string subject, string message, string mailTo)
         {
             try
             {
@@ -40,6 +43,26 @@ namespace Infrastructure.Services
                 Console.WriteLine($"Error enviando mail: {ex.Message}");
                 throw;
             }
+        }
+
+        public async Task SendToAdmins(string subject, string message)
+        {
+            var admins = await _userRepository.GetUsersByRoleAsync("Admin");
+            foreach (var admin in admins)
+            {
+                await Send(subject, message, admin.Email);
+            }
+        }
+
+        public async Task SendFirstContact(string name, string mail, string subject, string message)
+        {
+            string editedSubject = $"Contacto desde EduConecta: {subject}";
+            string body = $"{name} quiere contactarse contigo desde EduConecta.\n" +
+                        $"Fecha: {DateTime.Now}\n" +
+                        $"Email: {mail}\n" +
+                        $"Mensaje: {message}";
+
+            await SendToAdmins(editedSubject, body);
         }
     }
 }

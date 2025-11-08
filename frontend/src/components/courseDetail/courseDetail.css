@@ -36,7 +36,7 @@
 
 .meeting-single-item .thumb img {
   width: 100%;
-  height: auto;
+  height: 40vh;
   display: block;
   object-fit: cover;
   border-radius: 8px 8px 0 0;

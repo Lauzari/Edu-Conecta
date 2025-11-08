@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(tokenValue);
   const decodedToken = token ? jwtDecode(token) : null;
   const [role, setRole] = useState(decodedToken?.role || null);
-  const [id, setId] = useState(decodedToken?.id || null);
+  const [userId, setUserId] = useState(decodedToken?.sub || null);
   const [name, setName] = useState(decodedToken?.name || null);
 
   const handleLogin = (token) => {
@@ -19,7 +19,7 @@ export const UserProvider = ({ children }) => {
 
   if (decodedToken) {
     setRole(decodedToken.role);
-    setId(decodedToken.id);
+    setUserId(decodedToken.id);
     setToken(token);
     setName(decodedToken.name);
   } else {
@@ -31,13 +31,13 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem("educonecta-token");
     setToken(null);
     setRole(null);
-    setId(null);
+    setUserId(null);
     setName(null);
   };
 
   return (
     <UserContext.Provider
-      value={{ token, role, id, name, handleLogin, handleLogout }}
+      value={{ token, role, userId, name, handleLogin, handleLogout }}
     >
       {children}
     </UserContext.Provider>
