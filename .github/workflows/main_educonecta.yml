@@ -23,24 +23,19 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Move to backend folder
+      - name: Build solution
         working-directory: ./backend
-        run: |
-          echo "Now inside backend folder"
+        run: dotnet build EduConecta.sln --configuration Release
 
-      - name: Build with dotnet
+      - name: Publish Web project
         working-directory: ./backend
-        run: dotnet build Edu-Conecta.sln --configuration Release
-
-      - name: Publish with dotnet
-        working-directory: ./backend
-        run: dotnet publish Edu-Conecta.sln -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ./src/Web/Web.csproj -c Release -o ./publish_output
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ./backend/publish_output
 
   deploy:
     runs-on: windows-latest
