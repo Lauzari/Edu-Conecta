@@ -1,30 +1,58 @@
-import React, { useState } from "react";
-import { Table, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Table, Button, Spinner, Alert } from "react-bootstrap";
 import Pagination from "../../ui/pagination/Pagination.jsx";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
-
-// Datos simulados
-const dummyApplications = Array.from({ length: 25 }, (_, i) => {
-  const statuses = ["Pendiente", "Aceptado", "Rechazado"];
-  return {
-    id: i + 1,
-    name: `Postulante ${i + 1}`,
-    date: new Date(2025, 8, (i % 30) + 1).toISOString().split("T")[0], // fechas simuladas
-    status: statuses[i % 3],
-  };
-});
+import { useAuth } from "../../../hooks/useAuth.js";
 
 function Applications({ searchTerm }) {
-  const [applications, setApplications] = useState(dummyApplications);
+  const [applications, setApplications] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [modalAction, setModalAction] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
+  const [error, setError] = useState(null);
   const appsPerPage = 10;
 
+ const { token } = useAuth();
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const response = await fetch(
+          "https://localhost:7018/api/ProfessorRequest",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Error al obtener las solicitudes");
+        }
+
+        const data = await response.json();
+
+        const formattedData = data.map((req) => ({
+          id: req.id,
+          applicantId: req.applicantId,
+          name: req.applicantName,
+          status: req.status || "Pending",
+        }));
+
+        setApplications(formattedData);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchApplications();
+  }, []);
+
   const orderedApplications = [...applications].sort((a, b) => {
-    if (a.status === "Pendiente" && b.status !== "Pendiente") return -1;
-    if (a.status !== "Pendiente" && b.status === "Pendiente") return 1;
+    if (a.status === "Pending" && b.status !== "Pending") return -1;
+    if (a.status !== "Pending" && b.status === "Pending") return 1;
     return 0;
   });
 
@@ -39,16 +67,79 @@ function Applications({ searchTerm }) {
   const currentApplications = filtered.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filtered.length / appsPerPage);
 
-  const handleAccept = (id) => {
-    setApplications((prev) =>
-      prev.map((app) => (app.id === id ? { ...app, status: "Aceptado" } : app))
-    );
+  const handleAccept = async (id) => {
+    try {
+      const app = applications.find((a) => a.id === id);
+      const applicantId = app?.applicantId || id;
+
+      const response = await fetch(
+        `https://localhost:7018/api/ProfessorRequest/acceptRequest`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            id,
+            applicantId,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const msg = await response.text();
+        throw new Error(`Error al aceptar la solicitud: ${msg}`);
+      }
+
+      const data = await response.json(); // DTO de salida
+      // Actualizamos el estado local
+      setApplications((prev) =>
+        prev.map((app) =>
+          app.id === id ? { ...app, status: data.status || "Accepted" } : app
+        )
+      );
+    } catch (error) {
+      console.error(error);
+      setError("No se pudo aceptar la solicitud.");
+    }
   };
 
-  const handleReject = (id) => {
-    setApplications((prev) =>
-      prev.map((app) => (app.id === id ? { ...app, status: "Rechazado" } : app))
-    );
+  const handleReject = async (id) => {
+    try {
+      const app = applications.find((a) => a.id === id);
+      const applicantId = app?.applicantId || id;
+
+      const response = await fetch(
+        `https://localhost:7018/api/ProfessorRequest/declineRequest`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            id,
+            applicantId,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const msg = await response.text();
+        throw new Error(`Error al rechazar la solicitud: ${msg}`);
+      }
+
+      const data = await response.json();
+      setApplications((prev) =>
+        prev.map((app) =>
+          app.id === id ? { ...app, status: data.status || "Rejected" } : app
+        )
+      );
+    } catch (error) {
+      console.error(error);
+      setError("No se pudo rechazar la solicitud.");
+    }
   };
 
   const handleConfirm = () => {
@@ -59,6 +150,8 @@ function Applications({ searchTerm }) {
     }
     setShowModal(false);
   };
+
+  if (error) return <Alert variant="danger">{error}</Alert>;
 
   return (
     <div
@@ -75,8 +168,7 @@ function Applications({ searchTerm }) {
         <thead>
           <tr>
             <th># Solicitud</th>
-            <th>Nombre</th>
-            <th>Fecha de Postulación</th>
+            <th>Nombre del postulante</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -86,14 +178,13 @@ function Applications({ searchTerm }) {
             <tr key={app.id}>
               <td>{app.id}</td>
               <td>{app.name}</td>
-              <td>{app.date}</td>
               <td>{app.status}</td>
               <td>
                 <Button
                   variant="success"
                   size="sm"
                   className="me-2"
-                  disabled={app.status !== "Pendiente"}
+                  disabled={app.status !== "Pending"}
                   onClick={() => {
                     setSelectedId(app.id);
                     setModalAction("accept");
@@ -105,7 +196,7 @@ function Applications({ searchTerm }) {
                 <Button
                   variant="danger"
                   size="sm"
-                  disabled={app.status !== "Pendiente"}
+                  disabled={app.status !== "Pending"}
                   onClick={() => {
                     setSelectedId(app.id);
                     setModalAction("reject");

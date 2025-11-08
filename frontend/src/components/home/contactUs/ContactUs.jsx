@@ -12,6 +12,7 @@ function ContactUs() {
   });
 
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false); // <-- estado para loader
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,25 +22,40 @@ function ContactUs() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // validations from formValidations.js
+    // Validaciones
     const newErrors = validateForm(formData);
     if (Object.values(newErrors).some((err) => err)) {
       setErrors(newErrors);
       return;
     }
 
+    setIsLoading(true); // <-- activar loader
+
     try {
-      //LOGICA PARA UNIR CON BACK:
-      //   const response = await fetch("http://localhost:4000/contact", {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify(formData),
-      //   });
-      //   if (!response.ok) throw new Error("Error al enviar el formulario");
-      toast.success("✅ ¡Formulario enviado con éxito!");
+      // Agregar prefijo al subject
+      const payload = {
+        ...formData,
+        subject: `Contacto desde EduConecta: ${formData.subject}`
+      };
+
+      const response = await fetch(
+        "https://localhost:7018/api/Mail/contactUs",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) throw new Error("Error al enviar el formulario");
+
+      toast.success("✅ ¡Mensaje enviado con éxito!");
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
-      toast.error("❌ Hubo un error al enviar el formulario");
+      console.error(err);
+      toast.error("❌ Hubo un error al enviar el mensaje.");
+    } finally {
+      setIsLoading(false); // <-- desactivar loader
     }
   };
 
@@ -104,8 +120,7 @@ function ContactUs() {
                           placeholder="Escribe tu consulta..."
                           value={formData.message}
                           onChange={handleChange}
-                        >
-                        </textarea>
+                        ></textarea>
                         {errors.message && <small>{errors.message}</small>}
                       </fieldset>
                     </div>
@@ -115,8 +130,9 @@ function ContactUs() {
                           type="submit"
                           id="form-submit"
                           className="button"
+                          disabled={isLoading} // <-- deshabilitar mientras carga
                         >
-                          Enviar mensaje
+                          {isLoading ? "Enviando..." : "Enviar mensaje"} {/* <-- loader */}
                         </button>
                       </fieldset>
                     </div>

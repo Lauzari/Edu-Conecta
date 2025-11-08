@@ -105,7 +105,7 @@ upcoming meetings page
 ---------------------------------------------
 */
 
-section.meetings-page {
+/* section.meetings-page {
   background-image: url(../images/meetings-page-bg.jpg);
   background-position: center center;
   background-attachment: fixed;
@@ -294,7 +294,6 @@ section.meetings-page .pagination ul li a:hover {
   color: #f5a425;
 }
 
-/* Meeting item column */
 .templatemo-item-col {
   width: 31%;
 }
@@ -309,7 +308,7 @@ section.meetings-page .pagination ul li a:hover {
   .templatemo-item-col {
     width: 100%;
   }
-}
+} */
 
 /*
 ---------------------------------------------

@@ -24,19 +24,13 @@ namespace Infrastructure.Services
             Console.WriteLine($"SecretForKey: {_options.SecretForKey}");
         }
 
-        private async Task<User?> ValidateUserAsync(string email, string password, string userType)
+        private async Task<User?> ValidateUserAsync(string email, string password)
         {
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
                 throw new AppValidationException("There is information missing in the request.");
 
-            if (!Enum.TryParse<UserType>(userType, ignoreCase: true, out var verifiedUserType))
-                throw new AppValidationException("Invalid user type.");
-
             var user = await _userRepository.GetByEmailAsync(email)
                 ?? throw new NotFoundException("User not found.");
-
-            if (user.UserType != verifiedUserType)
-                throw new AppValidationException("User type mismatch.");
 
             if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
                 throw new AppValidationException("Invalid password.");
@@ -46,9 +40,9 @@ namespace Infrastructure.Services
 
 
 
-        public async Task<string> Autenticar(string email, string password, string userType)
+        public async Task<string> Autenticar(string email, string password)
         {
-            var user = await ValidateUserAsync(email, password, userType) ?? throw new Exception("User authentication failed");
+            var user = await ValidateUserAsync(email, password) ?? throw new Exception("User authentication failed");
 
             var securityPassword = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_options.SecretForKey)); //Traemos la SecretKey del Json. agregar antes: using Microsoft.IdentityModel.Tokens;
 
@@ -58,7 +52,7 @@ namespace Infrastructure.Services
             {
                 new("sub", user.Id.ToString()),
                 new("name", user.Name), // First and last name are in the same variable
-                new("role", userType)
+                new("role", user.UserType.ToString())
             };
 
             var jwtSecurityToken = new JwtSecurityToken( //agregar using System.IdentityModel.Tokens.Jwt; Acá es donde se crea el token con toda la data que le pasamos antes.

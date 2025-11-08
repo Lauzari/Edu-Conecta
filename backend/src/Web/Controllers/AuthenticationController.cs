@@ -24,7 +24,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("authenticate")]
     public async Task<ActionResult<string>> Autenticar(AuthenticationRequest authenticationRequest)
     {
-        string token = await _customAuthenticationService.Autenticar(authenticationRequest.Email, authenticationRequest.Password, authenticationRequest.UserType);
+        string token = await _customAuthenticationService.Autenticar(authenticationRequest.Email, authenticationRequest.Password);
 
         return Ok(token);
     }

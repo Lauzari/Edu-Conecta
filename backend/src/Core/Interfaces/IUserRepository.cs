@@ -13,6 +13,8 @@ public interface IUserRepository
 
     Task<User?> GetByEmailAsync(string email);
 
+    Task<IEnumerable<User>> GetUsersByRoleAsync(string role);
+
     Task<IEnumerable<User>> ListAsync();
 
     Task<User> AddAsync(User entity);

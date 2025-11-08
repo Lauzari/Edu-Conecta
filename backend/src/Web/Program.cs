@@ -5,11 +5,10 @@ using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Web.Middlewares;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Core.Interfaces;
-using Core.Services;
+using Infrastructure.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +23,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<Infrastructure.Services.AuthenticationService.AuthenticationServiceOptions>(
     builder.Configuration.GetSection(Infrastructure.Services.AuthenticationService.AuthenticationServiceOptions.AuthenticationService)
 );
+
+// HTTP Client
+builder.Services.AddHttpClient<IQuoteService, ZenQuoteService>();
+
 
 # region Swagger custom token config
 builder.Services.AddSwaggerGen(setupAction =>
@@ -43,7 +46,7 @@ builder.Services.AddSwaggerGen(setupAction =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "ConsultaAlumnosApiBearerAuth" } //Tiene que coincidir con el id seteado arriba en la definición
+                    Id = "ConsultaAlumnosApiBearerAuth" }
                 }, new List<string>() }
     });
 
@@ -53,8 +56,8 @@ builder.Services.AddSwaggerGen(setupAction =>
 
 });
 
-builder.Services.AddAuthentication("Bearer") //"Bearer" es el tipo de auntenticación que tenemos que elegir después en PostMan para pasarle el token
-    .AddJwtBearer(options => //Acá definimos la configuración de la autenticación. le decimos qué cosas queremos comprobar. La fecha de expiración se valida por defecto.
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new()
         {
@@ -80,7 +83,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 // Repositorios y servicios
-builder.Services.AddApplicationServices(); // Extensión para registrar repos y services
+builder.Services.AddApplicationServices();
 
 // CORS
 builder.Services.AddCors(options =>
@@ -99,7 +102,6 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

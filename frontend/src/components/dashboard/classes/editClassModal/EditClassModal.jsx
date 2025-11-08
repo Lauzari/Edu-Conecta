@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
+import { useAuth } from "../../../../hooks/useAuth.js";
 
 function EditClassModal({ show, onHide, classId, onSave }) {
   const [formData, setFormData] = useState({
     subjectId: "",
+    classDescription: "",
+    teacherId: "",
     teacherName: "",
+    zoomLink: "",
     shift: "",
     startDate: "",
   });
@@ -12,30 +16,53 @@ function EditClassModal({ show, onHide, classId, onSave }) {
   const [subjects, setSubjects] = useState([]);
   const [error, setError] = useState("");
 
+  const { token } = useAuth(); 
+
   useEffect(() => {
     if (show) {
-        // HACER REQUEST A API
-      const dummySubjects = [
-        { id: 1, name: "Matemática" },
-        { id: 2, name: "Lengua y Literatura" },
-        { id: 3, name: "Historia" },
-        { id: 4, name: "Inglés" },
-      ];
-      setSubjects(dummySubjects);
+      const fetchSubjects = async () => {
+        try {
+          const response = await fetch("https://localhost:7018/api/Subject", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (!response.ok) throw new Error("Error al cargar materias");
+          const data = await response.json();
+          setSubjects(data);
+        } catch (err) {
+          console.error(err);
+          setSubjects([]);
+        }
+      };
+
+      fetchSubjects();
     }
   }, [show]);
 
   useEffect(() => {
     if (show && classId) {
-        //HACER REQUEST A API
-      const dummyClassData = {
-        id: classId,
-        subjectId: 2,
-        teacherName: "María López",
-        shift: "Tarde",
-        startDate: "2025-08-20",
+      const fetchClass = async () => {
+        try {
+          const response = await fetch(`https://localhost:7018/Class/GetClass?id=${classId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (!response.ok) throw new Error("Error al cargar clase");
+          const cls = await response.json();
+
+          setFormData({
+            subjectId: cls.subjectId,
+            classDescription: cls.classDescription || "",
+            teacherId: cls.teacherId,
+            teacherName: cls.teacher?.name || "",
+            zoomLink: cls.zoomLink || "",
+            shift: cls.classShift,
+            startDate: cls.startDate ? cls.startDate.split("T")[0] : "",
+          });
+        } catch (err) {
+          console.error(err);
+        }
       };
-      setFormData(dummyClassData);
+
+      fetchClass();
     }
   }, [show, classId]);
 
@@ -45,13 +72,55 @@ function EditClassModal({ show, onHide, classId, onSave }) {
     setError("");
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.subjectId || !formData.shift || !formData.startDate) {
       setError("Todos los campos son obligatorios.");
       return;
     }
-    onSave(formData);
-    onHide();
+
+    try {
+      const requestBody = {
+        Id: classId,
+        SubjectId: parseInt(formData.subjectId),
+        ClassDescription: formData.classDescription,
+        TeacherId: formData.teacherId,
+        ZoomLink: formData.zoomLink,
+        ClassShift: formData.shift,
+        StartDate: formData.startDate,
+      };
+
+      const response = await fetch("https://localhost:7018/Class", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al actualizar la clase");
+      }
+
+      const updatedClass = await response.json();
+
+      // Mapear a formato que espera la tabla de clases
+      const formatted = {
+        id: updatedClass.classId,
+        subjectName: updatedClass.subject?.name || "",
+        teacherName: updatedClass.teacher?.fullName || "",
+        classShift: updatedClass.classShift,
+        startDate: updatedClass.startDate
+          ? updatedClass.startDate.split("T")[0]
+          : "",
+      };
+
+      onSave(formatted);
+      onHide();
+    } catch (err) {
+      console.error(err);
+      setError("No se pudo actualizar la clase.");
+    }
   };
 
   const handleCancel = () => {
@@ -101,6 +170,16 @@ function EditClassModal({ show, onHide, classId, onSave }) {
             />
           </Form.Group>
 
+          <Form.Group className="mb-3" controlId="zoomLink">
+            <Form.Label>Link de Zoom</Form.Label>
+            <Form.Control
+              type="text"
+              name="zoomLink"
+              value={formData.zoomLink}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
           <Form.Group className="mb-3" controlId="classShift">
             <Form.Label>Turno</Form.Label>
             <Form.Select
@@ -109,9 +188,9 @@ function EditClassModal({ show, onHide, classId, onSave }) {
               onChange={handleChange}
             >
               <option value="">Seleccionar turno</option>
-              <option value="Mañana">Mañana</option>
-              <option value="Tarde">Tarde</option>
-              <option value="Noche">Noche</option>
+              <option value="Morning">Mañana</option>
+              <option value="Afternoon">Tarde</option>
+              <option value="Evening">Noche</option>
             </Form.Select>
           </Form.Group>
 

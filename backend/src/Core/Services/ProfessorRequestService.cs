@@ -10,12 +10,14 @@ namespace Core.Services
         private readonly IProfessorRequestRepository _professorRequestRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserService _userService;
+        private readonly IMailService _mailService;
 
-        public ProfessorRequestService(IProfessorRequestRepository repository, IUserService userService, IUserRepository userRepository)
+        public ProfessorRequestService(IProfessorRequestRepository repository, IUserService userService, IUserRepository userRepository, IMailService mailService)
         {
             _professorRequestRepository = repository;
             _userService = userService;
             _userRepository = userRepository;
+            _mailService = mailService;
         }
 
         public async Task<IEnumerable<ProfessorRequest>> GetRequestsAsync()
@@ -53,6 +55,15 @@ namespace Core.Services
                 Status = RequestStatus.Pending,
             };
             await _professorRequestRepository.AddAsync(newRequest);
+
+            string subject = $"Nueva solicitud de profesor Nro. {newRequest.Id}";
+            string body = $"{newRequest.Applicant.Name} realizó una nueva solicitud.\n" +
+                        $"ID: {newRequest.Id}\n" +
+                        $"Fecha: {DateTime.Now}\n" +
+                        $"Email: {newRequest.Applicant.Email}\n" +
+                        $"Descripción: {newRequest.Description}";
+
+            await _mailService.SendToAdmins(subject, body);
             return newRequest;
         }
 
@@ -60,6 +71,14 @@ namespace Core.Services
         {
             var request = await _professorRequestRepository.GetByIdAsync(id) ?? throw new NotFoundException("Professor Request not found");
             return request;
+        }
+
+        public async Task<IEnumerable<ProfessorRequest>> GetRequestsByUserId(int id)
+        {
+            var user = _userRepository.GetByIdAsync(id) ?? throw new NotFoundException("User Not Found.");
+
+            var requests = await _professorRequestRepository.GetRequestsByUserIdAsync(id) ?? throw new NotFoundException("Professor Request not found");
+            return requests;
         }
 
         public async Task<ProfessorRequest> AcceptRequestStatusAsync(int requestId, int applicantId)
@@ -86,7 +105,7 @@ namespace Core.Services
                 ?? throw new NotFoundException("Professor Request Not Found.");
 
             if (request.Status != RequestStatus.Pending)
-            //Agregamos un nuevo tipo de error como "BussinessRuleException"???
+                //Agregamos un nuevo tipo de error como "BussinessRuleException"???
                 throw new InvalidOperationException("Solo se pueden rechazar solicitudes en estado 'Pending'.");
 
             request.Status = RequestStatus.Rejected;

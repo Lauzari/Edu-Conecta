@@ -21,18 +21,27 @@ namespace Infrastructure.Data
             await _context.SaveChangesAsync();
             return request;
         }
+
         public async Task<IEnumerable<ProfessorRequest>> GetAllAsync()
         {
-            return await _context.ProfessorRequests.AsNoTracking().ToListAsync();
+            return await _context.ProfessorRequests
+                .Include(r => r.Applicant)
+                .AsNoTracking()
+                .ToListAsync();
         }
+
         public async Task<ProfessorRequest?> GetByIdAsync(int id)
         {
-            return await _context.ProfessorRequests.FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.ProfessorRequests
+                .Include(r => r.Applicant)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
+
         public async Task<ProfessorRequest?> GetByApplicantIdAndStatusAsync(int applicantId, RequestStatus status)
         {
             return await _context.ProfessorRequests
-                .AsNoTracking() //data only for reading
+                .Include(r => r.Applicant)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.ApplicantId == applicantId && r.Status == status);
         }
 
@@ -41,6 +50,15 @@ namespace Infrastructure.Data
             _context.ProfessorRequests.Update(request);
             await _context.SaveChangesAsync();
             return request;
+        }
+
+        public async Task<IEnumerable<ProfessorRequest>> GetRequestsByUserIdAsync(int id)
+        {
+            return await _context.ProfessorRequests
+                .Include(r => r.Applicant)
+                .Where(r => r.ApplicantId == id)
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

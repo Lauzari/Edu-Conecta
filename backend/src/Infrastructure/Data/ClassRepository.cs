@@ -29,10 +29,10 @@ namespace Infrastructure.Data
 
         public async Task<Class?> GetById(int id)
         {
-           return await _applicationDbContext.Classes
-            .Include(x => x.Subject)
-            .Include(x => x.Teacher)
-            .FirstOrDefaultAsync(a => a.Id == id);
+            return await _applicationDbContext.Classes
+             .Include(x => x.Subject)
+             .Include(x => x.Teacher)
+             .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<Class?> GetByIdWithStudents(int id)
@@ -58,10 +58,18 @@ namespace Infrastructure.Data
             return updatedClass;
         }
 
-        public async void Delete(Class classItem)
+        public async Task Delete(Class classItem)
         {
             _applicationDbContext.Classes.Remove(classItem);
             await _applicationDbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> GetStudentCount(int classId)
+        {
+            return await _applicationDbContext.Classes
+                .Where(c => c.Id == classId)
+                .Select(c => c.Students.Count)
+                .FirstOrDefaultAsync();
         }
     }
 }

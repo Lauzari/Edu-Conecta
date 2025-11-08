@@ -1,17 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
 import SubjectCard from "../../subjectCard/SubjectCard.jsx";
-import courses from "../../../data/courses.js";
-
 import "./OurSubjects.css";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "./OurSubjects.css";
+import { useAuth } from "../../../hooks/useAuth.js";
 
 function OurSubjects() {
   const navigate = useNavigate();
+  const { token } = useAuth();
+
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch("https://localhost:7018/api/Subject", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Error al obtener materias");
+        }
+
+        const data = await response.json();
+        setCourses(data);
+      } catch (error) {
+        console.error("Error al cargar cursos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, [token]);
 
   const settings = {
     dots: true,
@@ -25,6 +51,7 @@ function OurSubjects() {
     ],
   };
 
+  if (loading) return <p>Cargando materias...</p>;
 
   return (
     <section className="our-subjects" id="courses">
@@ -40,9 +67,9 @@ function OurSubjects() {
               {courses.map((course) => (
                 <div className="item" key={course.id}>
                   <SubjectCard
-                    img={course.img}
-                    title={course.title}
+                    title={course.name}
                     description={course.description}
+                    img={course.id ? `/images/subjects/${course.id}.jpg` : "/images/subjects/default.jpg"}
                     onClick={() => navigate(`/subjects/${course.id}`)}
                   />
                 </div>

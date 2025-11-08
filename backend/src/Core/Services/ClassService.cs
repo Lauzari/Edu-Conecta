@@ -108,11 +108,17 @@ public class ClassService : IClassService
     public async Task Delete(int id)
     {
         var existing = await _classRepository.GetById(id) ?? throw new NotFoundException("Class Not Found.");
-        _classRepository.Delete(existing);
+        await _classRepository.Delete(existing);
     }
 
     public async Task AddStudent(int classId, int studentId)
     {
+        int studentCount = await _classRepository.GetStudentCount(classId);
+
+        if (studentCount >= 15)
+        {
+            throw new AppValidationException("The class is full.");
+        }
         var classEntity = await _classRepository.GetById(classId) ?? throw new NotFoundException("Class not found.");
 
         var student = await _userRepository.GetByIdAsync(studentId) ?? throw new NotFoundException("User not found.");

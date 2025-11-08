@@ -9,8 +9,8 @@ public record UserWithRelationsDto(
     DateOnly BirthDate,
     DateTime RegisterDate,
     string UserType,
-    List<ProfessorRequestDto>? Requests
-    // List<CourseDto>? Courses
+    List<ProfessorRequestDto>? Requests,
+    List<ClassDto>? Classes
 )
 {
     // Create methods: makes User mapping easier
@@ -23,8 +23,8 @@ public record UserWithRelationsDto(
             entity.BirthDate,
             entity.RegisterDate,
             entity.UserType.ToString(),
-            entity.Requests?.Select(ProfessorRequestDto.Create).ToList()
-            //entity.Courses?.Select(CourseDto.Create).ToList()
+            entity.Requests?.Select(ProfessorRequestDto.Create).ToList(),
+            entity.Classes?.Select(ClassDto.Create).ToList()
         );
 
         return dto;

@@ -28,7 +28,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("GetClassesWithStudents")]
-         [Authorize(Roles = nameof(UserType.Admin))]
         public async Task<ActionResult<IEnumerable<ClassWithStudentsDto>>> GetAllWithStudents()
         {
             var classes = await _classService.GetAllWithStudents();
@@ -43,7 +42,6 @@ namespace Web.Controllers
         }
 
         [HttpGet("GetClassWithStudents")]
-        [Authorize(Roles = nameof(UserType.Professor))]
         public async Task<ActionResult<ClassWithStudentsDto>> GetClassWithStudents([FromQuery] int id)
         {
             var classItem = await _classService.GetByIdWithStudents(id);
@@ -51,7 +49,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(UserType.Professor))]
+        [Authorize(Roles = $"{nameof(UserType.Admin)},{nameof(UserType.Professor)}")]
         public async Task<ActionResult<ClassDto>> Create([FromBody] CreateClassRequest request)
         {
             var newClass = await _classService.Create(request.SubjectId, request.ClassDescription, request.TeacherId, request.ZoomLink, request.ClassShift, request.StartDate);
@@ -60,7 +58,7 @@ namespace Web.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = nameof(UserType.Professor))]
+        [Authorize(Roles = $"{nameof(UserType.Admin)},{nameof(UserType.Professor)}")]
         public async Task<ActionResult<ClassDto>> Update([FromBody] UpdateClassRequest request)
         {
             var updatedClass = await _classService.Update(request.Id, request.SubjectId, request.ClassDescription, request.TeacherId, request.ZoomLink, request.ClassShift, request.StartDate);
