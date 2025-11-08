@@ -124,14 +124,6 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var configuration = services.GetRequiredService<IConfiguration>();
-
-    await Infrastructure.Data.Seeding.AdminSeeder.SeedAdminAsync(services, configuration);
-}
-
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.MapControllers();
@@ -139,16 +131,21 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var configuration = services.GetRequiredService<IConfiguration>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
+
     try
     {
         var dbContext = services.GetRequiredService<ApplicationDbContext>();
         dbContext.Database.Migrate();
+        
+        await Infrastructure.Data.Seeding.AdminSeeder.SeedAdminAsync(services, configuration);
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Ocurrió un error al aplicar las migraciones a la base de datos.");
+        logger.LogError(ex, "Error al aplicar migraciones o ejecutar el seeder.");
     }
 }
+
 
 app.Run();
