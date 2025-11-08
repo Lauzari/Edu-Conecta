@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - EduConecta
+name: Build and deploy ASP.Net Core app to Azure Web App - Edu-Conecta
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
 
       - name: Build solution
         working-directory: ./backend
-        run: dotnet build EduConecta.sln --configuration Release
+        run: dotnet build Edu-Conecta.sln --configuration Release
 
       - name: Publish Web project
         working-directory: ./backend
@@ -54,3 +54,4 @@ jobs:
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_73767992DA2A476F85C5F1BADD90418C }}
+
