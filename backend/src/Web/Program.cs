@@ -31,7 +31,7 @@ builder.Services.AddHttpClient<IQuoteService, ZenQuoteService>();
 # region Swagger custom token config
 builder.Services.AddSwaggerGen(setupAction =>
 {
-    setupAction.AddSecurityDefinition("ConsultaAlumnosApiBearerAuth", new OpenApiSecurityScheme() //Esto va a permitir usar swagger con el token.
+    setupAction.AddSecurityDefinition("EduConectaApiBearerAuth", new OpenApiSecurityScheme()
     {
         Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
@@ -46,7 +46,7 @@ builder.Services.AddSwaggerGen(setupAction =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "ConsultaAlumnosApiBearerAuth" }
+                    Id = "EduConectaApiBearerAuth" }
                 }, new List<string>() }
     });
 
@@ -74,7 +74,15 @@ builder.Services.AddAuthentication("Bearer")
 
 // DbContext - SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null
+        )
+    )
+);
 
 // Extension to register repositories and services
 builder.Services.AddApplicationServices();
@@ -82,7 +90,7 @@ builder.Services.AddApplicationServices();
 // Middlewares
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
-// Repositorios y servicios
+// Repositories and services
 builder.Services.AddApplicationServices();
 
 // CORS
@@ -102,11 +110,8 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 
 app.UseHttpsRedirection();
 
@@ -116,16 +121,28 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+
+app.MapControllers();
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var configuration = services.GetRequiredService<IConfiguration>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
 
-    await Infrastructure.Data.Seeding.AdminSeeder.SeedAdminAsync(services, configuration);
+    try
+    {
+        var dbContext = services.GetRequiredService<ApplicationDbContext>();
+        dbContext.Database.Migrate();
+        
+        await Infrastructure.Data.Seeding.AdminSeeder.SeedAdminAsync(services, configuration);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error al aplicar migraciones o ejecutar el seeder.");
+    }
 }
 
-app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
-
-app.MapControllers();
 
 app.Run();

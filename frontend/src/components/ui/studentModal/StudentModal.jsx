@@ -5,11 +5,11 @@ import courses from '../../../data/courses.js';
 import { useParams } from 'react-router-dom';
 import users from '../../../data/user.js';
 import ConfirmModal from '../../ui/confirmationModal/ConfirmationModal.jsx';
-import './StudientModal.css';
-import './StudientOrder.js';
+import './StudentModal.css';
+import './StudentOrder.js';
 import { FaRegTrashAlt } from "react-icons/fa";
 
-function StudientModal(props) {
+function StudentModal(props) {
     const { id } = useParams();
 
     const [showConfirm, setShowConfirm] = useState(false);
@@ -108,4 +108,4 @@ function StudientModal(props) {
     );
 }
 
-export default StudientModal;
+export default StudentModal;

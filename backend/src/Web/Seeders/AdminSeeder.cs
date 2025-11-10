@@ -9,21 +9,19 @@ namespace Infrastructure.Data.Seeding
             using var scope = serviceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
 
-            string adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL")
-                                ?? configuration["AdminCredentials:Email"];
-            string adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD")
-                                   ?? configuration["AdminCredentials:Password"];
+            string adminEmail = configuration["AdminCredentials:Email"];
+            string adminPassword = configuration["AdminCredentials:Password"];
 
             if (string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
-                throw new Exception("Admin credentials are not set.");
+                throw new Exception("Admin credentials are not set in configuration.");
 
             var existingAdmin = await userService.GetByEmailAsync(adminEmail);
             if (existingAdmin != null) return;
 
             await userService.CreateAdminAsync(
-                adminEmail, 
-                adminPassword, 
-                "Admin", 
+                adminEmail,
+                adminPassword,
+                "Admin",
                 DateOnly.FromDateTime(DateTime.Now)
             );
         }
