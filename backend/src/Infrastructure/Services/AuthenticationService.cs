@@ -19,9 +19,6 @@ namespace Infrastructure.Services
         {
             _userRepository = userRepository;
             _options = options.Value;
-
-            Console.WriteLine($"Issuer: {_options.Issuer}");
-            Console.WriteLine($"SecretForKey: {_options.SecretForKey}");
         }
 
         private async Task<User?> ValidateUserAsync(string email, string password)
