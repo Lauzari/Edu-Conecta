@@ -46,7 +46,7 @@ builder.Services.AddSwaggerGen(setupAction =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "ConsultaAlumnosApiBearerAuth" }
+                    Id = "EduConectaApiBearerAuth" }
                 }, new List<string>() }
     });
 
