@@ -1,0 +1,56 @@
+.notfound-bg {
+  background-image: url(../images/meetings-bg.jpg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notfound-container {
+  margin: 17vh 1vh 7vh 1vh;
+  border-radius: 5rem;
+  background-color: #fbf6f2;
+  max-width: 90rem;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  text-align: left;
+  flex-wrap: wrap;
+}
+
+.notfound-image {
+  max-width: 15rem;
+  height: auto;
+}
+
+.notfound-text h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.notfound-text p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-home {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  margin-top: 2rem;
+}
+
+.btn-home:hover {
+  background-color: #055ed2;
+}
+@media (max-width: 576px) {
+  .notfound-image {
+  max-width: 10rem;
+  }
+}

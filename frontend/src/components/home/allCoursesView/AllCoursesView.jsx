@@ -60,9 +60,6 @@ function AllCoursesView() {
     startIndex + coursesPerPage
   );
 
-  if (loading) return <p>Cargando cursos...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
     <div className="courses-bg">
       {/* Heading Page */}
