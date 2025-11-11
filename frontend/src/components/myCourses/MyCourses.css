@@ -1,0 +1,51 @@
+.my-courses {
+  background-image: url(../images/my-courses.jpg) !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.general-container {
+  background-image: url(../images/meetings-bg.jpg) !important;
+}
+
+.custom-btn {
+  background-color: #004aad !important;
+  border-color: #004aad !important;
+  color: white !important;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+}
+
+.custom-btn:hover {
+  background-color: #003b8a !important;
+  transform: translateY(-2px);
+}
+
+.card {
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card img {
+  height: 150px;
+  object-fit: cover;
+}
+
+.btn-outline-danger,
+.btn-outline-primary {
+  border-width: 2px;
+}
+
+@media (max-width: 576px) {
+  .custom-btn {
+    width: 100%;
+  }
+  .card {
+    min-width: 100%;
+  }
+}

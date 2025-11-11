@@ -5,6 +5,7 @@ import Pagination from "../../ui/pagination/Pagination.jsx";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
 import EditClassModal from "./editClassModal/EditClassModal.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
+import { toast } from "react-toastify";
 
 function Classes({ searchTerm }) {
   const [classes, setClasses] = useState([]);
@@ -84,11 +85,13 @@ function Classes({ searchTerm }) {
         );
 
         if (!response.ok) {
+          toast.info("No se pudo eliminar la clase. Inténtelo de nuevo más tarde.");
           throw new Error("Error al eliminar la clase");
         }
 
         setClasses(classes.filter((cls) => cls.id !== selectedClassId));
         setSelectedClassId(null);
+        toast.success("¡Clase eliminada con éxito!");
       } catch (error) {
         console.error(error);
       }
@@ -121,6 +124,7 @@ function Classes({ searchTerm }) {
           : cls
       )
     );
+    toast.success("¡Clase editada con éxito!");
   };
 
   return (

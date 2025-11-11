@@ -46,9 +46,12 @@ public class UserRepository : IUserRepository
     public async Task<User?> GetByIdWithJoinsAsync(int id)
     {
         return await _applicationDbContext.Users
-        .Include(x => x.Requests)
-        .Include(x => x.Classes)
-        .FirstOrDefaultAsync(a => a.Id == id);
+        .Include(u => u.Requests)
+        .Include(u => u.Classes)
+            .ThenInclude(c => c.Subject)
+        .Include(u => u.Classes)
+            .ThenInclude(c => c.Teacher)
+        .FirstOrDefaultAsync(u => u.Id == id);
     }
 
 

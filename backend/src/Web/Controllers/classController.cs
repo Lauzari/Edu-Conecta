@@ -84,7 +84,7 @@ namespace Web.Controllers
         }
 
         [HttpPost("{classId}/deleteStudent")]
-        [Authorize(Roles = nameof(UserType.Professor))]
+        [Authorize]
         public async Task<ActionResult> DeleteStudent(int classId, [FromBody] int studentId)
         {
             await _classService.DeleteStudent(classId, studentId);

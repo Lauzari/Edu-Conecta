@@ -36,7 +36,7 @@ const Register = () => {
       console.log("Formulario válido ✅", values);
       try {
         //puse mi localhost porque no me tomaba el puerto de appsettings.json, hay que modificarlo 
-        const response = await fetch("http://localhost:5253/User/create", {
+        const response = await fetch("https://localhost:7018/User/create", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

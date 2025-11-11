@@ -7,6 +7,7 @@ import "./Subjects.css";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
 import AddSubjectModal from "./addSubjectModal/AddSubjectModal.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
+import { toast } from "react-toastify";
 
 function Subjects({ searchTerm }) {
   const [subjects, setSubjects] = useState([]);
@@ -21,7 +22,7 @@ function Subjects({ searchTerm }) {
   const navigate = useNavigate();
 
   const { token } = useAuth();
-  
+
   // === FETCH SUBJECTS ===
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -35,7 +36,6 @@ function Subjects({ searchTerm }) {
         if (!response.ok) throw new Error("Error al obtener las materias");
 
         const data = await response.json();
-
 
         const formatted = data.map((subj) => ({
           id: subj.id,
@@ -54,37 +54,36 @@ function Subjects({ searchTerm }) {
     fetchSubjects();
   }, [token]);
 
-// === HANDLE SAVE SUBJECT (solo actualizar estado local) ===
-const handleSaveSubject = (savedSubject, subjectId) => {
-  if (subjectId) {
-    setSubjects((prev) =>
-      prev.map((subj) =>
-        subj.id === subjectId
-          ? {
-              id: savedSubject.id,
-              name: savedSubject.name,
-              year: savedSubject.year,
-              duration: `${savedSubject.duration} meses`,
-              description: savedSubject.description,
-            }
-          : subj
-      )
-    );
-  } else {
-    setSubjects((prev) => [
-      ...prev,
-      {
-        id: savedSubject.id,
-        name: savedSubject.name,
-        year: savedSubject.year,
-        duration: `${savedSubject.duration} meses`,
-        description: savedSubject.description,
-      },
-    ]);
-  }
+  // === HANDLE SAVE SUBJECT ===
+  const handleSaveSubject = async () => {
+    try {
+      const response = await fetch("https://localhost:7018/api/Subject", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  setShowSubjectModal(false);
-};
+      if (!response.ok)
+        throw new Error("Error al obtener las materias actualizadas");
+
+      const data = await response.json();
+
+      const formatted = data.map((subj) => ({
+        id: subj.id,
+        name: subj.name,
+        year: subj.year,
+        duration: `${subj.duration} meses`,
+        description: subj.description,
+      }));
+
+      setSubjects(formatted);
+      setShowSubjectModal(false);
+      toast.success("Materia guardada correctamente.");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al actualizar la lista de materias");
+    }
+  };
 
   const handleEdit = (id) => {
     setSelectedSubjectId(id);
@@ -113,7 +112,9 @@ const handleSaveSubject = (savedSubject, subjectId) => {
         setSubjects((prev) => prev.filter((s) => s.id !== selectedSubjectId));
         setSelectedSubjectId(null);
         setShowDeleteModal(false);
+        toast.info("Materia eliminada.");
       } catch (error) {
+        toast.info("No se pudo eliminar la materia.");
         console.error(error);
       }
     }
