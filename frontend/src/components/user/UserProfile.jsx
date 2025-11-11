@@ -7,17 +7,12 @@ import PasswordModal from "../passwordModal/passwordModal.jsx";
 import { FaUserCircle, FaBell, FaEdit } from "react-icons/fa";
 
 function UserProfile() {
-    // const [courses, setCourses] = useState(coursesData);
+   
     const [editMode, setEditMode] = useState(false);
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState({});
-    const { token, id } = useAuth();
+    const { token, userId } = useAuth();
     const [show, setShow] = useState(false);
-
-    // const handleDelete = (id) => {
-    //     // elimina el curso con ese id
-    //     setCourses(courses.filter((c) => c.id !== id));
-    // };
 
     const toggleEditMode = () => {
         setEditMode(!editMode);
@@ -26,10 +21,6 @@ function UserProfile() {
 
     const toggleNotifications = () => setOpen(!open);
 
-    const notifications = [
-        { id: 1, text: "Nueva solicitud", visto: false },
-        { id: 2, text: "Nueva solicitud", visto: true },
-    ];
 
     // Obtener datos del usuario
     useEffect(() => {
@@ -38,7 +29,7 @@ function UserProfile() {
             console.log("Token recibido del backend:", token);
             console.log("Token decodificado:", decodedToken);
             try {
-                const res = await fetch(`https://localhost:7169/User/completeUserInfo?id=${id}`, {
+                const res = await fetch(`https://localhost:7018/User/completeUserInfo?id=${userId}`, {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
@@ -112,7 +103,7 @@ function UserProfile() {
                     </div>
                 </div>
             </div>
-            {/* <div className="course-card">
+            <div className="course-card">
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <div>
                         <h3>Mis Materias</h3>
@@ -123,8 +114,8 @@ function UserProfile() {
                 </div>
 
                 <div className="course-card-content">
-                    {limitedCourses.length > 0 ? (
-                        limitedCourses.map((course) => (
+                    {user.courses && user.courses.length > 0 ? (
+                        user.courses.map((course) => (
                             <div className="course-card-item" key={course.id}>
                                 {editMode && (
                                     <button
@@ -136,7 +127,7 @@ function UserProfile() {
                                 )}
                                 <img src={course.img} alt={course.title} className="course-img" />
                                 <div className="course-content">
-                                    <h3 className="course-title">{course.title}</h3>
+                                    <h3 className="course-title">{course.name}</h3>
                                 </div>
                             </div>
                         ))
@@ -145,7 +136,7 @@ function UserProfile() {
                         <p>No tienes materias por el momento...</p>
                     )}
                 </div>
-            </div> */}
+            </div> 
             {show && <PasswordModal show={show} handleClose={() => setShow(false)} />}
         </div>
     );

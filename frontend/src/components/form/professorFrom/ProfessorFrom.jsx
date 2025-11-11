@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 import { FaArrowLeft } from "react-icons/fa";
 import './professorForm.css';
+import { toast, Bounce } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../../../hooks/useAuth.js";
 
-const ProfessorForm = () => {
+const ProfessorFrom = () => {
+
+
+  const { token, userId } = useAuth();
 
   const [values, setValues] = useState({
     nombre: "",
     lastName: "",
-    experience: "",
+    description: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
- 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -26,7 +32,7 @@ const ProfessorForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!values.nombre || !values.lastName || !values.experience) {
+    if (!values.nombre || !values.lastName || !values.description) {
       setMessage("Por favor completá todos los campos.");
       return;
     }
@@ -34,27 +40,76 @@ const ProfessorForm = () => {
     setLoading(true);
     setMessage("");
 
+    console.log("🧩 ID:", userId);
+    console.log("🧩 TOKEN:", token);
+
     try {
-      const response = await fetch("http://localhost:7018/api/professors", {
+      const response = await fetch(`https://localhost:7018/api/ProfessorRequest/${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          description: values.description,
+          applicantId: userId,
+        }),
       });
 
+      const text = await response.text(); // <- leemos el body en texto
+
       if (response.ok) {
-        setMessage("✅ Tu postulación fue enviada correctamente.");
-        setValues({ nombre: "", lastName: "", experience: "" });
+        toast("✨ Tu solicitud fue enviada con éxito!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
+        setTimeout(() => navigate("/"), 3000);
       } else {
-        const errorData = await response.json();
-        setMessage(`❌ Error: ${errorData.message || "No se pudo enviar la solicitud."}`);
+        // Intentamos parsear JSON si lo hay
+        let errorMessage = "No se pudo enviar la solicitud.";
+        if (text) {
+          try {
+            const errorData = JSON.parse(text);
+            errorMessage = errorData.message || errorMessage;
+          } catch {
+            console.warn("⚠️ Respuesta no es JSON:", text);
+          }
+        }
+
+        toast(`❌ Error: ${errorMessage}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
       }
     } catch (error) {
-      setMessage("⚠️ Error al conectar con el servidor.");
-    } finally {
-      setLoading(false);
+      toast("❌ Error al enviar la solicitud", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+      console.error("❌ Error:", error);
     }
+
   };
 
   return (
@@ -91,8 +146,8 @@ const ProfessorForm = () => {
 
             <div className='form-group-text'>
               <textarea
-                name="experience"
-                value={values.experience}
+                name="description"
+                value={values.description}
                 onChange={handleChange}
                 placeholder="Experiencia..."
               ></textarea>
@@ -118,4 +173,4 @@ const ProfessorForm = () => {
   );
 };
 
-export default ProfessorForm;
+export default ProfessorFrom;
