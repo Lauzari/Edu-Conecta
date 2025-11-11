@@ -1,33 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./userProfile.css";
-import course from "../../data/courses.js";
+import { jwtDecode } from "jwt-decode";
+// import coursesData from "../../data/courses.js";
+import { useAuth } from "../../hooks/useAuth.js"
 import PasswordModal from "../passwordModal/passwordModal.jsx";
 import { FaUserCircle, FaBell, FaEdit } from "react-icons/fa";
 
 function UserProfile() {
-    const [courses, setCourses] = useState(course);
+   
     const [editMode, setEditMode] = useState(false);
     const [open, setOpen] = useState(false);
+    const [user, setUser] = useState({});
+    const { token, userId } = useAuth();
     const [show, setShow] = useState(false);
-
-
-    const handleDelete = (id) => {
-        // elimina el curso con ese id
-        setCourses(courses.filter((c) => c.id !== id));
-    };
 
     const toggleEditMode = () => {
         setEditMode(!editMode);
     };
-    const limitedCourses = courses.slice(0, 2);
+    // const limitedCourses = courses.slice(0, 2);
 
     const toggleNotifications = () => setOpen(!open);
 
-    const notifications = [
-        { id: 1, text: "Nueva solicitud", visto: false },
-        { id: 2, text: "Nueva solicitud", visto: true },
-    ];
 
+    // Obtener datos del usuario
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            const decodedToken = jwtDecode(token);
+            console.log("Token recibido del backend:", token);
+            console.log("Token decodificado:", decodedToken);
+            try {
+                const res = await fetch(`https://localhost:7018/User/completeUserInfo?id=${userId}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+
+                if (!res.ok) {
+                    console.error("Error HTTP:", res.status);
+                    throw new Error("Error al obtener datos del usuario");
+                }
+
+                const data = await res.json();
+                setUser(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
 
     return (
         <div style={{ backgroundColor: "#3b3fbd" }}>
@@ -40,15 +62,22 @@ function UserProfile() {
                     </button>
                     {open && (
                         <div className="notification-dropdown">
-                            {notifications.map((n) => (
-                                <div
-                                    key={n.id}
-                                    className={`notification-item ${n.visto ? "visto" : "no-visto"}`}
-                                >
-                                    <span>{n.text}</span>
-                                    <span className="estado">{n.visto ? "Visto" : "No visto"}</span>
-                                </div>
-                            ))}
+                            {user.requests && user.requests.length > 0 ? (
+                                user.requests.map((req) => (
+                                    <div
+                                        key={req.id}
+                                        className={`notification-item ${req.status === "Pending" ? "no-visto" : "visto"
+                                            }`}
+                                    >
+                                        <span>Estado:</span>
+                                        <span className="estado">
+                                            {req.status === "Pending" ? "Pendiente" : req.status}
+                                        </span>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No tenés solicitudes de profesor.</p>
+                            )}
                         </div>
                     )}
                 </div>
@@ -62,11 +91,11 @@ function UserProfile() {
                     <div className="profile-details">
                         <p className="label">Nombre</p>
                         <h2 className="name">
-                            Martina <FaEdit className="edit-icon" />
+                            {user.name} <FaEdit className="edit-icon" />
                         </h2>
 
                         <p className="label">Email</p>
-                        <p className="email">MartinaPerez@gmail</p>
+                        <p className="email">{user.email}</p>
 
                         <a href="#" className="edit-password" onClick={(e) => { e.preventDefault(); setShow(true) }}>
                             Editar Contraseña
@@ -85,8 +114,8 @@ function UserProfile() {
                 </div>
 
                 <div className="course-card-content">
-                    {limitedCourses.length > 0 ? (
-                        limitedCourses.map((course) => (
+                    {user.courses && user.courses.length > 0 ? (
+                        user.courses.map((course) => (
                             <div className="course-card-item" key={course.id}>
                                 {editMode && (
                                     <button
@@ -98,7 +127,7 @@ function UserProfile() {
                                 )}
                                 <img src={course.img} alt={course.title} className="course-img" />
                                 <div className="course-content">
-                                    <h3 className="course-title">{course.title}</h3>
+                                    <h3 className="course-title">{course.name}</h3>
                                 </div>
                             </div>
                         ))
@@ -107,7 +136,7 @@ function UserProfile() {
                         <p>No tienes materias por el momento...</p>
                     )}
                 </div>
-            </div>
+            </div> 
             {show && <PasswordModal show={show} handleClose={() => setShow(false)} />}
         </div>
     );
