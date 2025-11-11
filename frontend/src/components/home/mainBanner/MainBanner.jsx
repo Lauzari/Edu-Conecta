@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import LoginModal from "../../loginModal/LoginModal";
 import "./MainBanner.css";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 
 function MainBanner() {
   const [showLogin, setShowLogin] = useState(false);
+  const { token } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <section className="section main-banner" id="top" data-section="section1">
@@ -28,11 +32,16 @@ function MainBanner() {
                   acompañado y seguro mientras avanzás en tu carrera.
                 </p>
                 <div className="main-button-green">
-                    <button
+                    {!token && <button
                       onClick={() => setShowLogin(true)}
                     >
                       Iniciá sesión
-                    </button>
+                    </button>}
+                    {token && <button
+                      onClick={() => navigate(`/user-profile`)}
+                    >
+                      Mi Perfil
+                    </button>}
                 </div>
               </div>
             </div>

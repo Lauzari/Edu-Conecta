@@ -93,7 +93,7 @@ function LoggedHeader() {
                   <button
                     className="nav-link"
                     onClick={() => {
-                      navigate("/myCourses");
+                      navigate("/my-courses");
                       setMenuOpen(false);
                     }}
                   >

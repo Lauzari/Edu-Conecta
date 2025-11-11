@@ -10,12 +10,11 @@ function CourseDetail() {
   const { token, role, userId } = useAuth();
   const [course, setCourse] = useState(null);
   const [enrolling, setEnrolling] = useState(false);
-  const [isEnrolled, setIsEnrolled] = useState();
+  const [isEnrolled, setIsEnrolled] = useState(false);
 
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        console.log(userId);
         const response = await fetch(
           `https://localhost:7018/Class/GetClassWithStudents?id=${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -37,17 +36,18 @@ function CourseDetail() {
         }
 
         setCourse(data);
-        setIsEnrolled(course?.students?.some(student => student.id === userId));
+
+        const enrolled = data.students?.some(
+          (student) => student.id === Number(userId)
+        );
+        setIsEnrolled(enrolled);
       } catch (err) {
-        console.error(err);
         navigate("/404", { replace: true });
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchCourse();
-  }, [id, token, navigate]);
+  }, [id, token, navigate, userId]);
 
   const handleEnroll = async () => {
     setEnrolling(true);
@@ -65,7 +65,9 @@ function CourseDetail() {
       );
 
       if (!response.ok) {
-        toast.error("No se pudo inscribir a esta materia. Inténtelo de nuevo más tarde.");
+        toast.error(
+          "No se pudo inscribir a esta materia. Inténtelo de nuevo más tarde."
+        );
         const errText = await response.text();
         throw new Error(errText || "Error al inscribirse");
       }
@@ -75,8 +77,50 @@ function CourseDetail() {
         ...prev,
         studentCount: prev.studentCount + 1,
       }));
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (err) {
-      setError(err.message);
+      throw new Error(err.message);
+    } finally {
+      setEnrolling(false);
+    }
+  };
+
+  const handleDropClass = async () => {
+    if (!userId || !id) return;
+    setEnrolling(true);
+    try {
+      const response = await fetch(
+        `https://localhost:7018/Class/${id}/deleteStudent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(userId),
+        }
+      );
+
+      if (!response.ok) {
+        toast.error(
+          "No se pudo abandonar la clase. Inténtelo de nuevo más tarde."
+        );
+        const errText = await response.text();
+        throw new Error(errText || "Error al abandonar la clase");
+      }
+
+      toast.success("Has abandonado la clase correctamente.");
+      setCourse((prev) => ({
+        ...prev,
+        studentCount: prev.studentCount > 0 ? prev.studentCount - 1 : 0,
+        students: prev.students.filter((s) => s.id !== Number(userId)),
+      }));
+      setIsEnrolled(false);
+    } catch (err) {
+      console.error(err);
+      toast.error("Ocurrió un error al abandonar la clase.");
     } finally {
       setEnrolling(false);
     }
@@ -86,7 +130,7 @@ function CourseDetail() {
   const endDate = course?.endDate ? new Date(course?.endDate) : null;
 
   return (
-    <div>
+    <div className="general-container">
       {/* Heading Page */}
       <section className="heading-page header-text" id="top">
         <div className="container">
@@ -109,11 +153,20 @@ function CourseDetail() {
                   <img
                     src={`/images/subjects/${course?.subject?.id}.jpg`}
                     alt={course?.subject?.name}
+                    onError={(e) =>
+                      (e.target.src = "/images/subjects/default.jpg")
+                    }
                   />
                 </div>
 
                 <div className="down-content">
                   <h4>{course?.subject?.name}</h4>
+                  {Number(userId) === Number(course?.teacher?.id) && (
+                    <div className="alert alert-info mt-3" role="alert">
+                      Usted es docente de esta clase. Puede modificar sus datos
+                      en la pestaña <strong>"Mis cursos"</strong>.
+                    </div>
+                  )}
                   <p className="description">
                     {course?.classDescription || course?.subject?.description}
                   </p>
@@ -133,9 +186,10 @@ function CourseDetail() {
                         : "Fecha no disponible"}
                     </p>
                     <p>
-                      <strong>Turno:</strong> {course?.classShift || "No disponible"}
+                      <strong>Turno:</strong>{" "}
+                      {course?.classShift || "No disponible"}
                     </p>
-                    {course?.zoomLink && (
+                    {course?.zoomLink && (isEnrolled || Number(userId) === Number(course?.teacher?.id)) && (
                       <p>
                         <strong>Zoom:</strong>{" "}
                         <a
@@ -163,24 +217,33 @@ function CourseDetail() {
                     >
                       Volver a la lista
                     </button>
-                    {userId === course?.teacher?.id && (
-                      <button className="main-button-red">Modificar curso</button>
-                    )}
-                    {role === "Student" && course?.studentCount < 15 && (
+
+                    {role === "Student" &&
+                      course?.studentCount < 15 &&
+                      !isEnrolled && (
+                        <button
+                          className="main-button-red"
+                          onClick={handleEnroll}
+                          disabled={enrolling}
+                        >
+                          {enrolling ? "Inscribiendo..." : "Inscribirme"}
+                        </button>
+                      )}
+
+                    {isEnrolled && (
                       <button
                         className="main-button-red"
-                        onClick={handleEnroll}
-                        disabled={isEnrolled}
+                        onClick={handleDropClass}
+                        disabled={enrolling}
                       >
-                        {enrolling ? "Inscribiendo..." : "Inscribirme"}
+                        {enrolling ? "Cargando..." : "Dejar la clase"}
                       </button>
                     )}
 
-                    {course?.studentCount >= 15 && (
+                    {course?.studentCount >= 15 && !isEnrolled && (
                       <p>No hay cupos disponibles.</p>
                     )}
                   </div>
-
                 </div>
               </div>
             </div>

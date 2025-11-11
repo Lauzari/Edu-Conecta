@@ -80,7 +80,6 @@ function SubjectModal({ show, onHide, onSave, subjectId }) {
       if (subjectId) {
         body = JSON.stringify({ id: subjectId, ...payload });
         url = `https://localhost:7018/api/Subject/${subjectId}`;
-         console.log("Enviar a backend:", { url, body });
         // PUT / Update
         response = await fetch(
           `https://localhost:7018/api/Subject/${subjectId}`,
@@ -96,7 +95,6 @@ function SubjectModal({ show, onHide, onSave, subjectId }) {
       } else {
         body = JSON.stringify(payload);
         url = `https://localhost:7018/api/Subject`;
-         console.log("Enviar a backend:", { url, body });
         // POST / Create
         response = await fetch(`https://localhost:7018/api/Subject`, {
           method: "POST",

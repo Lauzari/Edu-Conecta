@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
-import { Outlet } from 'react-router';
+import React, { useEffect } from 'react';
+import { Outlet, Navigate } from "react-router-dom";
 import { isTokenValid } from '../service/auth/userContext/auth.helpers';
 import { useAuth } from '../../hooks/useAuth';
-import LoginModal from '../loginModal/LoginModal';
+import { toast } from "react-toastify";
 
 const Protected = () => {
   const { token } = useAuth();
-  const [showLogin, setShowLogin] = useState(false);
+  const tokenIsValid = isTokenValid(token);
 
-  if (!isTokenValid(token)) {
-    return (
-      <>
-        <LoginModal show={true} handleClose={() => setShowLogin(false)} />
-        <div style={{ padding: '2rem', textAlign: 'center' }}>
-          Debes iniciar sesión para continuar.
-        </div>
-      </>
-    );
+  useEffect(() => {
+    if (!tokenIsValid) {
+      toast.info("Debes iniciar sesión para continuar", { autoClose: 3000 });
+    }
+  }, [tokenIsValid]);
+
+  if (!tokenIsValid) {
+    return <Navigate to="/" replace />;
   }
 
   return <Outlet />;

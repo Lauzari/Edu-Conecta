@@ -3,6 +3,7 @@ import { Table, Button, Spinner, Alert } from "react-bootstrap";
 import Pagination from "../../ui/pagination/Pagination.jsx";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
+import { toast } from "react-toastify";
 
 function Applications({ searchTerm }) {
   const [applications, setApplications] = useState([]);
@@ -92,13 +93,14 @@ function Applications({ searchTerm }) {
         throw new Error(`Error al aceptar la solicitud: ${msg}`);
       }
 
-      const data = await response.json(); // DTO de salida
-      // Actualizamos el estado local
+      const data = await response.json();
+
       setApplications((prev) =>
         prev.map((app) =>
           app.id === id ? { ...app, status: data.status || "Accepted" } : app
         )
       );
+      toast.success( `Solicitud nro. ${id} aceptada.`);
     } catch (error) {
       console.error(error);
       setError("No se pudo aceptar la solicitud.");
@@ -136,6 +138,7 @@ function Applications({ searchTerm }) {
           app.id === id ? { ...app, status: data.status || "Rejected" } : app
         )
       );
+      toast.info( `Solicitud nro. ${id} rechazada.`);
     } catch (error) {
       console.error(error);
       setError("No se pudo rechazar la solicitud.");
@@ -150,8 +153,6 @@ function Applications({ searchTerm }) {
     }
     setShowModal(false);
   };
-
-  if (error) return <Alert variant="danger">{error}</Alert>;
 
   return (
     <div

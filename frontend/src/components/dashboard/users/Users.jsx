@@ -5,6 +5,7 @@ import Pagination from "../../ui/pagination/Pagination.jsx";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
 import EditUserModal from "./editUserModal/EditUserModal.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
+import { toast } from "react-toastify";
 
 function Users({ searchTerm }) {
   const [users, setUsers] = useState([]);
@@ -19,44 +20,41 @@ function Users({ searchTerm }) {
   const usersPerPage = 10;
 
   const { token } = useAuth();
-  
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(
-          "https://localhost:7018/User/allUsersInfo",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
 
-        if (!response.ok) {
-          throw new Error("Error al obtener los usuarios");
-        }
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("https://localhost:7018/User/allUsersInfo", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        const data = await response.json();
-
-        const formattedData = data.map((u) => ({
-          id: u.id,
-          name: u.name,
-          email: u.email,
-          role: u.userType,
-          birthDate: u.birthDate,
-          registerDate: u.registerDate,
-        }));
-
-        setUsers(formattedData);
-      } catch (err) {
-        console.error(err);
-        setError(err.message);
+      if (!response.ok) {
+        throw new Error("Error al obtener los usuarios");
       }
-    };
 
+      const data = await response.json();
+
+      const formattedData = data.map((u) => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.userType,
+        birthDate: u.birthDate,
+        registerDate: u.registerDate,
+      }));
+
+      setUsers(formattedData);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  };
+
+  useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [token]);
 
   const filtered = users.filter(
     (user) =>
@@ -90,40 +88,31 @@ function Users({ searchTerm }) {
         throw new Error(`Error al eliminar usuario (HTTP ${response.status})`);
       }
 
-      setUsers((prev) => prev.filter((user) => user.id !== selectedUserId));
-      console.log("Usuario eliminado con id:", selectedUserId);
-
-      setSelectedUserId(null);
+      toast.success(`Usuario nro. ${selectedUserId} eliminado.`);
       setShowDeleteModal(false);
+      setSelectedUserId(null);
+
+      await fetchUsers();
     } catch (err) {
-      console.error("Error al eliminar usuario:", err);
       setError("No se pudo eliminar el usuario. Inténtalo de nuevo.");
       setShowDeleteModal(false);
     }
   };
 
-  // 🔹 Editar usuario
   const handleEdit = (id) => {
     setSelectedUserId(id);
     setShowEditModal(true);
   };
 
-  const handleSaveUser = (updatedUser) => {
-    const normalizedUser = {
-      ...updatedUser,
-      role: updatedUser.userType, // 👈 importante
-    };
-
-    setUsers((prev) =>
-      prev.map((user) =>
-        user.id === normalizedUser.id ? { ...user, ...normalizedUser } : user
-      )
-    );
-
-    console.log("Usuario actualizado:", normalizedUser);
+  const handleSaveUser = async () => {
+    try {
+      await fetchUsers();
+      toast.success("Usuario actualizado correctamente");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al actualizar la lista de usuarios");
+    }
   };
-
-  if (error) return <Alert variant="danger">{error}</Alert>;
 
   return (
     <div
@@ -180,7 +169,6 @@ function Users({ searchTerm }) {
         onPageChange={setCurrentPage}
       />
 
-      {/* Modal de confirmación para eliminar */}
       <ConfirmationModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
@@ -191,7 +179,6 @@ function Users({ searchTerm }) {
         onConfirm={handleDelete}
       />
 
-      {/* Modal para editar usuario */}
       <EditUserModal
         show={showEditModal}
         onHide={() => setShowEditModal(false)}

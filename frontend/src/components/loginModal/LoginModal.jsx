@@ -85,6 +85,7 @@ const handleModalClose = () => {
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
       setError("Error al iniciar sesión");
+      toast.error("Error al iniciar sesión");
     } finally {
       setLoading(false);
     }
