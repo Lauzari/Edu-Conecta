@@ -29,7 +29,7 @@ function Classes({ searchTerm }) {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetch("https://localhost:7018/Class", {
+        const response = await fetch(`${apiUrl}/Class`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -75,7 +75,7 @@ function Classes({ searchTerm }) {
     if (selectedClassId !== null) {
       try {
         const response = await fetch(
-          `https://localhost:7018/Class/Delete?id=${selectedClassId}`,
+          `${apiUrl}/Class/Delete?id=${selectedClassId}`,
           {
             method: "DELETE",
             headers: {

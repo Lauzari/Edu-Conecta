@@ -27,7 +27,7 @@ function Subjects({ searchTerm }) {
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
-        const response = await fetch("https://localhost:7018/api/Subject", {
+        const response = await fetch(`${apiUrl}/api/Subject`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -57,7 +57,7 @@ function Subjects({ searchTerm }) {
   // === HANDLE SAVE SUBJECT ===
   const handleSaveSubject = async () => {
     try {
-      const response = await fetch("https://localhost:7018/api/Subject", {
+      const response = await fetch(`${apiUrl}/api/Subject`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -100,7 +100,7 @@ function Subjects({ searchTerm }) {
     if (selectedSubjectId !== null) {
       try {
         const response = await fetch(
-          `https://localhost:7018/api/Subject/${selectedSubjectId}`,
+          `${apiUrl}/api/Subject/${selectedSubjectId}`,
           {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` },

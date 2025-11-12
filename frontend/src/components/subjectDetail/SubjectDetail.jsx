@@ -16,7 +16,7 @@ const [subject, setSubject] = useState(null);
     const fetchSubject = async () => {
       try {
         
-        const response = await fetch(`http://localhost:7018/api/subjects/${id}`);
+        const response = await fetch(`${apiUrl}/api/subjects/${id}`);
 
         if (!response.ok) {
           throw new Error("Error al obtener la materia");

@@ -23,7 +23,7 @@ function Users({ searchTerm }) {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("https://localhost:7018/User/allUsersInfo", {
+      const response = await fetch(`${apiUrl}/User/allUsersInfo`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -74,7 +74,7 @@ function Users({ searchTerm }) {
       setError(null);
 
       const response = await fetch(
-        `https://localhost:7018/User/delete?id=${selectedUserId}`,
+        `${apiUrl}/User/delete?id=${selectedUserId}`,
         {
           method: "DELETE",
           headers: {

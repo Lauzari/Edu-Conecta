@@ -32,19 +32,16 @@ function App() {
           <Route path="/applyNow" element={<ApplyNow />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/form-professor" element={<RegisterProfessor />} />
-          <Route path="/user-profile" element={<UserProfile />} />
           <Route path="*" element={<NotFound />} />
           <Route element={<Protected />}>
+          <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/my-courses" element={<MyCourses />} />
-          {/* <Route path="/editProfile/:userId" element={<EditProfile />} /> */}
           <Route element={<PrivateRoute allowedRoles={["Admin"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
         </Route>
         </Route>
         <Route path="/register" element={<Register isEdit={false} />} />
-
-        
       </Routes>
       <ToastContainer position="bottom-right" autoClose={3000} />
     </>

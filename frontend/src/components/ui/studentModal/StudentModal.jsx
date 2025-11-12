@@ -20,7 +20,7 @@ function StudentModal({ show, onHide, classId }) {
         try {
           setLoading(true);
           const response = await fetch(
-            `https://localhost:7018/Class/GetClassWithStudents?id=${classId}`,
+            `${apiUrl}/Class/GetClassWithStudents?id=${classId}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ function StudentModal({ show, onHide, classId }) {
 
     try {
       const response = await fetch(
-        `https://localhost:7018/Class/${classId}/deleteStudent`,
+        `${apiUrl}/Class/${classId}/deleteStudent`,
         {
           method: "POST",
           headers: {

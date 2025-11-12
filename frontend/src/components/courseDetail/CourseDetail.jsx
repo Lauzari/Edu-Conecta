@@ -16,7 +16,7 @@ function CourseDetail() {
     const fetchCourse = async () => {
       try {
         const response = await fetch(
-          `https://localhost:7018/Class/GetClassWithStudents?id=${id}`,
+          `${apiUrl}/Class/GetClassWithStudents?id=${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -53,7 +53,7 @@ function CourseDetail() {
     setEnrolling(true);
     try {
       const response = await fetch(
-        `https://localhost:7018/Class/${id}/enrollStudent`,
+        `${apiUrl}/Class/${id}/enrollStudent`,
         {
           method: "POST",
           headers: {
@@ -92,7 +92,7 @@ function CourseDetail() {
     setEnrolling(true);
     try {
       const response = await fetch(
-        `https://localhost:7018/Class/${id}/deleteStudent`,
+        `${apiUrl}/Class/${id}/deleteStudent`,
         {
           method: "POST",
           headers: {

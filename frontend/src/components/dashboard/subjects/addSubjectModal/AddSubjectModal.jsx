@@ -22,7 +22,7 @@ function SubjectModal({ show, onHide, onSave, subjectId }) {
         try {
           setLoading(true);
           const response = await fetch(
-            `https://localhost:7018/api/Subject/${subjectId}`,
+            `${apiUrl}/api/Subject/${subjectId}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -79,10 +79,10 @@ function SubjectModal({ show, onHide, onSave, subjectId }) {
       let url = "";
       if (subjectId) {
         body = JSON.stringify({ id: subjectId, ...payload });
-        url = `https://localhost:7018/api/Subject/${subjectId}`;
+        url = `${apiUrl}/api/Subject/${subjectId}`;
         // PUT / Update
         response = await fetch(
-          `https://localhost:7018/api/Subject/${subjectId}`,
+          `${apiUrl}/api/Subject/${subjectId}`,
           {
             method: "PUT",
             headers: {
@@ -94,9 +94,9 @@ function SubjectModal({ show, onHide, onSave, subjectId }) {
         );
       } else {
         body = JSON.stringify(payload);
-        url = `https://localhost:7018/api/Subject`;
+        url = `${apiUrl}/api/Subject`;
         // POST / Create
-        response = await fetch(`https://localhost:7018/api/Subject`, {
+        response = await fetch(`${apiUrl}/api/Subject`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

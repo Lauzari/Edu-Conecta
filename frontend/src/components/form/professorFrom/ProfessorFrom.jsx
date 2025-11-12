@@ -44,7 +44,7 @@ const ProfessorFrom = () => {
     console.log("🧩 TOKEN:", token);
 
     try {
-      const response = await fetch(`https://localhost:7018/api/ProfessorRequest/${userId}`, {
+      const response = await fetch(`${apiUrl}/api/ProfessorRequest/${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -65,7 +65,7 @@ const handleModalClose = () => {
       setLoading(true);
 
       const response = await fetch(
-        "https://localhost:7018/api/authentication/authenticate",
+        `${apiUrl}/api/authentication/authenticate`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

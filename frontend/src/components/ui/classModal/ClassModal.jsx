@@ -25,7 +25,7 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
     const fetchSubjects = async () => {
       try {
         setLoadingSubjects(true);
-        const response = await fetch("https://localhost:7018/api/Subject", {
+        const response = await fetch(`${apiUrl}/api/Subject`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error("Error al cargar las materias");
@@ -94,7 +94,7 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
         classData.Id = formData.id;
       }
 
-      const url = "https://localhost:7018/Class";
+      const url = `${apiUrl}/Class`;
       const method = isEditing ? "PUT" : "POST";
 
       const response = await fetch(url, {

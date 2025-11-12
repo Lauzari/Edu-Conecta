@@ -1,7 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./userProfile.css";
-import { jwtDecode } from "jwt-decode";
-// import coursesData from "../../data/courses.js";
 import { useAuth } from "../../hooks/useAuth.js";
 import PasswordModal from "../passwordModal/passwordModal.jsx";
 import { FaUserCircle, FaBell, FaEdit } from "react-icons/fa";
@@ -17,19 +15,14 @@ function UserProfile() {
   const toggleEditMode = () => {
     setEditMode(!editMode);
   };
-  // const limitedCourses = courses.slice(0, 2);
 
   const toggleNotifications = () => setOpen(!open);
 
-  // Obtener datos del usuario
   useEffect(() => {
     const fetchUserProfile = async () => {
-    //   const decodedToken = jwtDecode(token);
-    //   console.log("Token recibido del backend:", token);
-    //   console.log("Token decodificado:", decodedToken);
       try {
         const res = await fetch(
-          `https://localhost:7018/User/completeUserInfo?id=${userId}`,
+          `${apiUrl}/User/completeUserInfo?id=${userId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -55,7 +48,6 @@ function UserProfile() {
 
   return (
     <div style={{ backgroundColor: "#3b3fbd" }}>
-      {/* "#1F262C" */}
       <div className="profile-card">
         <div className="profile-header">
           <button className="notification-btn" onClick={toggleNotifications}>

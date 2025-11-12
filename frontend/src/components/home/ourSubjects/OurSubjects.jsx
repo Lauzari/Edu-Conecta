@@ -17,7 +17,7 @@ function OurSubjects() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("https://localhost:7018/api/Subject", {
+        const response = await fetch(`${apiUrl}/api/Subject`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

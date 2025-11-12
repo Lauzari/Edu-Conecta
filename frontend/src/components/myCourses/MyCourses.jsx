@@ -20,7 +20,7 @@ function MyCourses() {
   const fetchUserData = useCallback(async () => {
     try {
       const response = await fetch(
-        `https://localhost:7018/User/completeUserInfo?id=${userId}`,
+        `${apiUrl}/User/completeUserInfo?id=${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -65,7 +65,7 @@ function MyCourses() {
 
     try {
       const response = await fetch(
-        `https://localhost:7018/Class/${selectedClassId}/deleteStudent`,
+        `${apiUrl}/Class/${selectedClassId}/deleteStudent`,
         {
           method: "POST",
           headers: {
@@ -93,7 +93,7 @@ function MyCourses() {
 
     try {
       const response = await fetch(
-        `https://localhost:7018/Class/Delete?id=${selectedClassId}`,
+        `${apiUrl}/Class/Delete?id=${selectedClassId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

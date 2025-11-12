@@ -22,7 +22,7 @@ function EditClassModal({ show, onHide, classId, onSave }) {
     if (show) {
       const fetchSubjects = async () => {
         try {
-          const response = await fetch("https://localhost:7018/api/Subject", {
+          const response = await fetch(`${apiUrl}/api/Subject`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (!response.ok) throw new Error("Error al cargar materias");
@@ -42,7 +42,7 @@ function EditClassModal({ show, onHide, classId, onSave }) {
     if (show && classId) {
       const fetchClass = async () => {
         try {
-          const response = await fetch(`https://localhost:7018/Class/GetClass?id=${classId}`, {
+          const response = await fetch(`${apiUrl}/Class/GetClass?id=${classId}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           if (!response.ok) throw new Error("Error al cargar clase");
@@ -89,7 +89,7 @@ function EditClassModal({ show, onHide, classId, onSave }) {
         StartDate: formData.startDate,
       };
 
-      const response = await fetch("https://localhost:7018/Class", {
+      const response = await fetch(`${apiUrl}/Class`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

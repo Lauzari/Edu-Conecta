@@ -20,7 +20,7 @@ function Applications({ searchTerm }) {
     const fetchApplications = async () => {
       try {
         const response = await fetch(
-          "https://localhost:7018/api/ProfessorRequest",
+          `${apiUrl}/api/ProfessorRequest`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -74,7 +74,7 @@ function Applications({ searchTerm }) {
       const applicantId = app?.applicantId || id;
 
       const response = await fetch(
-        `https://localhost:7018/api/ProfessorRequest/acceptRequest`,
+        `${apiUrl}/api/ProfessorRequest/acceptRequest`,
         {
           method: "PUT",
           headers: {
@@ -113,7 +113,7 @@ function Applications({ searchTerm }) {
       const applicantId = app?.applicantId || id;
 
       const response = await fetch(
-        `https://localhost:7018/api/ProfessorRequest/declineRequest`,
+        `${apiUrl}/api/ProfessorRequest/declineRequest`,
         {
           method: "PUT",
           headers: {

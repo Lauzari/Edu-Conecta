@@ -39,7 +39,7 @@ function ContactUs() {
       };
 
       const response = await fetch(
-        "https://localhost:7018/api/Mail/contactUs",
+        `${apiUrl}/api/Mail/contactUs`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

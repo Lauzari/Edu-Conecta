@@ -21,7 +21,7 @@ function CoursesView() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("https://localhost:7018/Class", {
+        const response = await fetch(`${apiUrl}/Class`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
