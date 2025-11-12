@@ -7,6 +7,7 @@ import { useAuth } from "../../../hooks/useAuth.js";
 
 const ProfessorFrom = () => {
   const { token, userId } = useAuth();
+  const navigate = useNavigate();
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
