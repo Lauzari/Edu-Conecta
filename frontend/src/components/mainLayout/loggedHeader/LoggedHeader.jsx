@@ -37,10 +37,10 @@ function LoggedHeader() {
   }, []);
 
   const handleUserLogOut = () => {
-    handleLogout();
-    toast.info("Ha cerrado sesión.");
     setMenuOpen(false)
     navigate("/");
+    handleLogout();
+    toast.info("Ha cerrado sesión.");
   };
   return (
     <header className={`header-area ${isSticky ? "header-sticky" : ""}`}>
@@ -93,7 +93,7 @@ function LoggedHeader() {
                   <button
                     className="nav-link"
                     onClick={() => {
-                      navigate("/myCourses");
+                      navigate("/my-courses");
                       setMenuOpen(false);
                     }}
                   >

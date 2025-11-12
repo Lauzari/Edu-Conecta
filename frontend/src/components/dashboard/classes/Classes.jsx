@@ -5,10 +5,13 @@ import Pagination from "../../ui/pagination/Pagination.jsx";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
 import EditClassModal from "./editClassModal/EditClassModal.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
+import { toast } from "react-toastify";
 
 function Classes({ searchTerm }) {
   const [classes, setClasses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   // States used for Modals
   const [selectedClassId, setSelectedClassId] = useState(null);
@@ -28,7 +31,7 @@ function Classes({ searchTerm }) {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetch("https://localhost:7018/Class", {
+        const response = await fetch(`${apiUrl}/Class`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -74,7 +77,7 @@ function Classes({ searchTerm }) {
     if (selectedClassId !== null) {
       try {
         const response = await fetch(
-          `https://localhost:7018/Class/Delete?id=${selectedClassId}`,
+          `${apiUrl}/Class/Delete?id=${selectedClassId}`,
           {
             method: "DELETE",
             headers: {
@@ -84,11 +87,13 @@ function Classes({ searchTerm }) {
         );
 
         if (!response.ok) {
+          toast.info("No se pudo eliminar la clase. Inténtelo de nuevo más tarde.");
           throw new Error("Error al eliminar la clase");
         }
 
         setClasses(classes.filter((cls) => cls.id !== selectedClassId));
         setSelectedClassId(null);
+        toast.success("¡Clase eliminada con éxito!");
       } catch (error) {
         console.error(error);
       }
@@ -121,6 +126,7 @@ function Classes({ searchTerm }) {
           : cls
       )
     );
+    toast.success("¡Clase editada con éxito!");
   };
 
   return (

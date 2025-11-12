@@ -11,6 +11,8 @@ function ContactUs() {
     message: "",
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false); // <-- estado para loader
 
@@ -39,7 +41,7 @@ function ContactUs() {
       };
 
       const response = await fetch(
-        "https://localhost:7018/api/Mail/contactUs",
+        `${apiUrl}/api/Mail/contactUs`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

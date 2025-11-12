@@ -15,6 +15,8 @@ const LoginModal = ({ show, handleClose }) => {
 
   const navigate = useNavigate();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const { handleLogin } = useAuth();
 
   const handleRegisterNavigate = () => {
@@ -65,7 +67,7 @@ const handleModalClose = () => {
       setLoading(true);
 
       const response = await fetch(
-        "https://localhost:7018/api/authentication/authenticate",
+        `${apiUrl}/api/authentication/authenticate`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -85,6 +87,7 @@ const handleModalClose = () => {
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
       setError("Error al iniciar sesión");
+      toast.error("Error al iniciar sesión");
     } finally {
       setLoading(false);
     }

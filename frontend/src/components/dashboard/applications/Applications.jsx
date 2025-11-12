@@ -3,6 +3,7 @@ import { Table, Button, Spinner, Alert } from "react-bootstrap";
 import Pagination from "../../ui/pagination/Pagination.jsx";
 import ConfirmationModal from "../../ui/confirmationModal/ConfirmationModal.jsx";
 import { useAuth } from "../../../hooks/useAuth.js";
+import { toast } from "react-toastify";
 
 function Applications({ searchTerm }) {
   const [applications, setApplications] = useState([]);
@@ -13,13 +14,15 @@ function Applications({ searchTerm }) {
   const [error, setError] = useState(null);
   const appsPerPage = 10;
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
  const { token } = useAuth();
 
   useEffect(() => {
     const fetchApplications = async () => {
       try {
         const response = await fetch(
-          "https://localhost:7018/api/ProfessorRequest",
+          `${apiUrl}/api/ProfessorRequest`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -73,7 +76,7 @@ function Applications({ searchTerm }) {
       const applicantId = app?.applicantId || id;
 
       const response = await fetch(
-        `https://localhost:7018/api/ProfessorRequest/acceptRequest`,
+        `${apiUrl}/api/ProfessorRequest/acceptRequest`,
         {
           method: "PUT",
           headers: {
@@ -92,13 +95,14 @@ function Applications({ searchTerm }) {
         throw new Error(`Error al aceptar la solicitud: ${msg}`);
       }
 
-      const data = await response.json(); // DTO de salida
-      // Actualizamos el estado local
+      const data = await response.json();
+
       setApplications((prev) =>
         prev.map((app) =>
           app.id === id ? { ...app, status: data.status || "Accepted" } : app
         )
       );
+      toast.success( `Solicitud nro. ${id} aceptada.`);
     } catch (error) {
       console.error(error);
       setError("No se pudo aceptar la solicitud.");
@@ -111,7 +115,7 @@ function Applications({ searchTerm }) {
       const applicantId = app?.applicantId || id;
 
       const response = await fetch(
-        `https://localhost:7018/api/ProfessorRequest/declineRequest`,
+        `${apiUrl}/api/ProfessorRequest/declineRequest`,
         {
           method: "PUT",
           headers: {
@@ -136,6 +140,7 @@ function Applications({ searchTerm }) {
           app.id === id ? { ...app, status: data.status || "Rejected" } : app
         )
       );
+      toast.info( `Solicitud nro. ${id} rechazada.`);
     } catch (error) {
       console.error(error);
       setError("No se pudo rechazar la solicitud.");
@@ -150,8 +155,6 @@ function Applications({ searchTerm }) {
     }
     setShowModal(false);
   };
-
-  if (error) return <Alert variant="danger">{error}</Alert>;
 
   return (
     <div

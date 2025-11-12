@@ -1,111 +1,185 @@
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import React, { useState } from 'react';
-import courses from '../../../data/courses.js';
-import { useParams } from 'react-router-dom';
-import users from '../../../data/user.js';
-import ConfirmModal from '../../ui/confirmationModal/ConfirmationModal.jsx';
-import './StudentModal.css';
-import './StudentOrder.js';
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import React, { useState, useEffect } from "react";
+import ConfirmModal from "../confirmationModal/ConfirmationModal.jsx";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { useAuth } from "../../../hooks/useAuth.js";
+import "./StudentModal.css";
+import { toast } from "react-toastify";
 
-function StudentModal(props) {
-    const { id } = useParams();
+function StudentModal({ show, onHide, classId }) {
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [courseData, setCourseData] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [selectedStudent, setSelectedStudent] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
+  const { token } = useAuth();
+  useEffect(() => {
+    if (show && classId) {
+      const fetchData = async () => {
+        try {
+          setLoading(true);
+          const response = await fetch(
+            `${apiUrl}/Class/GetClassWithStudents?id=${classId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-    const course = courses.find((c) => c.id === parseInt(id));
-    const [students, setStudents] = useState(
-        users.filter((u) => u.role === "student")
-    );
+          if (!response.ok)
+            throw new Error("Error al obtener los datos de la clase");
 
-    const sortedStudents = [...students].sort((a, b) =>
-        a.name.localeCompare(b.name)
-    );
+          const data = await response.json();
+          setCourseData(data);
+          setStudents(data.students || []);
+        } catch (error) {
+          console.error("Error cargando clase:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    const groupedStudents = sortedStudents.reduce((groups, student) => {
-        const firstLetter = student.name[0].toUpperCase();
-        if (!groups[firstLetter]) groups[firstLetter] = [];
-        groups[firstLetter].push(student);
-        return groups;
-    }, {});
+      fetchData();
+    }
+  }, [show, classId, token]);
 
-    const handleDeleteClick = (student) => {
-        setSelectedStudent(student);
-        setShowConfirm(true);
-    };
+  const handleConfirmDelete = async () => {
+    console.log(selectedStudent.id);
+    if (!selectedStudent) return;
 
-    const handleConfirmDelete = () => {
-        setStudents(students.filter((s) => s.id !== selectedStudent.id));
-        setSelectedStudent(null);
-    };
+    try {
+      const response = await fetch(
+        `${apiUrl}/Class/${classId}/deleteStudent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(selectedStudent.id),
+        }
+      );
 
+      if (!response.ok) throw new Error("Error al eliminar al estudiante");
+
+      setStudents((prev) => prev.filter((s) => s.id !== selectedStudent.id));
+      toast.success("Estudiante eliminado con éxito.");
+    } catch (error) {
+      console.error("Error al eliminar estudiante:", error);
+    } finally {
+      setSelectedStudent(null);
+      setShowConfirm(false);
+    }
+  };
+
+  const handleDeleteClick = (student) => {
+    setSelectedStudent(student);
+    setShowConfirm(true);
+  };
+
+  if (loading) {
     return (
-        <>
-            <Modal
-                {...props}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        {course ? course.title : "Materia"}
-                    </Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <h4>Alumnos Inscriptos en la materia</h4>
-
-                    <div className="students-list">
-                        {Object.keys(groupedStudents).length > 0 ? (
-                            Object.keys(groupedStudents).map((letter) => (
-                                <div key={letter} className="student-group">
-                                    <h5 className="group-letter">{letter}</h5>
-                                    {groupedStudents[letter].map((student) => (
-                                        <div className="student-item" key={student.id}>
-                                            <img
-                                                src={student.Image}
-                                                alt={student.name}
-                                                className="student-img"
-                                            />
-                                            <div className="student-info">
-                                                <h5>{student.name}</h5>
-                                                <p>{student.email}</p>
-                                            </div>
-                                            <div className='delete-user'>
-                                                <button onClick={() => handleDeleteClick(student)}><FaRegTrashAlt /></button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ))
-                        ) : (
-                            <p>No hay alumnos inscriptos aún.</p>
-                        )}
-                    </div>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button onClick={props.onHide}>Cerrar</Button>
-                </Modal.Footer>
-            </Modal>
-            <ConfirmModal
-                show={showConfirm}
-                onHide={() => setShowConfirm(false)}
-                title="Confirmar eliminación"
-                message={
-                    selectedStudent
-                        ? `¿Estás segura/o de eliminar a ${selectedStudent.name}?`
-                        : "¿Eliminar usuario?"
-                }
-                confirmText="Eliminar"
-                cancelText="Cancelar"
-                onConfirm={handleConfirmDelete}
-            />
-        </>
+      <Modal show={show} onHide={onHide} centered>
+        <Modal.Body>
+          <p>Cargando alumnos...</p>
+        </Modal.Body>
+      </Modal>
     );
+  }
+
+  const sortedStudents = [...students].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+
+  const groupedStudents = sortedStudents.reduce((groups, student) => {
+    const firstLetter = student.name[0].toUpperCase();
+    if (!groups[firstLetter]) groups[firstLetter] = [];
+    groups[firstLetter].push(student);
+    return groups;
+  }, {});
+
+  return (
+    <>
+      <Modal show={show} onHide={onHide} size="lg" centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {courseData ? `${courseData.subject.name}` : "Materia"}
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <h5>Alumnos inscriptos</h5>
+
+          <div className="students-list">
+            {Object.keys(groupedStudents).length > 0 ? (
+              Object.keys(groupedStudents).map((letter) => (
+                <div key={letter} className="student-group mb-3">
+                  <h6 className="group-letter">{letter}</h6>
+                  {groupedStudents[letter].map((student) => (
+                    <div
+                      className="student-item d-flex align-items-center justify-content-between border p-2 rounded mb-2"
+                      key={student.id}
+                    >
+                      <div className="d-flex align-items-center">
+                        <div
+                          className="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3"
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            fontWeight: "bold",
+                            fontSize: "1.2rem",
+                          }}
+                        >
+                          {student.name?.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <h6 className="mb-0">{student.name}</h6>
+                          <small className="text-muted">{student.email}</small>
+                        </div>
+                      </div>
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => handleDeleteClick(student)}
+                      >
+                        <FaRegTrashAlt />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ))
+            ) : (
+              <p>No hay alumnos inscriptos aún.</p>
+            )}
+          </div>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onHide}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <ConfirmModal
+        show={showConfirm}
+        onHide={() => setShowConfirm(false)}
+        title="Confirmar eliminación"
+        message={
+          selectedStudent
+            ? `¿Estás segura/o de eliminar a ${selectedStudent.name}?`
+            : "¿Eliminar usuario?"
+        }
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        onConfirm={handleConfirmDelete}
+      />
+    </>
+  );
 }
 
 export default StudentModal;

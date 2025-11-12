@@ -15,6 +15,8 @@ import Dashboard from "./components/dashboard/Dashboard.jsx";
 import UserProfile from "./components/user/UserProfile.jsx";
 import Protected from "./components/protected/Protected";
 import PrivateRoute from "./components/privateRoute/PrivateRoute.jsx";
+import NotFound from "./components/errors/notFound/NotFound.jsx";
+import MyCourses from "./components/myCourses/MyCourses.jsx";
 
 function App() {
   return (
@@ -30,17 +32,16 @@ function App() {
           <Route path="/applyNow" element={<ApplyNow />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/form-professor" element={<RegisterProfessor />} />
-          <Route path="/user-profile" element={<UserProfile />} />
+          <Route path="*" element={<NotFound />} />
           <Route element={<Protected />}>
-          {/* <Route path="/editProfile/:userId" element={<EditProfile />} /> */}
+          <Route path="/user-profile" element={<UserProfile />} />
+          <Route path="/my-courses" element={<MyCourses />} />
           <Route element={<PrivateRoute allowedRoles={["Admin"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
         </Route>
         </Route>
         <Route path="/register" element={<Register isEdit={false} />} />
-
-        
       </Routes>
       <ToastContainer position="bottom-right" autoClose={3000} />
     </>

@@ -3,12 +3,11 @@ import './register.css';
 import validateRegister from './loginhelper';
 import LoginModal from '../loginModal/LoginModal';
 import { useNavigate } from 'react-router-dom';
-
+import { FaArrowLeft } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [showLogin, setShowLogin] = useState(false);
-
-  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [values, setValues] = useState({
     Name: "",
@@ -18,6 +17,10 @@ const Register = () => {
     terms: false,
     birthdate: "",
   });
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -33,10 +36,8 @@ const Register = () => {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Formulario válido ✅", values);
       try {
-        //puse mi localhost porque no me tomaba el puerto de appsettings.json, hay que modificarlo 
-        const response = await fetch("http://localhost:5253/User/create", {
+        const response = await fetch(`${apiUrl}/User/create`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -49,31 +50,34 @@ const Register = () => {
           }),
         });
 
-          const data = await response.json();
+        const data = await response.json();
         if (response.ok) {
-          console.log("✅ Registro exitoso");
+          toast.success("Registro exitoso");
           navigate("/");
-        } if (!response.ok) {
+        } else {
           alert(data.message || "El usuario ya existe ❌");
         }
       } catch (error) {
         console.error("❌ Error en la conexión:", error);
         alert("Error al conectar con el servidor");
       }
-
     }
   };
 
-
   return (
     <div className="register">
-      <div className='register-form'>
-        <div className='register-form-content'>
+      <div className="register-form">
+        <button className="back-button" onClick={() => navigate("/")}>
+          <FaArrowLeft size={20} />
+        </button>
+
+        <div className="register-form-content">
           <h1>Bienvenido a EduConecta</h1>
           <p>Por favor completa los campos del registro</p>
           <form onSubmit={handleSubmit}>
             <div className='form-group'>
-              <input type="text"
+              <input
+                type="text"
                 name="Name"
                 value={values.Name}
                 onChange={handleChange}
@@ -83,7 +87,8 @@ const Register = () => {
             </div>
 
             <div className='form-group'>
-              <input type="text"
+              <input
+                type="text"
                 name="Email"
                 value={values.Email}
                 onChange={handleChange}
@@ -93,7 +98,8 @@ const Register = () => {
             </div>
 
             <div className='form-group'>
-              <input type="date"
+              <input
+                type="date"
                 name="birthdate"
                 value={values.birthdate}
                 onChange={handleChange}
@@ -103,7 +109,8 @@ const Register = () => {
             </div>
 
             <div className='form-group'>
-              <input type="password"
+              <input
+                type="password"
                 placeholder="Contraseña"
                 name='Password'
                 value={values.Password}
@@ -113,7 +120,8 @@ const Register = () => {
             </div>
 
             <div className='form-group'>
-              <input type="password"
+              <input
+                type="password"
                 name='confirmPassword'
                 value={values.confirmPassword}
                 onChange={handleChange}
@@ -123,25 +131,28 @@ const Register = () => {
             </div>
 
             <div className='form-group'>
-              <label htmlFor="" className='check-box'>
-                <input type="checkbox"
+              <label className='check-box'>
+                <input
+                  type="checkbox"
                   name='terms'
-                  value={values.terms}
+                  checked={values.terms}
                   onChange={handleChange}
-                /><p>Acepto los términos y condiciones</p>
+                />
+                <p>Acepto los términos y condiciones</p>
               </label>
               {errors.terms && <span className="error">{errors.terms}</span>}
             </div>
 
             <button className='submit-register' type="submit">Registrar</button>
           </form>
-          <p>Ya tienes una cuenta? <button onClick={() => setShowLogin(true)}>Iniciar sesión</button></p>
+          <p>¿Ya tienes una cuenta? <button className="login-btn" onClick={() => setShowLogin(true)}>Iniciar sesión</button></p>
         </div>
       </div>
 
       <div className='register-img'>
         <img src="/images/Img-register.jpg" alt="Registro" />
       </div>
+
       <LoginModal show={showLogin} handleClose={() => setShowLogin(false)} />
     </div>
   );

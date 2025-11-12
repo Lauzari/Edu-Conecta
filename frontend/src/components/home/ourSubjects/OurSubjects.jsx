@@ -11,13 +11,15 @@ function OurSubjects() {
   const navigate = useNavigate();
   const { token } = useAuth();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("https://localhost:7018/api/Subject", {
+        const response = await fetch(`${apiUrl}/api/Subject`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -25,7 +25,16 @@ public class ClassService : IClassService
 
     public async Task<IEnumerable<Class>> GetAllWithStudents()
     {
-        return await _classRepository.GetAllWithStudents();
+        var classes = await _classRepository.GetAllWithStudents();
+
+        foreach (var c in classes)
+        {
+            c.Students = c.Students
+                .Where(s => s.UserType == UserType.Student)
+                .ToList();
+        }
+
+        return classes;
     }
 
     public async Task<Class> GetById(int id)
@@ -35,7 +44,14 @@ public class ClassService : IClassService
 
     public async Task<Class> GetByIdWithStudents(int id)
     {
-        return await _classRepository.GetByIdWithStudents(id) ?? throw new NotFoundException("Class Not Found.");
+        var classEntity = await _classRepository.GetByIdWithStudents(id)
+            ?? throw new NotFoundException("Class Not Found.");
+
+        classEntity.Students = classEntity.Students
+            .Where(s => s.UserType == UserType.Student)
+            .ToList();
+
+        return classEntity;
     }
 
     public async Task<Class> Create(
@@ -67,7 +83,9 @@ public class ClassService : IClassService
             startDate,
             subject.Duration
         );
+        teacher.Classes.Add(newClass);
         var createdClass = await _classRepository.Create(newClass);
+        await _userRepository.UpdateAsync(teacher);
         return await _classRepository.GetById(createdClass.Id);
     }
 
@@ -145,7 +163,6 @@ public class ClassService : IClassService
         if (student.UserType != UserType.Student)
             throw new Exception("Invalid UserType.");
 
-        // Buscar la instancia trackeada dentro de la clase
         var studentInClass = classEntity.Students.FirstOrDefault(s => s.Id == studentId);
 
         if (studentInClass == null)

@@ -7,6 +7,8 @@ function AllCoursesView() {
   const navigate = useNavigate();
   const { token } = useAuth();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [courses, setCourses] = useState([]);
   const [filter, setFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,7 +25,7 @@ function AllCoursesView() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("https://localhost:7018/Class", {
+        const response = await fetch(`${apiUrl}/Class`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -59,9 +61,6 @@ function AllCoursesView() {
     startIndex,
     startIndex + coursesPerPage
   );
-
-  if (loading) return <p>Cargando cursos...</p>;
-  if (error) return <p>{error}</p>;
 
   return (
     <div className="courses-bg">
