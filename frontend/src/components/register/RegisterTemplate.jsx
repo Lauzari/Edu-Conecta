@@ -18,6 +18,8 @@ const Register = () => {
     birthdate: "",
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {

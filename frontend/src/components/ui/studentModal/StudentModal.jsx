@@ -13,6 +13,9 @@ function StudentModal({ show, onHide, classId }) {
   const [courseData, setCourseData] = useState(null);
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
   const { token } = useAuth();
   useEffect(() => {
     if (show && classId) {

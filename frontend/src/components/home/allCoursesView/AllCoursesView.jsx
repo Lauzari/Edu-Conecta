@@ -7,6 +7,8 @@ function AllCoursesView() {
   const navigate = useNavigate();
   const { token } = useAuth();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [courses, setCourses] = useState([]);
   const [filter, setFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);

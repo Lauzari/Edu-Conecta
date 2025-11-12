@@ -6,6 +6,8 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
   const { token, userId } = useAuth();
   const isEditing = !!classToEdit;
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [formData, setFormData] = useState({
     id: 0,
     subjectId: "",

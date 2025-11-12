@@ -12,6 +12,8 @@ function UserProfile() {
   const { token, userId } = useAuth();
   const [show, setShow] = useState(false);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const toggleEditMode = () => {
     setEditMode(!editMode);
   };

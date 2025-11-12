@@ -13,6 +13,8 @@ function EditClassModal({ show, onHide, classId, onSave }) {
     startDate: "",
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [subjects, setSubjects] = useState([]);
   const [error, setError] = useState("");
 

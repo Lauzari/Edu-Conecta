@@ -11,6 +11,8 @@ function ContactUs() {
     message: "",
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false); // <-- estado para loader
 

@@ -11,6 +11,8 @@ function Classes({ searchTerm }) {
   const [classes, setClasses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   // States used for Modals
   const [selectedClassId, setSelectedClassId] = useState(null);
   const [showModal, setShowModal] = useState(false);

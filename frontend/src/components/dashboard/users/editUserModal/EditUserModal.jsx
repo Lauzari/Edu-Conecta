@@ -11,6 +11,8 @@ function EditUserModal({ show, onHide, userId, onSave }) {
   const [fetchError, setFetchError] = useState(null);
   const [saving, setSaving] = useState(false);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [userData, setUserData] = useState({
     name: "",
     birthDate: "",
@@ -28,7 +30,7 @@ function EditUserModal({ show, onHide, userId, onSave }) {
         setShowRoleWarning(false); // resetea warning
         try {
           const response = await fetch(
-            `https://localhost:7018/User/userInfo?id=${userId}`,
+            `${apiUrl}/User/userInfo?id=${userId}`,
             {
               method: "GET",
               headers: {
@@ -107,7 +109,7 @@ function EditUserModal({ show, onHide, userId, onSave }) {
         userType: userData.role,
       };
 
-      const response = await fetch("https://localhost:7018/User/update", {
+      const response = await fetch(`${apiUrl}/User/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

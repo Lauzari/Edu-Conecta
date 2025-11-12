@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../../hooks/useAuth.js";
 
 const ProfessorFrom = () => {
-
-
   const { token, userId } = useAuth();
+
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const [values, setValues] = useState({
     nombre: "",

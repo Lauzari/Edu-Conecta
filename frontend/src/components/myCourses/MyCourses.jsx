@@ -17,6 +17,8 @@ function MyCourses() {
   const { token, userId, role, isReady } = useAuth();
   const navigate = useNavigate();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const fetchUserData = useCallback(async () => {
     try {
       const response = await fetch(

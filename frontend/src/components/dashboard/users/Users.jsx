@@ -12,6 +12,8 @@ function Users({ searchTerm }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   // Modal States
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);

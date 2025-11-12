@@ -13,6 +13,8 @@ function SubjectModal({ show, onHide, onSave, subjectId }) {
     description: "",
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const { token } = useAuth();
   
   // === FETCH SUBJECT BY ID ===

@@ -14,6 +14,8 @@ function Applications({ searchTerm }) {
   const [error, setError] = useState(null);
   const appsPerPage = 10;
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
  const { token } = useAuth();
 
   useEffect(() => {

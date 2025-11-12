@@ -3,19 +3,17 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./SubjectDetail.css";
 
-
 function SubjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-const [subject, setSubject] = useState(null);
+  const [subject, setSubject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
- 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
-   
     const fetchSubject = async () => {
       try {
-        
         const response = await fetch(`${apiUrl}/api/subjects/${id}`);
 
         if (!response.ok) {
@@ -24,25 +22,23 @@ const [subject, setSubject] = useState(null);
 
         const data = await response.json();
 
-       
         setSubject(data);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
-        window.scrollTo(0, 0); 
+        window.scrollTo(0, 0);
       }
     };
 
     fetchSubject();
-  }, [id]); 
-
+  }, [id]);
 
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>{error}</p>;
   if (!subject) return <p>Materia no encontrada</p>;
 
-     useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
@@ -51,13 +47,15 @@ const [subject, setSubject] = useState(null);
   }
 
   return (
-    <section className="section main-banner" id="subject-detail" data-section="section-detail">
-     
+    <section
+      className="section main-banner"
+      id="subject-detail"
+      data-section="section-detail"
+    >
       <video autoPlay muted loop id="bg-video">
         <source src="/images/course-video.mp4" type="video/mp4" />
       </video>
 
-      
       <div className="video-overlay header-text">
         <div className="container">
           <div className="row">
@@ -65,26 +63,23 @@ const [subject, setSubject] = useState(null);
               <div className="caption">
                 <h2>{subject.title}</h2>
 
-                
-
                 <p>{subject.description}</p>
 
-               
                 <div className="main-button-red" style={{ marginTop: "20px" }}>
                   <div className="scroll-to-section">
-                    <button onClick={() => navigate(`/inscripcion/${subject.id}`)}>
+                    <button
+                      onClick={() => navigate(`/inscripcion/${subject.id}`)}
+                    >
                       Cursos disponibles para esta materia
                     </button>
                   </div>
                 </div>
 
-               
                 <div className="main-button-red" style={{ marginTop: "15px" }}>
                   <div className="scroll-to-section">
                     <button onClick={() => navigate(-1)}>Volver</button>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>

@@ -14,6 +14,8 @@ function Subjects({ searchTerm }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSubjectId, setSelectedSubjectId] = useState(null);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   // States for Modals
   const [showSubjectModal, setShowSubjectModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
