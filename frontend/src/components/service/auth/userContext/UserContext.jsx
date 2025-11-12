@@ -9,6 +9,7 @@ export const UserProvider = ({ children }) => {
   const [userId, setUserId] = useState(null);
   const [name, setName] = useState(null);
   const [isReady, setIsReady] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("educonecta-token");
@@ -39,6 +40,7 @@ export const UserProvider = ({ children }) => {
   };
 
   const handleLogout = () => {
+    setIsLoggingOut(true);
     localStorage.removeItem("educonecta-token");
     setToken(null);
     setRole(null);
@@ -56,6 +58,7 @@ export const UserProvider = ({ children }) => {
         isReady,
         handleLogin,
         handleLogout,
+        isLoggingOut
       }}
     >
       {children}

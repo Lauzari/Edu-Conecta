@@ -93,8 +93,8 @@ function ApplyNow() {
                   <h3>REGISTRATE COMO DOCENTE</h3>
                   <p>
                     Para poder formar parte de nuestro cuerpo docente, primero
-                    debes crear una cuenta como estudiante y luego rellenar el{" "}
-                    <Link to="/form-professor">siguiente formulario</Link> para que
+                    debes crear una cuenta como estudiante y luego rellenar el
+                    formulario que aparece en la sección "Profesores" para que
                     nuestro comité verifique tu perfil.
                   </p>
                   <div className="main-button-green">

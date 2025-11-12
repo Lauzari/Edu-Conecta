@@ -1,7 +1,17 @@
 .services {
-  margin-top: -135px;
-  position: absolute;
+  background-image: url(../images/meetings-page-bg.jpg)!important;
   width: 100%;
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.services .container {
+  width: 90%;
+  margin: 0 auto;
 }
 
 .services .item {
@@ -12,8 +22,16 @@
   border-radius: 20px;
   text-align: center;
   color: #fff;
-  padding: 25px;
-  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 1.2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.services .item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .services .item .icon {
@@ -31,22 +49,35 @@
 .services .item p {
   color: #fff;
   font-size: 15px;
+  padding: 0 10px;
 }
 
 .services .slick-slide {
   padding: 0 1.6rem;
 }
+@media (max-width: 1380px) {
 
-@media (max-width: 992px) {
+  .services {
+  height: 45vh;
+}
+}
+
+@media (max-width: 840px) {
   .services .item {
-    height: 30vh;
+    height: auto;
+    margin-top: 5vh;
+    padding: 20px 25px;
+  }
+  .services .slick-slide {
+    padding: 0 1rem;
+  }
+  .services .container {
+    width: 100%;
   }
 }
 
-@media (max-width: 500px) {
-  .services .item {
-    margin-top: 18vh;
-    height: 55vh;
-  }
+@media (max-width: 380px) {
+.services {
+  height: 70vh;
 }
-
+}

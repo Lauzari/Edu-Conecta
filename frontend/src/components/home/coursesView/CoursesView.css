@@ -5,7 +5,7 @@ section.courses-view {
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
-  padding-top: 380px;
+  padding-top: 2.2rem;
   padding-bottom: 110px;
 }
 
@@ -155,9 +155,7 @@ section.courses-view .categories .main-button-blue button:hover {
 
 /* --- Responsive --- */
 @media (max-width: 992px) {
-  section.courses-view {
-    padding-top: 400px;
-  }
+  
 
   section.courses-view .categories {
     margin-right: 0;
