@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./CourseDetail.css";
+import "./courseDetail.css";
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 
