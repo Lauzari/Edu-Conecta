@@ -1,17 +1,24 @@
 .services {
-  background-image: url(../images/meetings-page-bg.jpg)!important;
+  background-image: url(../images/meetings-page-bg.jpg) !important;
   width: 100%;
-  height: 60vh;
+  min-height: 60vh;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   z-index: 2;
+  padding: 3rem 0;
 }
 
 .services .container {
   width: 90%;
   margin: 0 auto;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
 }
 
 .services .item {
@@ -25,7 +32,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: 1.2rem;
+  padding: 1.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -52,32 +59,24 @@
   padding: 0 10px;
 }
 
-.services .slick-slide {
-  padding: 0 1.6rem;
-}
 @media (max-width: 1380px) {
-
   .services {
-  height: 45vh;
-}
+    min-height: 45vh;
+  }
 }
 
 @media (max-width: 840px) {
+  .services {
+    padding: 2rem 1rem;
+  }
+
   .services .item {
-    height: auto;
-    margin-top: 5vh;
     padding: 20px 25px;
-  }
-  .services .slick-slide {
-    padding: 0 1rem;
-  }
-  .services .container {
-    width: 100%;
   }
 }
 
 @media (max-width: 380px) {
-.services {
-  height: 70vh;
-}
+  .services {
+    min-height: 70vh;
+  }
 }
