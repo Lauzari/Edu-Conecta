@@ -80,7 +80,7 @@ public class UserService : IUserService
 
     public async Task<User> PromoteToProfessor(int id)
     {
-        var user = await _userRepository.GetByIdAsync(id) ?? throw new NotFoundException("User Not Found.");
+        var user = await _userRepository.GetByIdWithJoinsAsync(id) ?? throw new NotFoundException("User Not Found.");
 
         if (user.UserType != UserType.Student)
             //Agregamos un nuevo tipo de error como "BussinessRuleException"???
