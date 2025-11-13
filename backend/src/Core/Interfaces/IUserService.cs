@@ -15,6 +15,8 @@ public interface IUserService
 
     Task<User> UpdateUserAsync(int id, string email, string name, DateOnly birthDate, UserType userType);
 
+    Task ChangePasswordAsync(int userId, string currentPassword, string newPassword);
+
     Task DeleteUserAsync(int id);
 
     Task<User> PromoteToProfessor(int id);

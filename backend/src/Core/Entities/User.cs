@@ -74,4 +74,9 @@ public class User
             Classes.Clear();
         UserType = newRole;
     }
+
+    public void UpdatePassword(string newPasswordHash)
+    {
+        Password = newPasswordHash;
+    }
 }

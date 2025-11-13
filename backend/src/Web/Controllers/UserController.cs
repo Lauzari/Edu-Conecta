@@ -5,6 +5,8 @@ using Models.Requests;
 using System.Threading.Tasks;
 using Core.Interfaces;
 using Core.Enums;
+using System.Security.Claims;
+
 
 namespace Web.Controllers;
 
@@ -73,6 +75,18 @@ public class UserController : ControllerBase
         request.UserType
         );
         return Ok(UserDto.Create(updatedUser));
+    }
+
+    [HttpPut("changePassword")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] UpdateUserPasswordRequest request)
+    {
+        
+             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            await _userService.ChangePasswordAsync(userId, request.CurrentPassword, request.NewPassword);
+
+            return Ok(new { message = "Contraseña actualizada correctamente." });
     }
 
     //AGREGAR MÁS SEGURIDAD (VERIFICACIÓN DE ID)

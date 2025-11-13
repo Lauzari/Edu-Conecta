@@ -3,6 +3,8 @@ using Core.Entities;
 using Core.Enums;
 using Core.Exceptions;
 using Core.Interfaces;
+
+
 namespace Core.Services;
 
 public class UserService : IUserService
@@ -77,6 +79,27 @@ public class UserService : IUserService
 
         return user;
     }
+
+    public async Task ChangePasswordAsync(int userId, string currentPassword, string newPassword)
+    {
+        var user = await _userRepository.GetByIdAsync(userId)
+             ?? throw new NotFoundException("Usuario no encontrado.");
+
+    
+        bool passwordValid = BCrypt.Net.BCrypt.Verify(currentPassword, user.Password);
+             if (!passwordValid)
+                throw new AppValidationException("La contraseña actual es incorrecta.");
+
+    
+        if (BCrypt.Net.BCrypt.Verify(newPassword, user.Password))
+            throw new AppValidationException("La nueva contraseña no puede ser igual a la actual.");
+
+    
+        string newHashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.UpdatePassword(newHashedPassword);
+
+        await _userRepository.UpdateAsync(user);
+}
 
     public async Task<User> PromoteToProfessor(int id)
     {
