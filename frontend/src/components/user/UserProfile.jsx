@@ -9,8 +9,13 @@ function UserProfile() {
   const [editMode, setEditMode] = useState(false);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({});
-  const { token, userId } = useAuth();
+  const { token, userId, isReady  } = useAuth();
   const [show, setShow] = useState(false);
+
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editableName, setEditableName] = useState("");
+
+  const userInitial = user.name ? user.name.charAt(0).toUpperCase() : "?";
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -20,18 +25,30 @@ function UserProfile() {
 
   const toggleNotifications = () => setOpen(!open);
 
+
+  const handleEditNameClick = () => {
+      setEditableName(user.name); // Carga el nombre actual en el input
+      setIsEditingName(true);
+  };
+
+  
+
   useEffect(() => {
+    console.log("Token que se envía:", token);
+console.log("UserId:", userId);
+console.log("URL:", `${apiUrl}/User/completeUserInfo?id=${userId}`);
+    if (!isReady || !token || !userId) return;
+
     const fetchUserProfile = async () => {
+      if (!token || !userId) return; 
       try {
-        const res = await fetch(
-          `${apiUrl}/User/completeUserInfo?id=${userId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await fetch(`${apiUrl}/User/completeUserInfo?id=${userId}`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!res.ok) {
           console.error("Error HTTP:", res.status);
@@ -46,7 +63,39 @@ function UserProfile() {
     };
 
     fetchUserProfile();
-  }, []);
+  }, [isReady,token, userId]); 
+
+
+  const handleSaveName = async () => {
+    console.log("Token que se está enviando:", token);
+    setUser(prevUser => ({ ...prevUser, name: editableName }));
+    setIsEditingName(false);
+
+    try{
+        const res = await fetch(`${apiUrl}/User/update`,{
+          method: "PUT",
+          header :{
+            "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+          userId: userId,
+          name: editableName 
+        }) 
+      });
+      if (!res.ok){
+        console.error("Error al actualizar el nombre");
+        setUser(prevUser => ({ ...prevUser, name: user.name }));
+      }
+    }catch(error){
+      console.error(error);
+      setUser(prevUser => ({ ...prevUser, name: user.name }));
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingName(false);
+  };
 
   return (
     <div style={{ backgroundColor: "#3b3fbd" }}>
@@ -62,9 +111,8 @@ function UserProfile() {
                 user.requests.map((req) => (
                   <div
                     key={req.id}
-                    className={`notification-item ${
-                      req.status === "Pending" ? "no-visto" : "visto"
-                    }`}
+                    className={`notification-item ${req.status === "Pending" ? "no-visto" : "visto"
+                      }`}
                   >
                     <span>Estado:</span>
                     <span className="estado">
@@ -81,16 +129,33 @@ function UserProfile() {
 
         <div className="profile-info">
           <div className="profile-avatar">
-            <FaUserCircle className="avatar-icon" />
-            <FaEdit className="edit-avatar" />
+            {userInitial}
           </div>
 
           <div className="profile-details">
             <p className="label">Nombre</p>
-            <h2 className="name">
-              {user.name} <FaEdit className="edit-icon" />
-            </h2>
-
+            {isEditingName ? (
+              <div className="edit-name-container">
+                <input
+                  type="text"
+                  className="name-input"
+                  value={editableName}
+                  onChange={(e) => setEditableName(e.target.value)}
+                  autoFocus // Pone el cursor en el input automáticamente
+                />
+                <button onClick={handleSaveName} className="save-btn">✓</button>
+                <button onClick={handleCancelEdit} className="cancel-btn">❌</button>
+              </div>
+            ) : (
+              // MODO VISTA: Muestra el nombre y el ícono
+              <h2 className="name">
+                {user.name} 
+                <FaEdit 
+                  className="edit-icon" 
+                  onClick={handleEditNameClick} // Llama a la nueva función
+                />
+              </h2>
+            )}
             <p className="label">Email</p>
             <p className="email">{user.email}</p>
 
@@ -153,10 +218,10 @@ function UserProfile() {
           ) : (
             <p>No tienes materias por el momento...</p>
           )}
-                    
+
         </div>
       </div>
-      {show && <PasswordModal show={show} handleClose={() => setShow(false)} />}
+      {show && <PasswordModal show={show} apiUrl={apiUrl} token={token}  handleClose={() => setShow(false)} />}
     </div>
   );
 }
