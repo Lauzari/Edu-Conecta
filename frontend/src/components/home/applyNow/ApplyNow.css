@@ -57,7 +57,7 @@ section.apply-now .item p {
   border-bottom: none;
 }
 .accordion.active .accordion-head {
-  color: #039a51; /* color cuando está abierto */
+  color: #039a51;
   border-bottom: none;
 }
 

@@ -47,7 +47,6 @@ function AllCoursesView() {
     fetchCourses();
   }, [token]);
 
-  // Filtrado por año
   const filteredCourses =
     filter === "all"
       ? courses
@@ -116,7 +115,7 @@ function AllCoursesView() {
           <div className="row grid">
             {currentCourses.map((course) => (
               <div
-                key={course.classId} // ahora usamos classId, que es único
+                key={course.classId}
                 className="col-12 col-md-6 col-lg-4 templatemo-item-col all"
               >
                 <div
@@ -149,14 +148,14 @@ function AllCoursesView() {
                           : "Fecha no disponible"}
                       </p>
 
-                      {/* Turno */}
+                      {/* Shift */}
                       <p>
                         <strong>Turno:</strong>{" "}
                         {shiftMap[course.classShift] || "No disponible"}
                       </p>
                     </div>
 
-                    {/* Profesor */}
+                    {/* Professor */}
                     <p>
                       <strong>Docente:</strong> {course.teacher.name}
                     </p>

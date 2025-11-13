@@ -12,7 +12,6 @@ namespace Web.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-// [Authorize] --> Cuando agreguemos Autenticación/Autorización
 public class UserController : ControllerBase
 {
 
@@ -89,7 +88,6 @@ public class UserController : ControllerBase
             return Ok(new { message = "Contraseña actualizada correctamente." });
     }
 
-    //AGREGAR MÁS SEGURIDAD (VERIFICACIÓN DE ID)
     [HttpDelete("delete")]
     [Authorize]
     public async Task<IActionResult> DeleteUser([FromQuery] int id)

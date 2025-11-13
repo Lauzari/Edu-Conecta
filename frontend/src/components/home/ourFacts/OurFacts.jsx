@@ -29,7 +29,6 @@ function OurFacts() {
 
        
         setFacts({
-        // cargar con los datos reales del backend
           professors: data.professors,
           newStudents: data.newStudents,
           availableClasses: data.availableClasses,

@@ -46,7 +46,7 @@ namespace Core.Services
         {
             if (id != subjectId)
             {
-                throw new AppValidationException("Route ID does not match body ID.");
+                throw new AppValidationException("Incorrect ID validation.");
             }
             var subject = await _repository.GetByIdAsync(subjectId) ?? throw new NotFoundException("Subject Not Found.");
             

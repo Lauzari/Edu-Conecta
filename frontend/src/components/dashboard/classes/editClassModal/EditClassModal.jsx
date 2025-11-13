@@ -106,7 +106,6 @@ function EditClassModal({ show, onHide, classId, onSave }) {
 
       const updatedClass = await response.json();
 
-      // Mapear a formato que espera la tabla de clases
       const formatted = {
         id: updatedClass.classId,
         subjectName: updatedClass.subject?.name || "",

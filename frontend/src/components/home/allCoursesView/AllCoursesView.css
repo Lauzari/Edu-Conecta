@@ -27,28 +27,38 @@
 }
 
 .filters ul li.active {
-  background-color:#0056b3;
+  background-color: #0056b3;
   color: #fff;
 }
+.pagination ul {
+  display: flex;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  margin-bottom: 2rem;
+}
 
-
+.pagination ul li {
+  display: inline-block;
+}
 .pagination ul li a {
-    margin-right: 8px; 
-     display: flex;           /* cambia inline-block a flex */
-    justify-content: center; 
-    align-items: center;   
-    padding: 8px 12px;
-   
-    color: #fff !important;      
-    background-color: #0056b3 !important; 
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.3s ease;
+  margin-right: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  color: #fff !important;
+  background-color: #0056b3 !important;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .pagination ul li a:hover,
 .pagination ul li.active a {
-  background-color: #004494 !important; 
+  background-color: #004494 !important;
   color: #fff !important;
 }
 .meeting-item {
@@ -57,7 +67,7 @@
 }
 
 .meeting-item:hover {
-  transform: translateY(-5px); 
+  transform: translateY(-5px);
 }
 
 .courses-bg {
