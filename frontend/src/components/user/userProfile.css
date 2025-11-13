@@ -185,11 +185,6 @@
 }
 
 
-.course-card-item{
-    border: 1px solid #ccc;
-    height: 300px;
-}
-
 .course-card-content p{
     font-size: 16px;
     color: gray;
@@ -199,8 +194,6 @@
 
 .delete-btn {
   position: absolute;
-  /* top: 8px;
-  right: 8px; */
   background: #FFFFFF;
   color: #c92a36;
   border: none;
@@ -239,19 +232,19 @@
 .profile-details .edit-name-container {
   display: flex;
   align-items: center;
-  gap: 8px; /* Espacio entre input y botones */
-  margin-bottom: 1rem; /* Mismo espacio que ocupaba el h2 */
+  gap: 8px; 
+  margin-bottom: 1rem; 
 }
 
 .profile-details .name-input {
-  /* Intenta imitar el estilo de tu h2 */
-  font-size: 1.5rem; /* Ajusta al tamaño de tu .name */
+ 
+  font-size: 1.5rem;
   font-weight: 700;
   color: #333;
   padding: 4px 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  flex-grow: 1; /* Hace que el input ocupe el espacio */
+  flex-grow: 1; 
 }
 
 .profile-details .save-btn,

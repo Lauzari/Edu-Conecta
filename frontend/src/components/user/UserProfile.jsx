@@ -4,6 +4,7 @@ import { useAuth } from "../../hooks/useAuth.js";
 import PasswordModal from "../passwordModal/passwordModal.jsx";
 import { FaUserCircle, FaBell, FaEdit } from "react-icons/fa";
 import SubjectCard from "../subjectCard/SubjectCard.jsx";
+import { useNavigate } from "react-router-dom";
 
 function UserProfile() {
   const [editMode, setEditMode] = useState(false);
@@ -19,6 +20,8 @@ function UserProfile() {
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
+  const navigate = useNavigate();
+
   const toggleEditMode = () => {
     setEditMode(!editMode);
   };
@@ -27,16 +30,15 @@ function UserProfile() {
 
 
   const handleEditNameClick = () => {
-      setEditableName(user.name); // Carga el nombre actual en el input
+      setEditableName(user.name); 
       setIsEditingName(true);
   };
 
-  
+  const handleEdit = () => {
+    navigate("/my-courses");
+  };
 
   useEffect(() => {
-    console.log("Token que se envía:", token);
-console.log("UserId:", userId);
-console.log("URL:", `${apiUrl}/User/completeUserInfo?id=${userId}`);
     if (!isReady || !token || !userId) return;
 
     const fetchUserProfile = async () => {
@@ -147,12 +149,12 @@ console.log("URL:", `${apiUrl}/User/completeUserInfo?id=${userId}`);
                 <button onClick={handleCancelEdit} className="cancel-btn">❌</button>
               </div>
             ) : (
-              // MODO VISTA: Muestra el nombre y el ícono
+            
               <h2 className="name">
                 {user.name} 
                 <FaEdit 
                   className="edit-icon" 
-                  onClick={handleEditNameClick} // Llama a la nueva función
+                  onClick={handleEditNameClick} 
                 />
               </h2>
             )}
@@ -179,7 +181,7 @@ console.log("URL:", `${apiUrl}/User/completeUserInfo?id=${userId}`);
           </div>
           <div className="edit-course">
             <FaEdit
-              onClick={toggleEditMode}
+              onClick={handleEdit}
               style={{
                 fontSize: "20px",
                 color: "#1a3c8b",
@@ -194,15 +196,7 @@ console.log("URL:", `${apiUrl}/User/completeUserInfo?id=${userId}`);
           {user.classes && user.classes.length > 0 ? (
             user.classes.map((cls) => (
               <div className="course-card-item" key={cls.classId}>
-                {editMode && (
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(cls.classId)}
-                  >
-                    ❌
-                  </button>
-                )}
-
+                
                 <SubjectCard
                   img="/images/subjects/default.jpg"
                   title={cls.subject.name}
