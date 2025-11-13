@@ -185,11 +185,6 @@
 }
 
 
-.course-card-item{
-    border: 1px solid #ccc;
-    height: 300px;
-}
-
 .course-card-content p{
     font-size: 16px;
     color: gray;
@@ -199,8 +194,6 @@
 
 .delete-btn {
   position: absolute;
-  /* top: 8px;
-  right: 8px; */
   background: #FFFFFF;
   color: #c92a36;
   border: none;
@@ -217,4 +210,55 @@
 
 .delete-btn:hover {
   background: #c92a36;
+}
+
+.profile-avatar{
+  width: 100px;
+  height: 100px;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 30px;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 0 !important;
+
+}
+
+.profile-details .edit-name-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  margin-bottom: 1rem; 
+}
+
+.profile-details .name-input {
+ 
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex-grow: 1; 
+}
+
+.profile-details .save-btn,
+.profile-details .cancel-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 4px;
+}
+
+.profile-details .save-btn {
+  color: green;
+}
+.profile-details .cancel-btn {
+  color: red;
 }

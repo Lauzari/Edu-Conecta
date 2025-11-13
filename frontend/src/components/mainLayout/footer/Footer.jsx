@@ -1,11 +1,12 @@
 import React from "react";
+import "./Footer.css"
 
 function Footer() {
   return (
     <section className="footer" id="footer">
       <div className="footer">
         <p>
-          Copyright © 2022 EduConecta Co., Ltd. Todos los derechos reservados.
+          Copyright © 2025 EduConecta Co., Ltd. Todos los derechos reservados.
           <br></br>
           Programadoras:{" "}
           <br />

@@ -122,72 +122,7 @@ section.contact-us fieldset {
   position: relative;
 }
 
-/*
----------------------------------------------
-Footer
----------------------------------------------
-*/
 
-section.footer {
-  background-image: url(../images/meetings-bg.jpg);
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  text-align: center;
-  border-top: 1px solid rgba(250, 250, 250, 0.15);
-  padding: 50px 0px;
-}
-
-section.footer #footer {
-  background-color: #fff;
-  border-radius: 20px;
-}
-
-.footer p {
-  text-transform: uppercase;
-  font-size: 14px;
-  color: #fff;
-}
-
-.footer p a {
-  color: #039a51;
-}
-
-/*
----------------------------------------------
-heading page
----------------------------------------------
-*/
-
-section.heading-page {
-  background-image: url(../images/heading-bg.jpg);
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding-top: 230px;
-  padding-bottom: 110px;
-  text-align: center;
-}
-
-section.heading-page h6 {
-  margin-top: 0px;
-  font-size: 15px;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: 1px;
-}
-
-section.heading-page h2 {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  font-size: 36px;
-  text-transform: uppercase;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: 1px;
-}
 @media (max-width: 992px) {
   section.contact-us #contact {
     margin-bottom: 30px;

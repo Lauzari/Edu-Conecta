@@ -2,15 +2,15 @@ import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
 /*
-Modal de confirmación reutilizable
+Reusable Confirmation Modal
  Props:
- - show (bool): controla si el modal está visible
- - onHide (func): función para cerrar el modal
- - title (string): título del modal
- - message (string): texto de la pregunta o mensaje
- - confirmText (string): texto del botón de confirmación
- - cancelText (string): texto del botón de cancelación
- - onConfirm (func): acción a ejecutar al confirmar
+ - show (bool): controls if the modal is visible or not
+ - onHide (func): function to close the modal
+ - title (string): title of the modal
+ - message (string): text of the question or message
+ - confirmText (string): text for the confirmation button
+ - cancelText (string): text for the cancel button
+ - onConfirm (func): action excecuted when the confirmation button is selected
  */
 function ConfirmModal({
   show,

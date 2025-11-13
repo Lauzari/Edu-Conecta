@@ -5,12 +5,13 @@ using Models.Requests;
 using System.Threading.Tasks;
 using Core.Interfaces;
 using Core.Enums;
+using System.Security.Claims;
+
 
 namespace Web.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-// [Authorize] --> Cuando agreguemos Autenticación/Autorización
 public class UserController : ControllerBase
 {
 
@@ -75,7 +76,18 @@ public class UserController : ControllerBase
         return Ok(UserDto.Create(updatedUser));
     }
 
-    //AGREGAR MÁS SEGURIDAD (VERIFICACIÓN DE ID)
+    [HttpPut("changePassword")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] UpdateUserPasswordRequest request)
+    {
+        
+             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            await _userService.ChangePasswordAsync(userId, request.CurrentPassword, request.NewPassword);
+
+            return Ok(new { message = "Contraseña actualizada correctamente." });
+    }
+
     [HttpDelete("delete")]
     [Authorize]
     public async Task<IActionResult> DeleteUser([FromQuery] int id)

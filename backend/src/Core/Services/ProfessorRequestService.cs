@@ -30,22 +30,20 @@ namespace Core.Services
 
             if (id != applicantId)
             {
-                throw new AppValidationException("Route ID does not match body ID.");
+                throw new AppValidationException("Incorrect ID validation.");
             }
 
             var user = await _userRepository.GetByIdAsync(applicantId) ?? throw new NotFoundException("User Not Found.");
 
             if (user.UserType != UserType.Student)
-                //Agregamos un nuevo tipo de error como "BussinessRuleException"???
-                throw new InvalidOperationException("Solo los usuarios con rol 'Student' pueden convertirse en 'Professor'.");
+                throw new InvalidOperationException("Invalid user type.");
 
             //Checks if there is already a request pending for this user
             var existingPending = await _professorRequestRepository.GetByApplicantIdAndStatusAsync(applicantId, RequestStatus.Pending);
 
             if (existingPending != null)
             {
-                //Agregamos un nuevo tipo de error como "BussinessRuleException"???
-                throw new InvalidOperationException("Ya existe una solicitud pendiente para este usuario.");
+                throw new InvalidOperationException("Request already exists.");
             }
             var newRequest = new ProfessorRequest
             {
@@ -87,8 +85,7 @@ namespace Core.Services
                 ?? throw new NotFoundException("Professor Request Not Found.");
 
             if (request.Status != RequestStatus.Pending)
-                //Agregamos un nuevo tipo de error como "BussinessRuleException"???
-                throw new InvalidOperationException("Solo se pueden aceptar solicitudes en estado 'Pending'.");
+                throw new InvalidOperationException("Invalid request status.");
 
             request.Status = RequestStatus.Approved;
 
@@ -105,8 +102,7 @@ namespace Core.Services
                 ?? throw new NotFoundException("Professor Request Not Found.");
 
             if (request.Status != RequestStatus.Pending)
-                //Agregamos un nuevo tipo de error como "BussinessRuleException"???
-                throw new InvalidOperationException("Solo se pueden rechazar solicitudes en estado 'Pending'.");
+                throw new InvalidOperationException("Invalid request status.");
 
             request.Status = RequestStatus.Rejected;
 

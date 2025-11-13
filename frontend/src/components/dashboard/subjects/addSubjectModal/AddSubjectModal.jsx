@@ -112,7 +112,6 @@ function SubjectModal({ show, onHide, onSave, subjectId }) {
 
       const savedSubject = await response.json();
 
-      // Tomar id de backend correctamente (Id o id)
       const updatedSubject = {
         id: savedSubject.id ?? savedSubject.Id,
         name: savedSubject.name,

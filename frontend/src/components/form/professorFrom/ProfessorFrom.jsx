@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaArrowLeft } from "react-icons/fa";
 import './professorForm.css';
 import { toast, Bounce } from 'react-toastify';
@@ -6,9 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../../hooks/useAuth.js";
 
 const ProfessorFrom = () => {
-  const { token, userId } = useAuth();
+  const { token, userId, name } = useAuth();
   const navigate = useNavigate();
-
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [values, setValues] = useState({
@@ -20,6 +19,11 @@ const ProfessorFrom = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    if (name) {
+      setValues((prev) => ({ ...prev, nombre: name }));
+    }
+  }, [name]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,20 +33,16 @@ const ProfessorFrom = () => {
     });
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!values.nombre || !values.lastName || !values.description) {
+    if (!values.nombre || !values.description) {
       setMessage("Por favor completá todos los campos.");
       return;
     }
 
     setLoading(true);
     setMessage("");
-
-    console.log("🧩 ID:", userId);
-    console.log("🧩 TOKEN:", token);
 
     try {
       const response = await fetch(`${apiUrl}/api/ProfessorRequest/${userId}`, {
@@ -57,23 +57,17 @@ const ProfessorFrom = () => {
         }),
       });
 
-      const text = await response.text(); // <- leemos el body en texto
+      const text = await response.text();
 
       if (response.ok) {
         toast("✨ Tu solicitud fue enviada con éxito!", {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
           theme: "dark",
           transition: Bounce,
         });
         setTimeout(() => navigate("/"), 3000);
       } else {
-        // Intentamos parsear JSON si lo hay
         let errorMessage = "No se pudo enviar la solicitud.";
         if (text) {
           try {
@@ -87,11 +81,6 @@ const ProfessorFrom = () => {
         toast(`❌ Error: ${errorMessage}`, {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
           theme: "dark",
           transition: Bounce,
         });
@@ -100,57 +89,55 @@ const ProfessorFrom = () => {
       toast("❌ Error al enviar la solicitud", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
         theme: "dark",
         transition: Bounce,
       });
       console.error("❌ Error:", error);
     }
-
   };
 
   return (
     <div className='Professor'>
       <div className='Professor-form'>
         <FaArrowLeft
-          style={{ fontSize: '30px', color: 'black', marginTop: '20px', marginLeft: '30px', cursor: 'pointer' }}
+          style={{
+            fontSize: '30px',
+            color: 'black',
+            marginTop: '20px',
+            marginLeft: '30px',
+            cursor: 'pointer',
+          }}
           onClick={() => window.location.href = '/'}
         />
 
         <div className='Professor-form-content'>
-          <h1>Sumate a nuestro equipo de docentes!</h1>
+          <h1>¡Sumate a nuestro equipo de docentes!</h1>
+          <p className="Professor-subtitle">
+            Contanos brevemente tu experiencia en la docencia o por qué te gustaría ser parte del cuerpo docente de <strong>EduConecta</strong>. Nuestro equipo revisará tu solicitud y te responderá a la brevedad.
+          </p>
 
           <form onSubmit={handleSubmit}>
             <div className='form-group'>
+              <label htmlFor="nombre">Nombre</label>
               <input
+                id="nombre"
                 type="text"
                 name="nombre"
                 value={values.nombre}
                 onChange={handleChange}
                 placeholder="Nombre"
-              />
-            </div>
-
-            <div className='form-group'>
-              <input
-                type="text"
-                name="lastName"
-                value={values.lastName}
-                onChange={handleChange}
-                placeholder="Apellido"
+                disabled
               />
             </div>
 
             <div className='form-group-text'>
+              <label htmlFor="description">Descripción</label>
               <textarea
+                id="description"
                 name="description"
                 value={values.description}
                 onChange={handleChange}
-                placeholder="Experiencia..."
+                placeholder="Contanos un poco sobre tu experiencia o motivación..."
               ></textarea>
             </div>
 
