@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import { useNavigate } from "react-router-dom";
 import SubjectCard from "../../subjectCard/SubjectCard.jsx";
 import "./OurSubjects.css";
 import "slick-carousel/slick/slick.css";
@@ -8,7 +7,6 @@ import "slick-carousel/slick/slick-theme.css";
 import { useAuth } from "../../../hooks/useAuth.js";
 
 function OurSubjects() {
-  const navigate = useNavigate();
   const { token } = useAuth();
 
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -71,8 +69,7 @@ function OurSubjects() {
                   <SubjectCard
                     title={course.name}
                     description={course.description}
-                    img={course.id ? `/images/subjects/${course.id}.jpg` : "/images/subjects/default.jpg"}
-                    onClick={() => navigate(`/subjects/${course.id}`)}
+                    img={`/images/subjects/${course.id || "default"}.jpg`}
                   />
                 </div>
               ))}

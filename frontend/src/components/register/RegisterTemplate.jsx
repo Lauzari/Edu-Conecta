@@ -52,14 +52,13 @@ const Register = () => {
 
         const data = await response.json();
         if (response.ok) {
-          toast.success("Registro exitoso");
+          toast.success("Registro exitoso. Inicie sesión para continuar.");
           navigate("/");
         } else {
-          alert(data.message || "El usuario ya existe ❌");
+          console.log(data.message || "El usuario ya existe ❌");
         }
       } catch (error) {
         console.error("❌ Error en la conexión:", error);
-        alert("Error al conectar con el servidor");
       }
     }
   };

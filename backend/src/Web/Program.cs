@@ -80,8 +80,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             maxRetryCount: 5,
             maxRetryDelay: TimeSpan.FromSeconds(10),
             errorNumbersToAdd: null
-        )
-    )
+  )
+)
 );
 
 // Extension to register repositories and services
@@ -89,9 +89,6 @@ builder.Services.AddApplicationServices();
 
 // Middlewares
 builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
-
-// Repositories and services
-builder.Services.AddApplicationServices();
 
 // CORS
 builder.Services.AddCors(options =>
@@ -110,8 +107,8 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
@@ -135,12 +132,12 @@ using (var scope = app.Services.CreateScope())
     {
         var dbContext = services.GetRequiredService<ApplicationDbContext>();
         dbContext.Database.Migrate();
-        
+
         await Infrastructure.Data.Seeding.AdminSeeder.SeedAdminAsync(services, configuration);
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "Error al aplicar migraciones o ejecutar el seeder.");
+        logger.LogError(ex, "Error excecuting migration or admin seeding.");
     }
 }
 

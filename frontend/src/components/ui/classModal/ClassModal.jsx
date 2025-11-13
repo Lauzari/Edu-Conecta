@@ -158,12 +158,11 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
             )}
           </Form.Group>
 
-          {/* 🔹 Descripción */}
           <Form.Group className="mb-3">
             <Form.Label>Descripción</Form.Label>
             <Form.Control
               as="textarea"
-              rows={5} // ✅ mínimo 5 líneas
+              rows={5}
               name="classDescription"
               value={formData.classDescription}
               onChange={handleChange}
@@ -172,7 +171,6 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
             />
           </Form.Group>
 
-          {/* 🔹 Zoom */}
           <Form.Group className="mb-3">
             <Form.Label>Link de Zoom</Form.Label>
             <Form.Control
@@ -184,7 +182,6 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
             />
           </Form.Group>
 
-          {/* 🔹 Turno */}
           <Form.Group className="mb-3">
             <Form.Label>Turno</Form.Label>
             <Form.Select

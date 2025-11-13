@@ -27,7 +27,7 @@ function EditUserModal({ show, onHide, userId, onSave }) {
       if (show && userId) {
         setLoading(true);
         setFetchError(null);
-        setShowRoleWarning(false); // resetea warning
+        setShowRoleWarning(false);
         try {
           const response = await fetch(
             `${apiUrl}/User/userInfo?id=${userId}`,
@@ -55,7 +55,7 @@ function EditUserModal({ show, onHide, userId, onSave }) {
             role: data.userType,
           });
 
-          setOriginalIsAdmin(data.userType === "Admin"); // setea el original desde el backend
+          setOriginalIsAdmin(data.userType === "Admin");
         } catch (err) {
           console.error("Error al obtener el usuario:", err);
           setFetchError("No se pudo obtener la información del usuario.");

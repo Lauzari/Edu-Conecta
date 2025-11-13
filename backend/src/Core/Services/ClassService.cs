@@ -109,7 +109,7 @@ public class ClassService : IClassService
             ?? throw new NotFoundException("Teacher not found.");
 
         if (teacher.UserType != UserType.Professor)
-            throw new ArgumentException("The selected user is not a professor.");
+            throw new Exception("Invalid user type.");
 
         existing.SubjectId = SubjectId;
         existing.ClassDescription = ClassDescription;
