@@ -42,8 +42,14 @@
 }
 
 .services .item .icon {
-  max-width: 60px;
+  max-width: 140px;
   margin: 0 auto;
+}
+
+.services .item .icon img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .services .item h4 {
@@ -78,5 +84,15 @@
 @media (max-width: 380px) {
   .services {
     min-height: 70vh;
+  }
+}
+@media (max-width: 840px) {
+  .services .item .icon {
+    max-width: 105px;
+  }
+}
+@media (max-width: 380px) {
+  .services .item .icon {
+    max-width: 95px;
   }
 }
