@@ -4,7 +4,7 @@
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(135deg, #3b3fbd, #242582);
+  background-image: url(../images/meetings-bg.jpg);
   padding: 20px;
   gap: 20px;
 }
