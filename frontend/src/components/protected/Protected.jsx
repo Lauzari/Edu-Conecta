@@ -5,8 +5,13 @@ import { useAuth } from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 
 const Protected = () => {
-  const { token, isLoggingOut } = useAuth();
+  const { token, isLoggingOut, isReady } = useAuth();
+
   const tokenIsValid = isTokenValid(token);
+
+   if (!isReady) {
+    return null;
+  }
 
   useEffect(() => {
     if (!tokenIsValid && !isLoggingOut) {

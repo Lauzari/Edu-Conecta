@@ -1,51 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./OurFacts.css";
 
-
-
 function OurFacts() {
- /* const [facts, setFacts] = useState({
-   
-    professors: 0,
-    newStudents: 0,
-    availableClasses: 0,
-  });
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  
-  useEffect(() => {
-    const fetchFacts = async () => {
-      try {
-        const response = await fetch("http://localhost:7018/api/facts");
-        
-
-        if (!response.ok) {
-          throw new Error("Error al obtener los datos de la institución");
-        }
-
-        const data = await response.json();
-
-       
-        setFacts({
-          professors: data.professors,
-          newStudents: data.newStudents,
-          availableClasses: data.availableClasses,
-        });
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFacts();
-  }, []);
-
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>Error: {error}</p>;
-*/
   return (
     <section className="our-facts">
     <div className="container">

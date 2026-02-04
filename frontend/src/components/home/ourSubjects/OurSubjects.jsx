@@ -69,7 +69,7 @@ function OurSubjects() {
                   <SubjectCard
                     title={course.name}
                     description={course.description}
-                    img={`/images/subjects/${course.id || "default"}.jpg`}
+
                   />
                 </div>
               ))}

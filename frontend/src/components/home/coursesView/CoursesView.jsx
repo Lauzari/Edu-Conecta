@@ -107,7 +107,7 @@ function CoursesView() {
                   >
                     <div className="thumb">
                       <img
-                        src={`/images/subjects/${course.subjectId || "/images/subjects/default"}.jpg`}
+                        src={course.coverImage}
                         alt={course.subject.name}
                       />
                       <div className="year">

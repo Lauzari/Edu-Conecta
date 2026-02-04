@@ -5,7 +5,7 @@ function SubjectCard({ img, title, description, onClick }) {
 
   return (
     <div className="subject-card meeting-item" onClick={onClick}>
-      <div
+      {/* <div
         className="thumb"
         style={{
           backgroundImage: `url(${img})`,
@@ -14,8 +14,8 @@ function SubjectCard({ img, title, description, onClick }) {
           height: "200px",
           position: "relative",
         }}
-      >
-      </div>
+      > */}
+      {/* </div> */}
       <div className="down-content">
         <h4>{title}</h4>
         <p>{description}</p>
