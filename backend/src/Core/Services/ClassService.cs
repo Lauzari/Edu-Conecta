@@ -17,14 +17,28 @@ public class ClassService : IClassService
         _subjectRepository = subjectRepository;
         _userRepository = userRepository;
     }
-
-    public async Task<IEnumerable<Class>> GetAll()
+ public async Task DeleteFinishedClasses()
     {
+        var classes = await _classRepository.GetAll();
+
+        var finishedClasses = classes
+            .Where(c => c.EndDate < DateTime.Now)
+            .ToList();
+
+        foreach (var c in finishedClasses)
+        {
+            await _classRepository.Delete(c);
+        }
+    }
+    public async Task<IEnumerable<Class>> GetAll()
+    {   
+        await DeleteFinishedClasses();
         return await _classRepository.GetAll();
     }
 
     public async Task<IEnumerable<Class>> GetAllWithStudents()
-    {
+    {   
+        await DeleteFinishedClasses();
         var classes = await _classRepository.GetAllWithStudents();
 
         foreach (var c in classes)
