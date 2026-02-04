@@ -1,3 +1,6 @@
+.body{
+  background-image: url(../images/meetings-bg.jpg);
+}
 .profile-card {
   width: 1092px;
   background-color: #f8fbff;
@@ -169,6 +172,7 @@
     margin-top: 30px;
     width: 1092px;
     height: 400px;
+    
 }
 .course-card h3{
     font-size: 20px;
@@ -178,10 +182,10 @@
 
 
 .course-card-content{
-    display: flex;
-    height: 182px;
-    width: 1030px;
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+
 }
 
 
@@ -261,4 +265,76 @@
 }
 .profile-details .cancel-btn {
   color: red;
+}
+
+@media (max-width: 767px) {
+  .profile-card{
+    width: 100%;
+  }
+  .profile-header{
+    flex-direction: column;
+    align-items: center;
+  }
+  .notification-btn{
+    margin-top: 1rem;
+  }
+  .notification-dropdown{
+    width: 100%;
+    margin-top: 1rem;
+  }
+  .avatar-icon{
+    margin-left: 0;
+    width: 25px;
+    height: 25px;
+  }
+  .edit-icon{
+    width: 15px;
+    height: 15px;
+  }
+
+  .edit-name-container input{
+    width: 30px;
+    height: 27px;
+  }
+  .course-card{
+    width: 100%;
+    height: auto;
+  }
+  
+
+}
+
+@media (max-width: 1024px) {
+  .profile-card{
+    width: 100%;
+  }
+  .profile-header{
+    flex-direction: column;
+    align-items: center;
+  }
+  .notification-btn{
+    margin-top: 1rem;
+  }
+  .notification-dropdown{
+    width: 100%;
+    margin-top: 1rem;
+  }
+  .avatar-icon{
+    margin-left: 0;
+    width: 25px;
+    height: 25px;
+  }
+  .edit-icon{
+    width: 15px;
+    height: 15px;
+  }
+
+  .edit-name-container input{
+    width: 30px;
+    height: 27px;
+  }
+  .course-card{
+    width: 100%;
+    height: auto;
+  }
 }
