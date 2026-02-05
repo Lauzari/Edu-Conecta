@@ -4,8 +4,6 @@ using Core.Enums;
 namespace Models.Requests;
 
 public record UpdateUserRequest(
-    [Required]
-    int Id,
 
     [MaxLength(100)]
     [Required]

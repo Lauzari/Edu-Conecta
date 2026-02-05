@@ -38,18 +38,32 @@ public class UserController : ControllerBase
 
     [HttpGet("userInfo")]
     [Authorize]
-    public async Task<ActionResult<UserDto>> GetUserInfo([FromQuery] int id)
+    public async Task<ActionResult<UserDto>> GetUserInfo()
     {
-        var user = await _userService.GetUserInfoAsync(id);
+        var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrWhiteSpace(claimValue))
+            return Unauthorized();
+
+        int userId = int.Parse(claimValue);
+
+        var user = await _userService.GetUserInfoAsync(userId);
 
         return UserDto.Create(user);
     }
 
     [HttpGet("completeUserInfo")]
     [Authorize]
-    public async Task<ActionResult<UserWithRelationsDto>> GetCompleteUserInfo([FromQuery] int id)
+    public async Task<ActionResult<UserWithRelationsDto>> GetCompleteUserInfo()
     {
-        var user = await _userService.GetUserInfoWithJoinsAsync(id);
+        var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrWhiteSpace(claimValue))
+            return Unauthorized();
+
+        int userId = int.Parse(claimValue);
+
+        var user = await _userService.GetUserInfoWithJoinsAsync(userId);
 
         return UserWithRelationsDto.Create(user);
     }
@@ -66,8 +80,15 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<ActionResult<UserDto>> UpdateUser([FromBody] UpdateUserRequest request)
     {
+        var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrWhiteSpace(claimValue))
+            return Unauthorized();
+
+        int userId = int.Parse(claimValue);
+
         var updatedUser = await _userService.UpdateUserAsync(
-        request.Id,
+        userId,
         request.Email,
         request.Name,
         request.BirthDate,
@@ -80,19 +101,35 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] UpdateUserPasswordRequest request)
     {
-        
-             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            await _userService.ChangePasswordAsync(userId, request.CurrentPassword, request.NewPassword);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            return Ok(new { message = "Contraseña actualizada correctamente." });
+        await _userService.ChangePasswordAsync(userId, request.CurrentPassword, request.NewPassword);
+
+        return Ok(new { message = "Contraseña actualizada correctamente." });
+    }
+
+    [HttpPut("updateName")]
+    [Authorize]
+    public async Task<ActionResult<UserDto>> UpdateUserName([FromBody] UpdateUserNameRequest request)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var updatedUser = await _userService.UpdateUserNameAsync(userId, request.Name);
+        return Ok(UserDto.Create(updatedUser));
     }
 
     [HttpDelete("delete")]
     [Authorize]
-    public async Task<IActionResult> DeleteUser([FromQuery] int id)
+    public async Task<IActionResult> DeleteUser()
     {
-        await _userService.DeleteUserAsync(id);
+        var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrWhiteSpace(claimValue))
+            return Unauthorized();
+
+        int userId = int.Parse(claimValue);
+        
+        await _userService.DeleteUserAsync(userId);
         return NoContent();
     }
 }

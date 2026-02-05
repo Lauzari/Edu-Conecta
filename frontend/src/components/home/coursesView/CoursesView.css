@@ -62,8 +62,6 @@ section.courses-view .categories ul li button {
 section.courses-view .categories ul li button.active {
   color: #039a51;
   font-weight: 700;
-  border-bottom: 2px solid #039a51;
-  padding-bottom: 3px;
 }
 
 section.courses-view .categories ul li button:hover {

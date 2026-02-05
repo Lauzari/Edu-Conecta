@@ -100,6 +100,15 @@ public class UserService : IUserService
 
         await _userRepository.UpdateAsync(user);
 }
+       public async Task<User> UpdateUserNameAsync(int id, string name)
+    {
+        var user = await _userRepository.GetByIdAsync(id) ?? throw new NotFoundException("User Not Found.");
+
+        user.UpdateName(name);
+        await _userRepository.UpdateAsync(user);
+
+        return user;
+    }
 
     public async Task<User> PromoteToProfessor(int id)
     {

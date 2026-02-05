@@ -14,14 +14,16 @@ public interface IClassService
 
     Task<Class> GetByIdWithStudents(int id);
 
-    Task<Class> Create(int SubjectId, string ClassDescription, int TeacherId, string ZoomLink, ClassShift ClassShift, DateTime StartDate);
+    Task<Class> Create(int SubjectId, string ClassDescription, int TeacherId, string ZoomLink, string CoverImage, ClassShift ClassShift, DateTime StartDate);
 
-    Task<Class> Update(int Id, int SubjectId, string ClassDescription, int TeacherId, string ZoomLink, ClassShift ClassShift, DateTime StartDate);
+    Task<Class> Update(int Id, int SubjectId, string ClassDescription, int TeacherId, string ZoomLink, string CoverImage, ClassShift ClassShift, DateTime StartDate);
 
     Task Delete(int id);
 
     Task AddStudent(int classId, int studentId);
 
-    Task DeleteStudent(int classId, int studentId);
+    Task DeleteStudent(int classId, int requesterId, int studentId);
+  
+    Task DeleteFinishedClasses();
 
 }

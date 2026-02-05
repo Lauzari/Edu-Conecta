@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Requests;
 using Web.Models;
+using System.Security.Claims;
 
 namespace Web.Controllers;
 
@@ -26,28 +27,42 @@ public class ProfessorRequestController : ControllerBase
         return ProfessorRequestDto.Create(requests);
     }
 
-    // It recieves the User ID in the route and all the Request info in the body
-    [HttpPost("{id}")]
+    [HttpPost]
     [Authorize]
-    public async Task<ActionResult<ProfessorRequestDto>> CreateProfessorRequest([FromRoute] int id, [FromBody] CreateProfessorRequestDto request)
+    public async Task<ActionResult<ProfessorRequestDto>> CreateProfessorRequest([FromBody] CreateProfessorRequestDto request)
     {
-        var newRequest = await _service.AddRequestAsync(id, request.Description, request.ApplicantId);
+
+        var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrWhiteSpace(claimValue))
+            return Unauthorized();
+
+        int userId = int.Parse(claimValue);
+
+        var newRequest = await _service.AddRequestAsync(userId, request.Description, request.ApplicantId);
         return CreatedAtAction(nameof(GetRequestById), new { id = newRequest.Id }, ProfessorRequestDto.Create(newRequest));
     }
 
     [HttpGet("{id}")]
-    [Authorize]
+    [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<ActionResult<ProfessorRequestDto>> GetRequestById([FromRoute] int id)
     {
         var request = await _service.GetRequestById(id);
         return ProfessorRequestDto.Create(request);
     }
 
-    [HttpGet("/requestsByUserId/{id}")]
+    [HttpGet("/requestsByUserId")]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<ProfessorRequestDto>>> GetRequestsByUserId([FromRoute] int id)
+    public async Task<ActionResult<IEnumerable<ProfessorRequestDto>>> GetRequestsByUserId()
     {
-        var requests = await _service.GetRequestsByUserId(id);
+        var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrWhiteSpace(claimValue))
+            return Unauthorized();
+
+        int userId = int.Parse(claimValue);
+
+        var requests = await _service.GetRequestsByUserId(userId);
         return ProfessorRequestDto.Create(requests);
     }
 
