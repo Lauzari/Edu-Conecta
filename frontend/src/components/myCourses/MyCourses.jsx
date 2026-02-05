@@ -25,7 +25,7 @@ function MyCourses() {
         `${apiUrl}/User/completeUserInfo?id=${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
       if (!response.ok) throw new Error("Error al obtener los cursos");
       const data = await response.json();
@@ -75,7 +75,7 @@ function MyCourses() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(userId),
-        }
+        },
       );
 
       if (!response.ok) throw new Error();
@@ -99,7 +99,7 @@ function MyCourses() {
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       if (!response.ok) throw new Error();
@@ -169,11 +169,7 @@ function MyCourses() {
             >
               <div className="card h-100 shadow-sm d-flex flex-column">
                 <img
-                  src={
-                    course.subject?.id
-                      ? `/images/subjects/${course.subject.id}.jpg`
-                      : "/images/subjects/default.jpg"
-                  }
+                  src={course.coverImage}
                   alt={course.subject?.name || "Materia sin imagen"}
                   className="card-img-top"
                   onError={(e) =>

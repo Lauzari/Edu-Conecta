@@ -61,8 +61,7 @@ function CourseDetail() {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(userId),
+          }
         }
       );
 
@@ -153,7 +152,7 @@ function CourseDetail() {
               <div className="meeting-single-item mx-auto">
                 <div className="thumb">
                   <img
-                    src={`/images/subjects/${course?.subject?.id}.jpg`}
+                    src={course?.coverImage}
                     alt={course?.subject?.name}
                     onError={(e) =>
                       (e.target.src = "/images/subjects/default.jpg")

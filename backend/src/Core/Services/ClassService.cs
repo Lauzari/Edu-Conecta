@@ -73,6 +73,7 @@ public class ClassService : IClassService
         string classDescription,
         int teacherId,
         string zoomLink,
+        string coverImage,
         ClassShift classShift,
         DateTime startDate)
     {
@@ -95,7 +96,8 @@ public class ClassService : IClassService
             zoomLink,
             classShift,
             startDate,
-            subject.Duration
+            subject.Duration,
+            coverImage
         );
         teacher.Classes.Add(newClass);
         var createdClass = await _classRepository.Create(newClass);
@@ -110,6 +112,7 @@ public class ClassService : IClassService
      string ClassDescription,
      int TeacherId,
      string ZoomLink,
+     string CoverImage,
      ClassShift ClassShift,
      DateTime StartDate)
     {
@@ -129,6 +132,7 @@ public class ClassService : IClassService
         existing.ClassDescription = ClassDescription;
         existing.TeacherId = TeacherId;
         existing.ZoomLink = ZoomLink;
+        existing.CoverImage = CoverImage;
         existing.ClassShift = ClassShift;
         existing.StartDate = StartDate;
 
@@ -159,25 +163,27 @@ public class ClassService : IClassService
         int studentCount = await _classRepository.GetStudentCount(classId);
 
         if (studentCount >= 15)
-        {
             throw new AppValidationException("The class is full.");
-        }
-        var classEntity = await _classRepository.GetById(classId) ?? throw new NotFoundException("Class not found.");
 
-        var student = await _userRepository.GetByIdAsync(studentId) ?? throw new NotFoundException("User not found.");
+        var classEntity = await _classRepository.GetById(classId)
+            ?? throw new NotFoundException("Class not found.");
+
+        var student = await _userRepository.GetByIdAsync(studentId)
+            ?? throw new NotFoundException("User not found.");
 
         if (student.UserType != UserType.Student)
-            throw new Exception("Invalid UserType.");
+            throw new AppValidationException("Only students can enroll in classes.");
 
         if (classEntity.Students.Any(s => s.Id == studentId))
-            throw new Exception("User is already registered in this class.");
+            throw new AppValidationException("User is already registered in this class.");
 
         classEntity.Students.Add(student);
 
         await _classRepository.Update(classEntity);
     }
 
-    public async Task DeleteStudent(int classId, int studentId)
+
+    public async Task DeleteStudent(int classId, int requesterId, int studentId)
     {
         var classEntity = await _classRepository.GetByIdWithStudents(classId)
             ?? throw new NotFoundException("Class not found.");
@@ -192,6 +198,16 @@ public class ClassService : IClassService
 
         if (studentInClass == null)
             throw new Exception("Student is not registered in this class.");
+
+        if (requesterId == studentId)
+        {
+            classEntity.Students.Remove(studentInClass);
+            await _classRepository.Update(classEntity);
+            return;
+        }
+
+        if (classEntity.Teacher.Id != requesterId)
+            throw new UnauthorizedAccessException("You are not the owner of this class.");
 
         classEntity.Students.Remove(studentInClass);
 

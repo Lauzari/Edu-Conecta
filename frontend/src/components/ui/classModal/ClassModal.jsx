@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { useAuth } from "../../../hooks/useAuth";
+import coverImages from "../../../data/coverImages";
 
 function ClassModal({ show, onHide, classToEdit = null, onSave }) {
   const { token, userId } = useAuth();
@@ -14,6 +15,7 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
     classDescription: "",
     teacherId: userId,
     zoomLink: "",
+    coverImage: "",
     classShift: "Morning",
     startDate: "",
   });
@@ -22,6 +24,15 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [loadingSubjects, setLoadingSubjects] = useState(true);
+
+  const [showValidationError, setShowValidationError] = useState(false);
+
+  useEffect(() => {
+    if (!show) {
+      setShowValidationError(false);
+      setError(null);
+    }
+  }, [show]);
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -52,6 +63,7 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
         classDescription: classToEdit.classDescription,
         teacherId: userId,
         zoomLink: classToEdit.zoomLink || "",
+        coverImage: classToEdit.coverImage || "",
         classShift: classToEdit.classShift,
         startDate: classToEdit.startDate
           ? classToEdit.startDate.split("T")[0]
@@ -64,6 +76,7 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
         classDescription: "",
         teacherId: userId,
         zoomLink: "",
+        coverImage: "",
         classShift: "Morning",
         startDate: "",
       });
@@ -72,13 +85,43 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    setShowValidationError(false);
+  };
+  const isStartDateValid = () => {
+    if (!formData.startDate) return false;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const selectedDate = new Date(formData.startDate);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    return selectedDate >= today;
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.subjectId &&
+      formData.classDescription.trim() &&
+      formData.zoomLink.trim() && 
+      formData.classShift &&
+      formData.coverImage &&
+      formData.startDate &&
+      isStartDateValid()
+    );
   };
 
   const handleSubmit = async () => {
+    if (!isFormValid()) {
+      setShowValidationError(true);
+      return;
+    }
     try {
       setLoading(true);
       setError(null);
@@ -88,6 +131,7 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
         ClassDescription: formData.classDescription,
         TeacherId: userId,
         ZoomLink: formData.zoomLink,
+        CoverImage: formData.coverImage,
         ClassShift: formData.classShift,
         StartDate: formData.startDate,
       };
@@ -122,7 +166,7 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} centered size="lg">
       <Modal.Header closeButton>
         <Modal.Title>
           {isEditing ? "Editar Clase" : "Crear Nueva Clase"}
@@ -130,12 +174,6 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
       </Modal.Header>
 
       <Modal.Body>
-        {error && (
-          <div className="alert alert-danger" role="alert">
-            {error}
-          </div>
-        )}
-
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>Materia</Form.Label>
@@ -146,7 +184,7 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
                 name="subjectId"
                 value={formData.subjectId}
                 onChange={handleChange}
-                required
+                isInvalid={showValidationError && !formData.subjectId}
               >
                 <option value="">Seleccionar materia...</option>
                 {subjects.map((subject) => (
@@ -167,7 +205,9 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
               value={formData.classDescription}
               onChange={handleChange}
               placeholder="Descripción detallada de la clase..."
-              required
+              isInvalid={
+                showValidationError && !formData.classDescription.trim()
+              }
             />
           </Form.Group>
 
@@ -179,6 +219,7 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
               value={formData.zoomLink}
               onChange={handleChange}
               placeholder="https://zoom.us/..."
+              isInvalid={showValidationError && !formData.zoomLink.trim()}
             />
           </Form.Group>
 
@@ -188,6 +229,7 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
               name="classShift"
               value={formData.classShift}
               onChange={handleChange}
+              isInvalid={showValidationError && !formData.classShift}
             >
               <option value="Morning">Mañana</option>
               <option value="Afternoon">Tarde</option>
@@ -202,10 +244,81 @@ function ClassModal({ show, onHide, classToEdit = null, onSave }) {
               name="startDate"
               value={formData.startDate}
               onChange={handleChange}
-              required
+              isInvalid={
+                showValidationError &&
+                (!formData.startDate || !isStartDateValid())
+              }
+              min={new Date().toISOString().split("T")[0]}
             />
+            {showValidationError && !isStartDateValid() && (
+              <span style={{ color: "red", margin: "0 0 0 0.9rem" }}>
+                Tiene que ingresar una fecha válida
+              </span>
+            )}
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Imagen de portada</Form.Label>
+            {loadingSubjects ? (
+              <div className="text-muted">Cargando imágenes...</div>
+            ) : (
+              <Form.Select
+                name="coverImage"
+                value={formData.coverImage}
+                onChange={handleChange}
+                isInvalid={showValidationError && !formData.coverImage}
+              >
+                <option value="">Seleccionar imagen...</option>
+                {coverImages.map((coverImage) => (
+                  <option key={coverImage.id} value={coverImage.image}>
+                    {coverImage.name}
+                  </option>
+                ))}
+              </Form.Select>
+            )}
+
+            <div
+              style={{
+                marginTop: "12px",
+                width: "100%",
+                height: "15rem",
+                borderRadius: "8px",
+                backgroundColor: "#e5e7eb",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "hidden",
+                border: "1px dashed #9ca3af",
+              }}
+            >
+              {formData.coverImage ? (
+                <img
+                  src={formData.coverImage}
+                  alt="Vista previa portada"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              ) : (
+                <span style={{ color: "#6b7280", fontWeight: 500 }}>
+                  Vista previa
+                </span>
+              )}
+            </div>
           </Form.Group>
         </Form>
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        )}
+
+        {showValidationError && (
+          <div className="alert alert-warning">
+            Debe completar todos los campos correctamente antes de continuar.
+          </div>
+        )}
       </Modal.Body>
 
       <Modal.Footer>

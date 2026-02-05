@@ -19,13 +19,15 @@ namespace Core.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
+        public string CoverImage { get; set; } = string.Empty;
+
         public virtual ICollection<User> Students { get; set; } = new List<User>();
 
         private Class()
         {
         }
 
-        public Class(int subjectId, int teacherId, string classDescription, string zoomLink, ClassShift classShift, DateTime startDate, int subjectDurationInMonths)
+        public Class(int subjectId, int teacherId, string classDescription, string zoomLink, ClassShift classShift, DateTime startDate, int subjectDurationInMonths, string coverImage)
         {
             SubjectId = subjectId;
             TeacherId = teacherId;
@@ -33,6 +35,7 @@ namespace Core.Entities
             ZoomLink = zoomLink;
             ClassShift = classShift;
             StartDate = startDate;
+            CoverImage = coverImage;
 
             EndDate = StartDate.AddMonths(subjectDurationInMonths);
         }

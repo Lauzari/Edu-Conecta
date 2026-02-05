@@ -13,6 +13,8 @@ public record CreateClassRequest(
 
     string ZoomLink,
 
+    string CoverImage,
+
     ClassShift ClassShift,
 
     DateTime StartDate
