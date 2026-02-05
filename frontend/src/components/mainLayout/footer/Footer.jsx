@@ -6,7 +6,7 @@ function Footer() {
     <section className="footer" id="footer">
       <div className="footer">
         <p>
-          Copyright © 2025 EduConecta Co., Ltd. Todos los derechos reservados.
+          Copyright © 2026 EduConecta Co., Ltd. Todos los derechos reservados.
           <br></br>
           Programadoras:{" "}
           <br />
