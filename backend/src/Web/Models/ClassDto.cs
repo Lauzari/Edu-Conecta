@@ -11,6 +11,7 @@ public record ClassDto(
     int teacherId,
     UserDto Teacher,
     string zoomLink,
+    string CoverImage,
     ClassShift classShift,
     DateTime startDate,
     DateTime endDate
@@ -26,6 +27,7 @@ public record ClassDto(
             entity.TeacherId,
             entity.Teacher != null ? UserDto.Create(entity.Teacher) : null,
             entity.ZoomLink,
+            entity.CoverImage,
             entity.ClassShift,
             entity.StartDate,
             entity.EndDate

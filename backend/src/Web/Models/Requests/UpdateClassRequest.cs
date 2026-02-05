@@ -15,6 +15,8 @@ public record UpdateClassRequest(
 
     string ZoomLink,
 
+    string CoverImage,
+
     ClassShift ClassShift,
 
     DateTime StartDate

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Core.Enums;
+using System.Security.Claims;
 
 
 namespace Web.Controllers
@@ -52,7 +53,7 @@ namespace Web.Controllers
         [Authorize(Roles = $"{nameof(UserType.Admin)},{nameof(UserType.Professor)}")]
         public async Task<ActionResult<ClassDto>> Create([FromBody] CreateClassRequest request)
         {
-            var newClass = await _classService.Create(request.SubjectId, request.ClassDescription, request.TeacherId, request.ZoomLink, request.ClassShift, request.StartDate);
+            var newClass = await _classService.Create(request.SubjectId, request.ClassDescription, request.TeacherId, request.ZoomLink, request.CoverImage, request.ClassShift, request.StartDate);
 
             return CreatedAtAction(nameof(GetById), new { id = newClass.Id }, ClassDto.Create(newClass));
         }
@@ -61,7 +62,7 @@ namespace Web.Controllers
         [Authorize(Roles = $"{nameof(UserType.Admin)},{nameof(UserType.Professor)}")]
         public async Task<ActionResult<ClassDto>> Update([FromBody] UpdateClassRequest request)
         {
-            var updatedClass = await _classService.Update(request.Id, request.SubjectId, request.ClassDescription, request.TeacherId, request.ZoomLink, request.ClassShift, request.StartDate);
+            var updatedClass = await _classService.Update(request.Id, request.SubjectId, request.ClassDescription, request.TeacherId, request.ZoomLink, request.CoverImage, request.ClassShift, request.StartDate);
 
             return ClassDto.Create(updatedClass);
         }
@@ -76,18 +77,35 @@ namespace Web.Controllers
 
         [HttpPost("{classId}/enrollStudent")]
         [Authorize]
-        public async Task<ActionResult> EnrollStudent(int classId, [FromBody] int studentId)
+        public async Task<ActionResult> EnrollStudent(int classId)
         {
-            await _classService.AddStudent(classId, studentId);
+            var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(claimValue))
+                return Unauthorized();
+
+            int userId = int.Parse(claimValue);
+
+            await _classService.AddStudent(classId, userId);
 
             return NoContent();
         }
 
+
         [HttpPost("{classId}/deleteStudent")]
-        [Authorize]
+        [Authorize(Roles = $"{nameof(UserType.Student)},{nameof(UserType.Professor)}")]
         public async Task<ActionResult> DeleteStudent(int classId, [FromBody] int studentId)
         {
-            await _classService.DeleteStudent(classId, studentId);
+            var claimValue = User.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
+                ?.Value;
+
+            if (string.IsNullOrWhiteSpace(claimValue))
+                return Unauthorized();
+
+            int requesterId = int.Parse(claimValue);
+
+            await _classService.DeleteStudent(classId, requesterId, studentId);
 
             return NoContent();
         }
