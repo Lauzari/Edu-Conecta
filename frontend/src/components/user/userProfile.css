@@ -1,4 +1,4 @@
-.body{
+.body {
   background-image: url(../images/meetings-bg.jpg);
 }
 .profile-card {
@@ -29,10 +29,9 @@
   overflow: hidden;
   z-index: 10;
   padding: 15px;
-
 }
 
-.notification-dropdown h5{
+.notification-dropdown h5 {
   text-align: center;
   font-size: 17px;
 }
@@ -161,44 +160,39 @@
   text-decoration: underline;
 }
 
-.course-card{
-    background-color: #FFFFFF;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    padding: 24px;
-    margin: 20px auto;
-    position: relative;
-    font-family: "Arial", sans-serif;
-    margin-top: 30px;
-    width: 1092px;
-    height: 400px;
-    
+.course-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin: 20px auto;
+  position: relative;
+  font-family: "Arial", sans-serif;
+  margin-top: 30px;
+  width: 1092px;
+  /* height: 400px; */
 }
-.course-card h3{
-    font-size: 20px;
-    margin-bottom: 10px;
-    font-weight: bold
+.course-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
-
-.course-card-content{
+.course-card-content {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
-
 }
 
-
-.course-card-content p{
-    font-size: 16px;
-    color: gray;
-    text-align: center;
-} 
-
+.course-card-content p {
+  font-size: 16px;
+  color: gray;
+  text-align: center;
+}
 
 .delete-btn {
   position: absolute;
-  background: #FFFFFF;
+  background: #ffffff;
   color: #c92a36;
   border: none;
   border-radius: 50%;
@@ -216,7 +210,7 @@
   background: #c92a36;
 }
 
-.profile-avatar{
+.profile-avatar {
   width: 100px;
   height: 100px;
   background-color: #4caf50;
@@ -230,18 +224,16 @@
   cursor: pointer;
   margin-left: 10px;
   padding: 0 !important;
-
 }
 
 .profile-details .edit-name-container {
   display: flex;
   align-items: center;
-  gap: 8px; 
-  margin-bottom: 1rem; 
+  gap: 8px;
+  margin-bottom: 1rem;
 }
 
 .profile-details .name-input {
- 
   font-size: 1.5rem;
   font-weight: 700;
   color: #333;
@@ -268,72 +260,70 @@
 }
 
 @media (max-width: 767px) {
-  .profile-card{
+  .profile-card {
     width: 100%;
   }
-  .profile-header{
+  .profile-header {
     flex-direction: column;
     align-items: center;
   }
-  .notification-btn{
+  .notification-btn {
     margin-top: 1rem;
   }
-  .notification-dropdown{
+  .notification-dropdown {
     width: 100%;
     margin-top: 1rem;
   }
-  .avatar-icon{
+  .avatar-icon {
     margin-left: 0;
     width: 25px;
     height: 25px;
   }
-  .edit-icon{
+  .edit-icon {
     width: 15px;
     height: 15px;
   }
 
-  .edit-name-container input{
+  .edit-name-container input {
     width: 30px;
     height: 27px;
   }
-  .course-card{
-    width: 100%;
-    height: auto;
+  .course-card {
+    max-height: 600px;
+    overflow-y: auto;
   }
-  
-
 }
 
 @media (max-width: 1024px) {
-  .profile-card{
+  .profile-card {
     width: 100%;
   }
-  .profile-header{
+  .profile-header {
     flex-direction: column;
     align-items: center;
   }
-  .notification-btn{
+  .notification-btn {
     margin-top: 1rem;
   }
-  .notification-dropdown{
+  .notification-dropdown {
     width: 100%;
     margin-top: 1rem;
   }
-  .avatar-icon{
+  .avatar-icon {
     margin-left: 0;
     width: 25px;
     height: 25px;
   }
-  .edit-icon{
+  .edit-icon {
     width: 15px;
     height: 15px;
   }
 
-  .edit-name-container input{
+  .edit-name-container input {
     width: 30px;
     height: 27px;
   }
-  .course-card{
+  .course-card {
     width: 100%;
     height: auto;
   }

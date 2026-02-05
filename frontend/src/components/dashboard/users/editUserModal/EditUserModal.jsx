@@ -30,7 +30,7 @@ function EditUserModal({ show, onHide, userId, onSave }) {
         setShowRoleWarning(false);
         try {
           const response = await fetch(
-            `${apiUrl}/User/userInfo?id=${userId}`,
+            `${apiUrl}/User/userInfo?userId=${userId}`,
             {
               method: "GET",
               headers: {

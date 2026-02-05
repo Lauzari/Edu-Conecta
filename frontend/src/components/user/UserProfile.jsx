@@ -3,14 +3,13 @@ import "./userProfile.css";
 import { useAuth } from "../../hooks/useAuth.js";
 import PasswordModal from "../passwordModal/passwordModal.jsx";
 import { FaUserCircle, FaBell, FaEdit } from "react-icons/fa";
-import SubjectCard from "../subjectCard/SubjectCard.jsx";
 import { useNavigate } from "react-router-dom";
 
 function UserProfile() {
   const [editMode, setEditMode] = useState(false);
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState({});
-  const { token, userId, isReady  } = useAuth();
+  const { token, userId, isReady } = useAuth();
   const [show, setShow] = useState(false);
 
   const [isEditingName, setIsEditingName] = useState(false);
@@ -22,6 +21,12 @@ function UserProfile() {
 
   const navigate = useNavigate();
 
+  const shiftMap = {
+    Morning: "Mañana",
+    Afternoon: "Tarde",
+    Evening: "Noche",
+  };
+
   const toggleEditMode = () => {
     setEditMode(!editMode);
   };
@@ -31,8 +36,8 @@ function UserProfile() {
   const isAdmin = user && user.userType?.toLowerCase() === "admin";
 
   const handleEditNameClick = () => {
-      setEditableName(user.name); 
-      setIsEditingName(true);
+    setEditableName(user.name);
+    setIsEditingName(true);
   };
 
   const handleEdit = () => {
@@ -43,17 +48,19 @@ function UserProfile() {
     if (!isReady || !token || !userId) return;
 
     const fetchUserProfile = async () => {
-      if (!token || !userId) return; 
+      if (!token || !userId) return;
       try {
-        const res = await fetch(`${apiUrl}/User/completeUserInfo?id=${userId}`, {
-          method: "GET",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
+        const res = await fetch(
+          `${apiUrl}/User/completeUserInfo?id=${userId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
           },
-        });
+        );
 
-        
         if (!res.ok) {
           console.error("Error HTTP:", res.status);
           throw new Error("Error al obtener datos del usuario");
@@ -64,37 +71,34 @@ function UserProfile() {
       } catch (error) {
         console.error(error);
       }
-      
     };
 
     fetchUserProfile();
-  }, [isReady,token, userId]); 
-
-  
+  }, [isReady, token, userId]);
 
   const handleSaveName = async () => {
     console.log("Token que se está enviando:", token);
-    setUser(prevUser => ({ ...prevUser, name: editableName }));
+    setUser((prevUser) => ({ ...prevUser, name: editableName }));
     setIsEditingName(false);
 
-    try{
-        const res = await fetch(`${apiUrl}/User/updateName`,{
-          method: "PUT",
-          headers :{
-            "Authorization": `Bearer ${token}`,
+    try {
+      const res = await fetch(`${apiUrl}/User/updateName`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-          name: editableName
-        }) 
+        },
+        body: JSON.stringify({
+          name: editableName,
+        }),
       });
-      if (!res.ok){
+      if (!res.ok) {
         console.error("Error al actualizar el nombre");
-        setUser(prevUser => ({ ...prevUser, name: user.name }));
+        setUser((prevUser) => ({ ...prevUser, name: user.name }));
       }
-    }catch(error){
+    } catch (error) {
       console.error(error);
-      setUser(prevUser => ({ ...prevUser, name: user.name }));
+      setUser((prevUser) => ({ ...prevUser, name: user.name }));
     }
   };
 
@@ -102,27 +106,26 @@ function UserProfile() {
     setIsEditingName(false);
   };
 
-
   return (
     <div className="body">
       <div className="profile-card">
         <div className="profile-header">
-          {!isAdmin &&  
-          <button className="notification-btn" onClick={toggleNotifications}>
-            <FaBell className="bell-icon" />
-            <span>Solicitudes para profesor</span>
-          </button>
-          }
-         
-          
+          {!isAdmin && (
+            <button className="notification-btn" onClick={toggleNotifications}>
+              <FaBell className="bell-icon" />
+              <span>Solicitudes para profesor</span>
+            </button>
+          )}
+
           {open && (
             <div className="notification-dropdown">
               {user.requests && user.requests.length > 0 ? (
                 user.requests.map((req) => (
                   <div
                     key={req.id}
-                    className={`notification-item ${req.status === "Pending" ? "no-visto" : "visto"
-                      }`}
+                    className={`notification-item ${
+                      req.status === "Pending" ? "no-visto" : "visto"
+                    }`}
                   >
                     <span>Estado:</span>
                     <span className="estado">
@@ -138,9 +141,7 @@ function UserProfile() {
         </div>
 
         <div className="profile-info">
-          <div className="profile-avatar">
-            {userInitial}
-          </div>
+          <div className="profile-avatar">{userInitial}</div>
 
           <div className="profile-details">
             <p className="label">Nombre</p>
@@ -153,17 +154,17 @@ function UserProfile() {
                   onChange={(e) => setEditableName(e.target.value)}
                   autoFocus // Pone el cursor en el input automáticamente
                 />
-                <button onClick={handleSaveName} className="save-btn">✓</button>
-                <button onClick={handleCancelEdit} className="cancel-btn">❌</button>
+                <button onClick={handleSaveName} className="save-btn">
+                  ✓
+                </button>
+                <button onClick={handleCancelEdit} className="cancel-btn">
+                  ❌
+                </button>
               </div>
             ) : (
-            
               <h2 className="name">
-                {user.name} 
-                <FaEdit 
-                  className="edit-icon" 
-                  onClick={handleEditNameClick} 
-                />
+                {user.name}
+                <FaEdit className="edit-icon" onClick={handleEditNameClick} />
               </h2>
             )}
             <p className="label">Email</p>
@@ -187,48 +188,93 @@ function UserProfile() {
           <div>
             <h3>Mis Materias</h3>
           </div>
-          {!isAdmin && ( <div className="edit-course">
-            <FaEdit
-              onClick={handleEdit}
-              style={{
-                fontSize: "20px",
-                color: "#1a3c8b",
-                marginLeft: "30px",
-                cursor: "pointer",
-              }}
-            />
-          </div>
-           )}
-         
+          {!isAdmin && (
+            <div className="edit-course">
+              <FaEdit
+                onClick={handleEdit}
+                style={{
+                  fontSize: "20px",
+                  color: "#1a3c8b",
+                  marginLeft: "30px",
+                  cursor: "pointer",
+                }}
+              />
+            </div>
+          )}
         </div>
 
         {!isAdmin && (
-        <div className="course-card-content">
-          {user.classes && user.classes.length > 0 ? (
-            user.classes.map((cls) => (
-              <div className="course-card-item" key={cls.classId}>
-                
-                <SubjectCard
-                  img="/images/subjects/default.jpg"
-                  title={cls.subject.name}
-                  description={`Turno: ${cls.classShift} | Desde: ${new Date(
-                    cls.startDate
-                  ).toLocaleDateString()} Hasta: ${new Date(
-                    cls.endDate
-                  ).toLocaleDateString()}`}
-                  onClick={() => window.open("/courses/" + cls.classId)}
-                />
-              </div>
-            ))
-          ) : (
-            <p>No tienes materias por el momento...</p>
-          )}
-          
-        </div>
+          <div className="course-card-content">
+            {user.classes && user.classes.length > 0 ? (
+              user.classes.map((cls) => (
+                <div key={cls.classId} className="course-grid-item">
+                  <div
+                    className="meeting-item"
+                    onClick={() => navigate(`/courses/${cls.classId}`)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {/* Imagen */}
+                    <div className="thumb">
+                      <img
+                        src={cls.coverImage || "/images/subjects/default.jpg"}
+                        alt={cls.subject.name}
+                      />
+                    </div>
+
+                    {/* Contenido */}
+                    <div className="down-content">
+                      <h4 className="course-title-link">{cls.subject.name}</h4>
+
+                      <div className="course-info">
+                        {/* Fecha */}
+                        <p>
+                          <strong>Fecha:</strong>{" "}
+                          {cls.startDate && cls.endDate
+                            ? `${new Date(cls.startDate).toLocaleDateString(
+                                "es-ES",
+                                {
+                                  month: "short",
+                                },
+                              )} ${new Date(cls.startDate).getDate()} - ${new Date(
+                                cls.endDate,
+                              ).toLocaleDateString("es-ES", {
+                                month: "short",
+                              })} ${new Date(cls.endDate).getDate()}`
+                            : "Fecha no disponible"}
+                        </p>
+
+                        {/* Turno */}
+                        <p>
+                          <strong>Turno:</strong>{" "}
+                          {shiftMap[cls.classShift] || cls.classShift}
+                        </p>
+                      </div>
+
+                      {/* Docente si existe */}
+                      {cls.teacher && (
+                        <p>
+                          <strong>Docente:</strong> {cls.teacher.name}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No tenés materias por el momento...</p>
+            )}
+          </div>
         )}
       </div>
 
-      {show && <PasswordModal show={show} apiUrl={apiUrl} token={token}  handleClose={() => setShow(false)} />}
+      {show && (
+        <PasswordModal
+          show={show}
+          apiUrl={apiUrl}
+          token={token}
+          handleClose={() => setShow(false)}
+        />
+      )}
     </div>
   );
 }
