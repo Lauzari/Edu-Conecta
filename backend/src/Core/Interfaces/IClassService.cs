@@ -23,5 +23,5 @@ public interface IClassService
     Task AddStudent(int classId, int studentId);
 
     Task DeleteStudent(int classId, int studentId);
-
+    Task DeleteFinishedClasses();
 }

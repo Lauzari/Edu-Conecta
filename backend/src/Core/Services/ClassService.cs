@@ -17,14 +17,28 @@ public class ClassService : IClassService
         _subjectRepository = subjectRepository;
         _userRepository = userRepository;
     }
-
-    public async Task<IEnumerable<Class>> GetAll()
+ public async Task DeleteFinishedClasses()
     {
+        var classes = await _classRepository.GetAll();
+
+        var finishedClasses = classes
+            .Where(c => c.EndDate < DateTime.Now)
+            .ToList();
+
+        foreach (var c in finishedClasses)
+        {
+            await _classRepository.Delete(c);
+        }
+    }
+    public async Task<IEnumerable<Class>> GetAll()
+    {   
+        await DeleteFinishedClasses();
         return await _classRepository.GetAll();
     }
 
     public async Task<IEnumerable<Class>> GetAllWithStudents()
-    {
+    {   
+        await DeleteFinishedClasses();
         var classes = await _classRepository.GetAllWithStudents();
 
         foreach (var c in classes)
@@ -130,7 +144,18 @@ public class ClassService : IClassService
     }
 
     public async Task AddStudent(int classId, int studentId)
-    {
+    {   
+          var allClasses = await _classRepository.GetAllWithStudents();
+
+        var activeClassesCount = allClasses
+            .Where(c => c.EndDate >= DateTime.Now &&
+                        c.Students.Any(s => s.Id == studentId))
+            .Count();
+
+        if (activeClassesCount >= 8)
+        {
+            throw new AppValidationException("The student is already enrolled in 8 active classes.");
+        }
         int studentCount = await _classRepository.GetStudentCount(classId);
 
         if (studentCount >= 15)
