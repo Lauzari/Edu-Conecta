@@ -28,6 +28,7 @@ function UserProfile() {
 
   const toggleNotifications = () => setOpen(!open);
 
+  const isAdmin = user && user.userType?.toLowerCase() === "admin";
 
   const handleEditNameClick = () => {
       setEditableName(user.name); 
@@ -44,7 +45,7 @@ function UserProfile() {
     const fetchUserProfile = async () => {
       if (!token || !userId) return; 
       try {
-        const res = await fetch(`${apiUrl}/User/completeUserInfo?id=${userId}`, {
+        const res = await fetch(`http://localhost:5253/User/completeUserInfo?id=${userId}`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -52,6 +53,7 @@ function UserProfile() {
           },
         });
 
+        
         if (!res.ok) {
           console.error("Error HTTP:", res.status);
           throw new Error("Error al obtener datos del usuario");
@@ -62,11 +64,13 @@ function UserProfile() {
       } catch (error) {
         console.error(error);
       }
+      
     };
 
     fetchUserProfile();
   }, [isReady,token, userId]); 
 
+  
 
   const handleSaveName = async () => {
     console.log("Token que se está enviando:", token);
@@ -74,15 +78,14 @@ function UserProfile() {
     setIsEditingName(false);
 
     try{
-        const res = await fetch(`${apiUrl}/User/update`,{
+        const res = await fetch(`http://localhost:5253/User/updateName`,{
           method: "PUT",
-          header :{
+          headers :{
             "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
           },
           body: JSON.stringify({
-          userId: userId,
-          name: editableName 
+          name: editableName
         }) 
       });
       if (!res.ok){
@@ -99,14 +102,19 @@ function UserProfile() {
     setIsEditingName(false);
   };
 
+
   return (
-    <div style={{ backgroundColor: "#3b3fbd" }}>
+    <div className="body">
       <div className="profile-card">
         <div className="profile-header">
+          {!isAdmin &&  
           <button className="notification-btn" onClick={toggleNotifications}>
             <FaBell className="bell-icon" />
             <span>Solicitudes para profesor</span>
           </button>
+          }
+         
+          
           {open && (
             <div className="notification-dropdown">
               {user.requests && user.requests.length > 0 ? (
@@ -179,7 +187,7 @@ function UserProfile() {
           <div>
             <h3>Mis Materias</h3>
           </div>
-          <div className="edit-course">
+          {!isAdmin && ( <div className="edit-course">
             <FaEdit
               onClick={handleEdit}
               style={{
@@ -190,8 +198,11 @@ function UserProfile() {
               }}
             />
           </div>
+           )}
+         
         </div>
 
+        {!isAdmin && (
         <div className="course-card-content">
           {user.classes && user.classes.length > 0 ? (
             user.classes.map((cls) => (
@@ -212,9 +223,11 @@ function UserProfile() {
           ) : (
             <p>No tienes materias por el momento...</p>
           )}
-
+          
         </div>
+        )}
       </div>
+
       {show && <PasswordModal show={show} apiUrl={apiUrl} token={token}  handleClose={() => setShow(false)} />}
     </div>
   );

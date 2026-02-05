@@ -24,8 +24,7 @@ builder.Services.Configure<Infrastructure.Services.AuthenticationService.Authent
     builder.Configuration.GetSection(Infrastructure.Services.AuthenticationService.AuthenticationServiceOptions.AuthenticationService)
 );
 
-// HTTP Client
-builder.Services.AddHttpClient<IQuoteService, ZenQuoteService>();
+
 
 
 # region Swagger custom token config

@@ -109,6 +109,15 @@ public class UserController : ControllerBase
         return Ok(new { message = "Contraseña actualizada correctamente." });
     }
 
+    [HttpPut("updateName")]
+    [Authorize]
+    public async Task<ActionResult<UserDto>> UpdateUserName([FromBody] UpdateUserNameRequest request)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var updatedUser = await _userService.UpdateUserNameAsync(userId, request.Name);
+        return Ok(UserDto.Create(updatedUser));
+    }
+
     [HttpDelete("delete")]
     [Authorize]
     public async Task<IActionResult> DeleteUser()

@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Core.Enums;
+using Core.Exceptions;
+
 
 namespace Core.Entities;
 
@@ -75,5 +77,12 @@ public class User
     public void UpdatePassword(string newPasswordHash)
     {
         Password = newPasswordHash;
+    }
+
+    public void UpdateName(string newName)
+    {
+         if (string.IsNullOrWhiteSpace(Name))
+            throw new AppValidationException("El nombre no puede estar vacío.");
+        Name = newName;
     }
 }
