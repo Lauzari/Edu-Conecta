@@ -37,15 +37,9 @@ public class UserController : ControllerBase
 
 
     [HttpGet("userInfo")]
-    [Authorize]
-    public async Task<ActionResult<UserDto>> GetUserInfo()
+    [Authorize(Roles = nameof(UserType.Admin))]
+    public async Task<ActionResult<UserDto>> GetUserInfo([FromQuery] int userId)
     {
-        var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrWhiteSpace(claimValue))
-            return Unauthorized();
-
-        int userId = int.Parse(claimValue);
 
         var user = await _userService.GetUserInfoAsync(userId);
 
