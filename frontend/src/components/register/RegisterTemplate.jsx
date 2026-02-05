@@ -37,7 +37,7 @@ const Register = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await fetch(`${apiUrl}/User/create`, {
+        const response = await fetch(`http://localhost:5253/User/create`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
