@@ -45,7 +45,7 @@ function UserProfile() {
     const fetchUserProfile = async () => {
       if (!token || !userId) return; 
       try {
-        const res = await fetch(`http://localhost:5253/User/completeUserInfo?id=${userId}`, {
+        const res = await fetch(`${apiUrl}/User/completeUserInfo?id=${userId}`, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -78,7 +78,7 @@ function UserProfile() {
     setIsEditingName(false);
 
     try{
-        const res = await fetch(`http://localhost:5253/User/updateName`,{
+        const res = await fetch(`${apiUrl}/User/updateName`,{
           method: "PUT",
           headers :{
             "Authorization": `Bearer ${token}`,
