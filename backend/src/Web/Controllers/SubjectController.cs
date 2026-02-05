@@ -48,7 +48,7 @@ public class SubjectController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-     [Authorize(Roles = nameof(UserType.Admin))]
+    [Authorize(Roles = nameof(UserType.Admin))]
     public async Task<IActionResult> Delete(int id)
     {
         await _subjectService.DeleteAsync(id);
