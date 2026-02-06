@@ -54,6 +54,20 @@ function CourseDetail() {
   const handleEnroll = async () => {
     setEnrolling(true);
     try {
+      // Check enrollment limit
+      const userRes = await fetch(`${apiUrl}/User/completeUserInfo?id=${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (userRes.ok) {
+        const userData = await userRes.json();
+        if (userData.classes && userData.classes.length >= 8) {
+          toast.warning("No podés inscribirte a más de 8 materias en simultáneo.");
+          setEnrolling(false);
+          return;
+        }
+      }
+
       const response = await fetch(
         `${apiUrl}/Class/${id}/enrollStudent`,
         {
