@@ -39,7 +39,7 @@ public class ProfessorRequestController : ControllerBase
 
         int userId = int.Parse(claimValue);
 
-        var newRequest = await _service.AddRequestAsync(userId, request.Description, request.ApplicantId);
+        var newRequest = await _service.AddRequestAsync(userId, request.Description);
         return CreatedAtAction(nameof(GetRequestById), new { id = newRequest.Id }, ProfessorRequestDto.Create(newRequest));
     }
 

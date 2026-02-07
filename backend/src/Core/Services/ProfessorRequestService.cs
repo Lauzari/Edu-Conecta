@@ -25,13 +25,8 @@ namespace Core.Services
             return await _professorRequestRepository.GetAllAsync();
         }
 
-        public async Task<ProfessorRequest> AddRequestAsync(int id, string description, int applicantId)
+        public async Task<ProfessorRequest> AddRequestAsync(int applicantId, string description)
         {
-
-            if (id != applicantId)
-            {
-                throw new AppValidationException("Incorrect ID validation.");
-            }
 
             var user = await _userRepository.GetByIdAsync(applicantId) ?? throw new NotFoundException("User Not Found.");
 

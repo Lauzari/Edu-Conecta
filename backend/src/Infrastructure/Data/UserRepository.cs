@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Core.Entities;
+using Core.Enums;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,11 +37,15 @@ public class UserRepository : IUserRepository
         return await _applicationDbContext.Users.FirstOrDefaultAsync(a => a.Id == id);
     }
 
-    public async Task<IEnumerable<User>> GetUsersByRoleAsync(string role)
+    public async Task<List<User>> GetUsersByRoleAsync(string role)
     {
+        if (!Enum.TryParse<UserType>(role, out var userType))
+            return new List<User>();
+
         return await _applicationDbContext.Users
-        .Where(u => u.UserType.ToString() == role)
-        .ToListAsync();
+            .AsNoTracking()
+            .Where(u => u.UserType == userType)
+            .ToListAsync();
     }
 
     public async Task<User?> GetByIdWithJoinsAsync(int id)
