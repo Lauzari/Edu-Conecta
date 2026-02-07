@@ -74,22 +74,29 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<ActionResult<UserDto>> UpdateUser([FromBody] UpdateUserRequest request)
     {
-        var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
+        var claimValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrWhiteSpace(claimValue))
             return Unauthorized();
 
-        int userId = int.Parse(claimValue);
+        int requesterId = int.Parse(claimValue);
+
+        bool isAdmin = User.IsInRole(nameof(UserType.Admin));
+
+        int targetUserId = request.TargetUserId ?? requesterId;
 
         var updatedUser = await _userService.UpdateUserAsync(
-        userId,
-        request.Email,
-        request.Name,
-        request.BirthDate,
-        request.UserType
+            requesterId,
+            targetUserId,
+            isAdmin,
+            request.Email,
+            request.Name,
+            request.BirthDate,
+            request.UserType
         );
+
         return Ok(UserDto.Create(updatedUser));
     }
+
 
     [HttpPut("changePassword")]
     [Authorize]
@@ -114,16 +121,24 @@ public class UserController : ControllerBase
 
     [HttpDelete("delete")]
     [Authorize]
-    public async Task<IActionResult> DeleteUser()
+    public async Task<IActionResult> DeleteUser([FromBody] int? targetUserId)
     {
         var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
         if (string.IsNullOrWhiteSpace(claimValue))
             return Unauthorized();
 
-        int userId = int.Parse(claimValue);
-        
-        await _userService.DeleteUserAsync(userId);
+        int requesterId = int.Parse(claimValue);
+
+        bool isAdmin = User.IsInRole(nameof(UserType.Admin));
+
+        int userIdToDelete = targetUserId ?? requesterId;
+
+        await _userService.DeleteUserAsync(
+        requesterId,
+        userIdToDelete,
+        isAdmin
+        );
         return NoContent();
     }
 }

@@ -40,9 +40,32 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
-            
+
             await context.Response.WriteAsync(json);
         }
+
+        catch (ForbiddenException ex)
+        {
+            _logger.LogError(ex, ex.Message);
+
+            int statusCode = (int)HttpStatusCode.Forbidden;
+
+            ProblemDetails problem = new()
+            {
+                Status = statusCode,
+                Type = "https://EduConectaAPI/errors/forbiddenexception",
+                Title = "ForbiddenException",
+                Detail = ex.Message
+            };
+
+            string json = JsonSerializer.Serialize(problem);
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = statusCode;
+
+            await context.Response.WriteAsync(json);
+        }
+
         catch (NotFoundException ex)
         {
             _logger.LogError(ex, ex.Message);
@@ -61,10 +84,10 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
-            
+
             await context.Response.WriteAsync(json);
         }
-        
+
         catch (Exception ex)
         {
             _logger.LogError(ex, ex.Message);

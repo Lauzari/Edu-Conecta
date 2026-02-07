@@ -13,12 +13,13 @@ public interface IUserService
 
     Task<IEnumerable<User>> GetAllUsersInfoAsync();
 
-    Task<User> UpdateUserAsync(int id, string email, string name, DateOnly birthDate, UserType userType);
+    Task<User> UpdateUserAsync(int requesterId, int targetUserId,
+    bool isAdmin, string email, string name, DateOnly birthDate, UserType userType);
 
     Task ChangePasswordAsync(int userId, string currentPassword, string newPassword);
 
     Task<User> UpdateUserNameAsync(int id, string name);
-    Task DeleteUserAsync(int id);
+    Task DeleteUserAsync(int requesterId, int targetUserId, bool isAdmin);
 
     Task<User> PromoteToProfessor(int id);
 

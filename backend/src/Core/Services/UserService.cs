@@ -63,16 +63,29 @@ public class UserService : IUserService
         return await _userRepository.ListAsync();
     }
 
-    public async Task DeleteUserAsync(int id)
-    {
-        var user = await _userRepository.GetByIdAsync(id) ?? throw new NotFoundException("User Not Found.");
+    public async Task DeleteUserAsync(int requesterId, int targetUserId, bool isAdmin)
+{
+    if (!isAdmin && requesterId != targetUserId)
+        throw new ForbiddenException("You cannot delete another user.");
 
-        await _userRepository.DeleteAsync(user);
-    }
+    var user = await _userRepository.GetByIdAsync(targetUserId)
+        ?? throw new NotFoundException("User Not Found.");
 
-    public async Task<User> UpdateUserAsync(int id, string email, string name, DateOnly birthDate, UserType userType)
+    await _userRepository.DeleteAsync(user);
+}
+
+
+    public async Task<User> UpdateUserAsync(int requesterId, int targetUserId,
+    bool isAdmin, string email, string name, DateOnly birthDate, UserType userType)
     {
-        var user = await _userRepository.GetByIdAsync(id) ?? throw new NotFoundException("User Not Found.");
+        if (!isAdmin && requesterId != targetUserId)
+            throw new ForbiddenException("You cannot update another user.");
+
+        var user = await _userRepository.GetByIdAsync(targetUserId)
+            ?? throw new NotFoundException("User not found.");
+
+        if (!isAdmin && user.UserType!=userType)
+            throw new ForbiddenException("You cannot change user role.");
 
         user.UpdateFields(email, name, birthDate, userType);
         await _userRepository.UpdateAsync(user);
@@ -85,22 +98,22 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(userId)
              ?? throw new NotFoundException("Usuario no encontrado.");
 
-    
-        bool passwordValid = BCrypt.Net.BCrypt.Verify(currentPassword, user.Password);
-             if (!passwordValid)
-                throw new AppValidationException("La contraseña actual es incorrecta.");
 
-    
+        bool passwordValid = BCrypt.Net.BCrypt.Verify(currentPassword, user.Password);
+        if (!passwordValid)
+            throw new AppValidationException("La contraseña actual es incorrecta.");
+
+
         if (BCrypt.Net.BCrypt.Verify(newPassword, user.Password))
             throw new AppValidationException("La nueva contraseña no puede ser igual a la actual.");
 
-    
+
         string newHashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            user.UpdatePassword(newHashedPassword);
+        user.UpdatePassword(newHashedPassword);
 
         await _userRepository.UpdateAsync(user);
-}
-       public async Task<User> UpdateUserNameAsync(int id, string name)
+    }
+    public async Task<User> UpdateUserNameAsync(int id, string name)
     {
         var user = await _userRepository.GetByIdAsync(id) ?? throw new NotFoundException("User Not Found.");
 

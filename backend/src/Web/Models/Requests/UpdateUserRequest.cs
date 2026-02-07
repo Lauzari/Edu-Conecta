@@ -5,6 +5,9 @@ namespace Models.Requests;
 
 public record UpdateUserRequest(
 
+    [Required]
+    int? TargetUserId,
+
     [MaxLength(100)]
     [Required]
     string Email,

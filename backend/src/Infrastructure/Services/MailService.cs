@@ -32,15 +32,18 @@ namespace Infrastructure.Services
                 using var client = new SmtpClient(_smtpHost, _smtpPort)
                 {
                     Credentials = new NetworkCredential(_smtpUser, _smtpPass),
-                    EnableSsl = true
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false
                 };
 
                 var mail = new MailMessage(_mailFrom, mailTo, subject, message);
-                client.Send(mail);
+                await client.SendMailAsync(mail);
             }
-            catch (Exception ex)
+            catch (SmtpException ex)
             {
-                Console.WriteLine($"Error enviando mail: {ex.Message}");
+                Console.WriteLine(ex.StatusCode);
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }
