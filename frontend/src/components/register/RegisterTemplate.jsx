@@ -55,6 +55,8 @@ const Register = () => {
           toast.success("Registro exitoso. Inicie sesión para continuar.");
           navigate("/");
         } else {
+          toast.success("Usuario existente. Inicie sesión para continuar.");
+          navigate("/");
           console.log(data.message || "El usuario ya existe ❌");
         }
       } catch (error) {
