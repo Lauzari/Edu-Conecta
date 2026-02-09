@@ -10,7 +10,7 @@ function Services() {
     },
     {
       icon: "/images/student.png",
-      title: "Nuestro cuerpo docente",
+      title: "Docentes especializados",
       desc: "Contamos con docentes certificados y apasionados por enseñar. Ellos entienden el plan de la UTN y saben cómo ayudarte a superar cada desafío.",
     },
     {
