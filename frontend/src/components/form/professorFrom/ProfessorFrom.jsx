@@ -133,7 +133,7 @@ const ProfessorFrom = () => {
           ) : (
             <>
               <p className="Professor-subtitle">
-                Contanos brevemente tu experiencia en la docencia. Nuestro equipo revisará tu solicitud y te responderá a la brevedad.
+                Contanos brevemente tu experiencia en la docencia o por qué te gustaría ser parte del cuerpo docente de <strong>EduConecta</strong> Nuestro equipo revisará tu solicitud y te responderá a la brevedad.
               </p>
 
               <form onSubmit={handleSubmit}>
