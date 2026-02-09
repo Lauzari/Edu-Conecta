@@ -38,7 +38,7 @@ namespace Core.Services
 
             if (existingPending != null)
             {
-                throw new InvalidOperationException("Request already exists.");
+                 throw new ConflictException("Ya enviaste una solicitud. Está en revisión.");
             }
             var newRequest = new ProfessorRequest
             {

@@ -87,6 +87,12 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
 
             await context.Response.WriteAsync(json);
         }
+        catch (ConflictException ex)
+        {
+           context.Response.StatusCode = 409;
+           context.Response.ContentType = "application/json";
+           await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+        }
 
         catch (Exception ex)
         {

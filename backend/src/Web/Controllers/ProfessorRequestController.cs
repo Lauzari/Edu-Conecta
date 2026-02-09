@@ -26,22 +26,34 @@ public class ProfessorRequestController : ControllerBase
         var requests = await _service.GetRequestsAsync();
         return ProfessorRequestDto.Create(requests);
     }
+[HttpPost]
+[Authorize]
+public async Task<ActionResult<ProfessorRequestDto>> CreateProfessorRequest([FromBody] CreateProfessorRequestDto request)
+{
+    var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-    [HttpPost]
-    [Authorize]
-    public async Task<ActionResult<ProfessorRequestDto>> CreateProfessorRequest([FromBody] CreateProfessorRequestDto request)
+    if (string.IsNullOrWhiteSpace(claimValue))
+        return Unauthorized();
+
+    int userId = int.Parse(claimValue);
+
+    try
     {
-
-        var claimValue = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrWhiteSpace(claimValue))
-            return Unauthorized();
-
-        int userId = int.Parse(claimValue);
-
         var newRequest = await _service.AddRequestAsync(userId, request.Description);
-        return CreatedAtAction(nameof(GetRequestById), new { id = newRequest.Id }, ProfessorRequestDto.Create(newRequest));
+
+        return CreatedAtAction(nameof(GetRequestById),
+            new { id = newRequest.Id },
+            ProfessorRequestDto.Create(newRequest));
     }
+    catch (InvalidOperationException ex) when (ex.Message.Contains("Request already exists"))
+    {
+        return Conflict(new { message = "Request already exists." });
+    }
+}
+
+
+
+
 
     [HttpGet("{id}")]
     [Authorize(Roles = nameof(UserType.Admin))]
