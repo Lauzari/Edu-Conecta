@@ -64,7 +64,7 @@ const ProfessorFrom = () => {
     e.preventDefault();
 
     if (!values.description.trim()) {
-      notify("❌ Por favor completá la descripción.");
+      notify("❌ Por favor completá todos los campos.");
       return;
     }
 
@@ -81,7 +81,7 @@ const ProfessorFrom = () => {
       });
 
       if (response.ok) {
-        // ÉXITO: Mostramos Toastify y fijamos el cartel
+       
         notify("✨ Tu solicitud fue enviada con éxito!", "success");
         setAlreadyRequested(true);
         setTimeout(() => navigate("/"), 4000);
