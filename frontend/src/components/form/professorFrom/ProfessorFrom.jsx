@@ -6,93 +6,98 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../../hooks/useAuth.js";
 
 const ProfessorFrom = () => {
-  const { token, userId, name } = useAuth();
+  const { token, name, userId } = useAuth();
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  const [values, setValues] = useState({
-    nombre: "",
-    lastName: "",
-    description: "",
-  });
-
+  const [values, setValues] = useState({ nombre: "", description: "" });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [alreadyRequested, setAlreadyRequested] = useState(false);
 
+  
+  const notify = (msg, type = "info") => {
+    const config = { 
+      position: "top-right", 
+      autoClose: 3000, 
+      theme: "light", 
+      transition: Bounce 
+    };
+    if (type === "success") toast.success(msg, config);
+    else toast(msg, config);
+  };
+
+ 
   useEffect(() => {
-    if (name) {
-      setValues((prev) => ({ ...prev, nombre: name }));
-    }
-  }, [name]);
+    const checkUserStatus = async () => {
+      if (!token) return;
+      
+      try {
+        const response = await fetch(`${apiUrl}/requestsByUserId`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const hasPending = data.some(r => r.status === "Pending");
+          if (hasPending) {
+            setAlreadyRequested(true);
+          
+          }
+        }
+      } catch (error) {
+        console.error("Error verificando estado:", error);
+      }
+    };
+
+    checkUserStatus();
+    if (name) setValues((prev) => ({ ...prev, nombre: name }));
+    
+   
+    return () => setAlreadyRequested(false);
+  }, [apiUrl, token, userId, name]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
+    setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!values.nombre || !values.description) {
-      setMessage("Por favor completá todos los campos.");
+    if (!values.description.trim()) {
+      notify("❌ Por favor completá todos los campos.");
       return;
     }
 
     setLoading(true);
-    setMessage("");
 
     try {
-      const response = await fetch(`${apiUrl}/api/ProfessorRequest/${userId}`, {
+      const response = await fetch(`${apiUrl}/api/ProfessorRequest/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          description: values.description,
-          applicantId: userId,
-        }),
+        body: JSON.stringify({ description: values.description }),
       });
-
-      const text = await response.text();
 
       if (response.ok) {
-        toast("✨ Tu solicitud fue enviada con éxito!", {
-          position: "top-right",
-          autoClose: 3000,
-          theme: "dark",
-          transition: Bounce,
-        });
-        setTimeout(() => navigate("/"), 3000);
+       
+        notify("✨ Tu solicitud fue enviada con éxito!", "success");
+        setAlreadyRequested(true);
+        setTimeout(() => navigate("/"), 4000);
       } else {
-        let errorMessage = "No se pudo enviar la solicitud.";
-        if (text) {
-          try {
-            const errorData = JSON.parse(text);
-            errorMessage = errorData.message || errorMessage;
-          } catch {
-            console.warn("⚠️ Respuesta no es JSON:", text);
-          }
+        const text = await response.text();
+      
+        if (response.status === 409 || response.status === 500) {
+          setAlreadyRequested(true);
+        } else {
+          notify(`❌ Error: ${text || "No se pudo enviar"}`);
         }
-
-        toast(`❌ Error: ${errorMessage}`, {
-          position: "top-right",
-          autoClose: 3000,
-          theme: "dark",
-          transition: Bounce,
-        });
       }
     } catch (error) {
-      toast("❌ Error al enviar la solicitud", {
-        position: "top-right",
-        autoClose: 3000,
-        theme: "dark",
-        transition: Bounce,
-      });
-      console.error("❌ Error:", error);
+      notify("❌ Error de conexión al enviar");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -100,57 +105,59 @@ const ProfessorFrom = () => {
     <div className='Professor'>
       <div className='Professor-form'>
         <FaArrowLeft
-          style={{
-            fontSize: '30px',
-            color: 'black',
-            marginTop: '20px',
-            marginLeft: '30px',
-            cursor: 'pointer',
-          }}
-          onClick={() => window.location.href = '/'}
+          style={{ fontSize: '20px', cursor: 'pointer', margin: '25px 10 10 30px', color: 'black' }}
+          onClick={() => navigate('/')}
         />
 
         <div className='Professor-form-content'>
-          <h1>¡Sumate a nuestro equipo de docentes!</h1>
-          <p className="Professor-subtitle">
-            Contanos brevemente tu experiencia en la docencia o por qué te gustaría ser parte del cuerpo docente de <strong>EduConecta</strong>. Nuestro equipo revisará tu solicitud y te responderá a la brevedad.
-          </p>
+          <h1>¡Gracias por tu interés en ser parte de nuestro equipo docente!</h1>
 
-          <form onSubmit={handleSubmit}>
-            <div className='form-group'>
-              <label htmlFor="nombre">Nombre</label>
-              <input
-                id="nombre"
-                type="text"
-                name="nombre"
-                value={values.nombre}
-                onChange={handleChange}
-                placeholder="Nombre"
-                disabled
-              />
+          {alreadyRequested ? (
+           
+            <div style={{ textAlign: 'center', marginTop: '40px' }}>
+              <p style={{ color: "#1ec05c", fontWeight: "bold", fontSize: "1.2rem" }}>
+                  Solo puedes enviarnos una solicitud. Tu solicitud ya está en revisión.
+              </p>
+              <p style={{ color: "#555", marginTop: "10px" }}>
+                
+                Estamos evaluando tu perfil. Te avisaremos por email pronto.
+              </p>
+              <button 
+                onClick={() => navigate('/')} 
+                className='submit-register-professor'
+                style={{ marginTop: '20px' }}
+              >
+                Volver al Inicio
+              </button>
             </div>
+          ) : (
+            <>
+              <p className="Professor-subtitle">
+                Contanos brevemente tu experiencia en la docencia o por qué te gustaría ser parte del cuerpo docente de <strong>EduConecta</strong> Nuestro equipo revisará tu solicitud y te responderá a la brevedad.
+              </p>
 
-            <div className='form-group-text'>
-              <label htmlFor="description">Descripción</label>
-              <textarea
-                id="description"
-                name="description"
-                value={values.description}
-                onChange={handleChange}
-                placeholder="Contanos un poco sobre tu experiencia o motivación..."
-              ></textarea>
-            </div>
+              <form onSubmit={handleSubmit}>
+                <div className='form-group'>
+                  <label>Nombre</label>
+                  <input name="nombre" value={values.nombre} disabled />
+                </div>
 
-            <button
-              className='submit-register-professor'
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? "Enviando..." : "Aplicar"}
-            </button>
+                <div className='form-group-text'>
+                  <label>Descripción</label>
+                  <textarea
+                    name="description"
+                    value={values.description}
+                    onChange={handleChange}
+                    placeholder="Contanos un poco sobre tu experiencia..."
+                  />
+                </div>
 
-            {message && <p style={{ marginTop: "10px" }}>{message}</p>}
-          </form>
+                <button className='submit-register-professor' type="submit" disabled={loading}>
+                  {loading ? "Enviando..." : "Aplicar"}
+                </button>
+              </form>
+            </>
+          )}
         </div>
       </div>
 
