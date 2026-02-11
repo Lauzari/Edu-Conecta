@@ -9,7 +9,8 @@ Este repositorio contiene el código fuente y la documentación de **Edu-Conecta
 
 ## 📋 Descripción del Proyecto
 
-Edu-Conecta es una plataforma web integral diseñada para facilitar y gestionar procesos educativos. [Completar con una breve descripción de la funcionalidad específica del sistema, ej: gestionar la conexión entre estudiantes y tutores, administración de cursos, seguimiento académico, etc.].
+
+Edu-Conecta es una plataforma web integral diseñada para que los estudiantes de la carrera Tecnicatura en Programacion de UTN cuenten con la posibilidad de reforzar sus conocimiento mediante cursos de cada materia dicatada en la catedra, siguiendo el mismo plan de estudios que la carrera de UTN, asi tambien si un profesor quisiera impartir clases tambien puede postularse y se parte de EDU-CONECTA.
 
 El sistema fue desarrollado siguiendo prácticas modernas de ingeniería de software, utilizando una arquitectura escalable y tecnologías de punta tanto en el frontend como en el backend.
 
@@ -85,7 +86,9 @@ npm run dev
 La aplicación cliente estará disponible generalmente en `http://localhost:5173`.
 
 ---
+ ### 4. Enlace de Deploy :  https://edu-conecta.vercel.app/
 
+ 
 ## 👥 Equipo de Desarrollo
 
 *   [Rey Justina]
