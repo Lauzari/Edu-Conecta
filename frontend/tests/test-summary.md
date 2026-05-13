@@ -34,4 +34,4 @@
 
 ## Conclusión
 
-Las funcionalidades principales de Edu-Conecta presentan un comportamiento estable para los flujos críticos analizados. Se identificaron incidencias relacionadas con validaciones de formularios y actualización de filtros, las cuales deben resolverse antes de una liberación productiva final.
+Las funcionalidades principales de Edu-Conecta presentan un comportamiento estable para los flujos críticos analizados. Se identificaron incidencias relacionadas con validaciones de formularios y actualización de filtros, las cuales fueron corregidas y re-testeadas para asegurar su correcto funcionamiento.

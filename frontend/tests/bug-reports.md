@@ -8,10 +8,10 @@
 - **Módulo:** Búsqueda y filtros de cursos
 - **Severidad:** Media
 - **Prioridad:** Alta
-- **Estado:** Open
+- **Estado:** Closed
 - **Entorno:** Producción / Navegador Chrome
 - **Reportado por:** QA
-- **Fecha:** 13/05/2026
+- **Fecha:** 13/02/2026
 
 ### Precondiciones
 - Usuario autenticado en el sistema.
@@ -43,10 +43,10 @@ El listado mantiene cursos mezclados entre “1er año” y “2do año” hasta
 - **Módulo:** Solicitud para profesor
 - **Severidad:** Alta
 - **Prioridad:** Alta
-- **Estado:** Open
+- **Estado:** Closed
 - **Entorno:** Producción / Navegador Chrome
 - **Reportado por:** QA
-- **Fecha:** 13/05/2026
+- **Fecha:** 13/02/2026
 
 ### Precondiciones
 - Usuario autenticado.

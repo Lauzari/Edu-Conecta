@@ -29,7 +29,6 @@ Fuera de alcance:
 
 - Smoke Testing
 - Functional Testing
-- Negative Testing
 - UI Validation
 
 ---
